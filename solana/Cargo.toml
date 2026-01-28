@@ -1,8 +1,0 @@
-[workspace]
-members = ["programs/checkin"]
-
-[profile.release]
-overflow-checks = true
-
-[workspace.dependencies]
-anchor-lang = "0.32.1"
