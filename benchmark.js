@@ -3,14 +3,14 @@
 console.log('🚀 加载 Benchmark 页面...');
 
 const BENCHMARK_PRICING = (window.PricingUtils && window.PricingUtils.constants) || {
-    currency: 'PHRS',
+    currency: 'ALEO',
     pricePerApiCallUsdc: 0.0008,
     gasEstimatePerCallUsdc: 0.00025,
     sharePurchaseMinUsdc: 1,
     sharePurchaseMaxUsdc: 20
 };
 
-const PHRS_ICON_PATH = 'svg/chains/pharos.jpg';
+const ALEO_ICON_PATH = 'svg/chains/aleo.svg';
 
 function formatNumeric(value, decimals) {
     const num = Number(value);
@@ -26,7 +26,7 @@ function renderUsdcBadge(value, decimals = 5) {
         return '<span class="usdc-amount">—</span>';
     }
     const formatted = formatNumeric(value, decimals);
-    return `<span class="usdc-amount">${formatted}</span><img src="${PHRS_ICON_PATH}" alt="PHRS" class="usdc-icon" loading="lazy">`;
+    return `<span class="usdc-amount">${formatted}</span><img src="${ALEO_ICON_PATH}" alt="ALEO" class="usdc-icon" loading="lazy">`;
 }
 
 function formatUsdc(value, options = {}) {
@@ -632,7 +632,7 @@ function populateBenchmarkTable(models) {
     }
     
     console.log('✅ 找到表格tbody，开始填充数据...');
-    console.log('📊 HTML表头列数: 10列 (MODEL, CATEGORY, INDUSTRY, PRICE / API CALL (PHRS), SHARE PRICE (PHRS), MARKET CHANGE, USAGE, COMPATIBILITY, TOTAL SCORE, ACTION)');
+    console.log('📊 HTML表头列数: 10列 (MODEL, CATEGORY, INDUSTRY, PRICE / API CALL (ALEO), SHARE PRICE (ALEO), MARKET CHANGE, USAGE, COMPATIBILITY, TOTAL SCORE, ACTION)');
     
     // 清空现有内容
     tableBody.innerHTML = '';

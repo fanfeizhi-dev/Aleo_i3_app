@@ -23,7 +23,7 @@ let selectionBox = null;
 let selectedNodes = new Set();
 let selectedConnections = new Set();
 
-// ==================== x402 Payment Support Functions ====================
+// ==================== Aleo Payment Support Functions ====================
 
 /**
  * 获取已连接的钱包地址（Canvas 版）
@@ -45,29 +45,29 @@ async function getConnectedWallet() {
     }
 }
 
-// ---- x402 / Pharos 支付辅助函数（Canvas 专用）----
-async function sendCanvasPharosPayment(recipient, amountUsdc, decimals) {
-    if (!window.ethereum || typeof ethers === 'undefined') {
-        throw new Error('Wallet provider (MetaMask / ethers) not available');
+// ---- Aleo 支付辅助函数（Canvas 专用）----
+async function sendCanvasAleoPayment(recipient, amount, _decimals) {
+    // 使用 AleoPayment 模块进行 Aleo 链上支付
+    if (!window.AleoPayment) {
+        throw new Error('AleoPayment module not loaded');
     }
-    // 确保钱包已经连接
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const amountWei = ethers.utils.parseUnits(
-        amountUsdc.toString(),
-        decimals || 18
-    );
-    const tx = await signer.sendTransaction({
-        to: recipient,
-        value: amountWei
+    
+    const result = await window.AleoPayment.sendAleoPayment({
+        recipient: recipient,
+        amount: amount
     });
-    // 等待链上确认
-    await tx.wait();
-    return tx; // 保留 tx.hash 给后面 confirm 使用
+    
+    if (!result.success) {
+        if (result.cancelled) {
+            throw new Error('Transaction cancelled by user');
+        }
+        throw new Error(result.error || 'Aleo payment failed');
+    }
+    
+    return { hash: result.transactionId };
 }
 
-// ---- Canvas 版 x402 Invoice 弹窗（对齐 workflow 的 UI + 付款逻辑）----
+// ---- Canvas 版 Aleo Private Payment 弹窗 ----
 function show402InvoiceModal(invoice, workflow) {
     return new Promise((resolve) => {
         const workflowInfo = invoice.workflow || {};
@@ -75,7 +75,7 @@ function show402InvoiceModal(invoice, workflow) {
             (workflow && workflow.name) ||
             workflowInfo.name ||
             'My Canvas Workflow';
-        const network = invoice.network || 'pharos-testnet';
+        const network = invoice.network || (window.AleoPayment ? window.AleoPayment.getCurrentNetwork() : 'mainnet');
         const nodeCount =
             workflowInfo.node_count ??
             workflowInfo.total_nodes ??
@@ -87,24 +87,24 @@ function show402InvoiceModal(invoice, workflow) {
             : null;
         const explorerBase =
             invoice.explorer_base_url ||
-            'https://pharos-testnet.socialscan.io/tx';
+            (window.AleoPayment ? window.AleoPayment.getExplorerUrl('').replace(/\/[^/]*$/, '') : 'https://explorer.aleo.org/transaction');
         const costBreakdown = invoice.cost_breakdown || [];
         const breakdownRows =
             costBreakdown.map((node) => `
                 <tr>
-                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;">
+                    <td style="padding:10px 12px;border-bottom:1px solid rgba(0,212,170,0.15);color:#e0f7f3;">
                         ${node.name}
                     </td>
-                    <td style="padding:8px 12px;text-align:center;border-bottom:1px solid #f3f4f6;">
+                    <td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(0,212,170,0.15);color:#7dffe5;">
                         ${node.calls}
                     </td>
-                    <td style="padding:8px 12px;text-align:right;border-bottom:1px solid #f3f4f6;">
-                        ${Number(node.total_cost || 0).toFixed(6)} PHRS
+                    <td style="padding:10px 12px;text-align:right;border-bottom:1px solid rgba(0,212,170,0.15);color:#00d4aa;font-weight:600;">
+                        ${Number(node.total_cost || 0).toFixed(6)} ALEO
                     </td>
                 </tr>
             `).join('') || `
                 <tr>
-                    <td colspan="3" style="padding:12px;text-align:center;color:#6b7280;border-bottom:1px solid #f3f4f6;">
+                    <td colspan="3" style="padding:16px;text-align:center;color:rgba(255,255,255,0.4);">
                         No detailed cost breakdown.
                     </td>
                 </tr>
@@ -113,64 +113,70 @@ function show402InvoiceModal(invoice, workflow) {
         const modal = document.createElement('div');
         modal.className = 'modal show';
         modal.style.cssText =
-            'position:fixed;inset:0;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;';
+            'position:fixed;inset:0;background:rgba(0,20,15,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;';
         modal.innerHTML = `
-            <div style="background:white;border-radius:18px;padding:24px 24px 20px;
-                        box-shadow:0 20px 45px rgba(15,23,42,0.35);
-                        width:100%;max-width:640px;max-height:80vh;overflow-y:auto;
+            <div style="background:linear-gradient(135deg,#0a1f1c 0%,#0d2926 50%,#0a1f1c 100%);border-radius:24px;padding:28px 26px 24px;
+                        box-shadow:0 25px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(0,212,170,0.2),inset 0 1px 0 rgba(255,255,255,0.05);
+                        width:100%;max-width:640px;max-height:85vh;overflow-y:auto;
                         font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;">
-                <!-- Header -->
-                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                    <div style="width:32px;height:32px;border-radius:999px;
-                                background:linear-gradient(135deg,#6366f1,#3b82f6);
-                                display:flex;align-items:center;justify-content:center;
-                                color:white;font-size:18px;">
-                        ₓ
-                    </div>
+                
+                <!-- Aleo 品牌头部 -->
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+                    <img src="svg/chains/aleo.svg" alt="Aleo" style="width:48px;height:48px;border-radius:14px;box-shadow:0 4px 20px rgba(0,212,170,0.4);">
                     <div style="flex:1;">
-                        <h2 style="margin:0;font-size:18px;color:#111827;">x402 Payment Invoice</h2>
-                        <p style="margin:2px 0 0 0;font-size:12px;color:#6b7280;">
-                            Pay once, then execute this workflow from Canvas without additional transactions.
-                        </p>
+                        <h2 style="margin:0;color:#fff;font-size:20px;font-weight:700;">Aleo Private Payment</h2>
+                        <p style="margin:4px 0 0;color:rgba(255,255,255,0.6);font-size:12px;">Zero-knowledge • Encrypted • Verifiable</p>
                     </div>
-                    <span style="font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;
-                                 background:#e0f2fe;color:#0369a1;">
-                        x402 PROTOCOL
-                    </span>
-                </div>
-                <!-- Summary -->
-                <div style="border-radius:12px;background:#f9fafb;padding:16px 14px;margin-bottom:16px;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
-                        <span style="color:#6b7280;">Workflow</span>
-                        <span style="font-weight:600;color:#111827;">${workflowName}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
-                        <span style="color:#6b7280;">Total Nodes</span>
-                        <span style="font-weight:600;color:#111827;">${nodeCount}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
-                        <span style="color:#6b7280;">Network</span>
-                        <span style="font-weight:600;color:#111827;">${network}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:14px;">
-                        <span style="color:#6b7280;">Total Amount</span>
-                        <span style="font-weight:700;color:#16a34a;">${amount.toFixed(6)} PHRS</span>
+                    <div style="background:rgba(0,212,170,0.15);border:1px solid rgba(0,212,170,0.3);padding:6px 12px;border-radius:20px;">
+                        <span style="color:#00d4aa;font-size:11px;font-weight:600;">🔒 PRIVATE</span>
                     </div>
                 </div>
-                <!-- Cost breakdown -->
-                <details open style="margin-bottom:16px;border-radius:12px;border:1px solid #e5e7eb;background:#ffffff;">
-                    <summary style="list-style:none;padding:10px 14px;cursor:pointer;
-                                    display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:13px;color:#374151;">📊 Cost Breakdown (${nodeCount} nodes)</span>
-                        <span style="font-size:11px;color:#6b7280;">Toggle</span>
+
+                <!-- Aleo 特色标签 -->
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(0,212,170,0.15);">
+                    <span style="background:rgba(0,212,170,0.1);color:#7dffe5;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:500;">⚡ Offchain Execution</span>
+                    <span style="background:rgba(0,212,170,0.1);color:#7dffe5;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:500;">🔐 Encrypted State</span>
+                    <span style="background:rgba(0,212,170,0.1);color:#7dffe5;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:500;">✅ Selective Disclosure</span>
+                </div>
+
+                <!-- 支付摘要 -->
+                <div style="border-radius:16px;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);padding:18px 16px;margin-bottom:18px;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px;">
+                        <span style="color:rgba(255,255,255,0.6);">Workflow</span>
+                        <span style="font-weight:600;color:#fff;">${workflowName}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px;">
+                        <span style="color:rgba(255,255,255,0.6);">Total Nodes</span>
+                        <span style="font-weight:600;color:#fff;">${nodeCount}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px;">
+                        <span style="color:rgba(255,255,255,0.6);">Network</span>
+                        <span style="font-weight:600;color:#00d4aa;">${network}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(0,212,170,0.2);align-items:center;">
+                        <span style="color:rgba(255,255,255,0.8);font-size:14px;">Total Amount</span>
+                        <div style="text-align:right;">
+                            <span style="font-weight:700;color:#00ffcc;font-size:24px;">${amount.toFixed(6)}</span>
+                            <span style="color:#2775ca;font-size:14px;margin-left:6px;">ALEO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 成本明细 -->
+                <details style="margin-bottom:16px;border-radius:12px;border:1px solid rgba(0,212,170,0.15);background:rgba(0,0,0,0.2);">
+                    <summary style="list-style:none;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:13px;color:#fff;display:flex;align-items:center;gap:8px;">
+                            <span>📊</span> Cost Breakdown
+                        </span>
+                        <span style="font-size:11px;color:rgba(255,255,255,0.5);">${nodeCount} nodes</span>
                     </summary>
-                    <div style="border-top:1px solid #e5e7eb;">
+                    <div style="border-top:1px solid rgba(0,212,170,0.15);">
                         <table style="width:100%;border-collapse:collapse;font-size:12px;">
                             <thead>
-                                <tr>
-                                    <th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:500;border-bottom:1px solid #e5e7eb;">Model</th>
-                                    <th style="text-align:center;padding:8px 12px;color:#6b7280;font-weight:500;border-bottom:1px solid #e5e7eb;">Calls</th>
-                                    <th style="text-align:right;padding:8px 12px;color:#6b7280;font-weight:500;border-bottom:1px solid #e5e7eb;">Cost</th>
+                                <tr style="background:rgba(0,212,170,0.08);">
+                                    <th style="text-align:left;padding:10px 12px;color:rgba(255,255,255,0.6);font-weight:500;font-size:11px;">MODEL</th>
+                                    <th style="text-align:center;padding:10px 12px;color:rgba(255,255,255,0.6);font-weight:500;font-size:11px;">CALLS</th>
+                                    <th style="text-align:right;padding:10px 12px;color:rgba(255,255,255,0.6);font-weight:500;font-size:11px;">COST</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,55 +185,64 @@ function show402InvoiceModal(invoice, workflow) {
                         </table>
                     </div>
                 </details>
-                <!-- Pay once note -->
-                <div style="margin-bottom:14px;padding:10px 12px;border-radius:12px;
-                            border:1px solid #facc15;background:#fef9c3;font-size:12px;color:#854d0e;">
-                    <strong style="display:block;margin-bottom:4px;">⚡ Pay Once, Execute All!</strong>
-                    <span>After this single payment, you can execute all ${nodeCount || 'workflow'} nodes without any additional transactions.</span>
+
+                <!-- Aleo 优势提示 -->
+                <div style="margin-bottom:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,170,0.12),rgba(0,184,148,0.08));border:1px solid rgba(0,212,170,0.25);">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="font-size:16px;">⚡</span>
+                        <strong style="color:#00ffcc;font-size:13px;">The Aleo Advantage</strong>
+                    </div>
+                    <p style="margin:0;color:rgba(255,255,255,0.7);font-size:12px;line-height:1.5;">
+                        Your transaction is computed privately and verified publicly using zero-knowledge proofs. Pay once, then execute all ${nodeCount || ''} nodes seamlessly.
+                    </p>
                 </div>
-                <!-- Recipient / Request / Explorer / Expiry -->
-                <div style="margin-bottom:18px;padding:12px 14px;border-radius:12px;
-                            border-left:4px solid #3b82f6;background:#eff6ff;font-size:12px;color:#1e3a8a;">
-                    <div style="margin-bottom:6px;">
-                        <strong>📍 Recipient:</strong><br>
-                        <code style="font-size:11px;background:white;border-radius:6px;padding:4px 6px;word-break:break-all;">
+
+                <!-- 交易详情 -->
+                <div style="margin-bottom:20px;padding:14px 16px;border-radius:12px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);font-size:12px;color:rgba(255,255,255,0.7);">
+                    <div style="margin-bottom:10px;">
+                        <span style="color:rgba(255,255,255,0.5);">📍 Recipient:</span><br>
+                        <code style="font-size:10px;background:rgba(0,212,170,0.1);border-radius:6px;padding:6px 8px;word-break:break-all;color:#7dffe5;display:block;margin-top:4px;">
                             ${invoice.recipient}
                         </code>
                     </div>
-                    <div style="margin-bottom:6px;">
-                        <strong>🆔 Request ID:</strong><br>
-                        <code style="font-size:11px;background:white;border-radius:6px;padding:4px 6px;word-break:break-all;">
+                    <div style="margin-bottom:10px;">
+                        <span style="color:rgba(255,255,255,0.5);">🔒 Request ID:</span><br>
+                        <code style="font-size:10px;background:rgba(0,212,170,0.1);border-radius:6px;padding:6px 8px;word-break:break-all;color:#7dffe5;display:block;margin-top:4px;">
                             ${invoice.request_id}
                         </code>
                     </div>
-                    <div style="margin-bottom:6px;">
-                        <strong>🔗 Explorer:</strong><br>
-                        <span style="font-size:11px;">${explorerBase}/&lt;tx-hash-after-payment&gt;</span>
-                    </div>
                     ${
                         expiresAt
-                            ? `<div>
-                                   <strong>⏰ Expires:</strong><br>
-                                   <span style="font-size:11px;">${expiresAt.toLocaleString()}</span>
+                            ? `<div style="display:flex;justify-content:space-between;align-items:center;">
+                                   <span style="color:rgba(255,255,255,0.5);">⏱️ Expires:</span>
+                                   <span style="color:#fff;">${expiresAt.toLocaleString()}</span>
                                </div>`
                             : ''
                     }
                 </div>
-                <!-- status + buttons -->
+
+                <!-- 支付状态 -->
                 <div id="x402-payment-status"
-                     style="font-size:12px;color:#6b7280;margin-bottom:8px;min-height:16px;"></div>
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+                     style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:12px;min-height:16px;text-align:center;"></div>
+
+                <!-- 操作按钮 -->
+                <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:4px;">
                     <button id="x402-cancel-btn"
-                            style="padding:9px 16px;font-size:13px;border-radius:999px;border:1px solid #e5e7eb;
-                                   background:white;color:#374151;cursor:pointer;">
+                            style="padding:14px 24px;font-size:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);
+                                   background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.2s;">
                         Cancel
                     </button>
                     <button id="x402-pay-btn"
-                            style="padding:9px 18px;font-size:13px;border-radius:999px;border:none;
-                                   background:linear-gradient(135deg,#4f46e5,#6366f1);
-                                   color:white;font-weight:600;cursor:pointer;">
-                        Pay ${amount.toFixed(6)} PHRS
+                            style="padding:14px 28px;font-size:14px;border-radius:12px;border:none;
+                                   background:linear-gradient(135deg,#00d4aa 0%,#00b894 100%);
+                                   color:#fff;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,212,170,0.4);transition:all 0.2s;">
+                        🔐 Pay ${amount.toFixed(6)} ALEO
                     </button>
+                </div>
+
+                <!-- Aleo 品牌脚注 -->
+                <div style="text-align:center;margin-top:18px;padding-top:14px;border-top:1px solid rgba(0,212,170,0.1);">
+                    <span style="color:rgba(255,255,255,0.4);font-size:10px;">Powered by Aleo • Backed by a16z, SoftBank & Samsung</span>
                 </div>
             </div>
         `;
@@ -244,14 +259,14 @@ function show402InvoiceModal(invoice, workflow) {
             resolve(null);
         });
 
-        // 支付：调用 MetaMask / Pharos，一次性完成付款
+        // 支付：调用 Leo Wallet / Aleo，一次性完成付款
         payBtn.addEventListener('click', async () => {
             try {
                 payBtn.disabled = true;
                 payBtn.textContent = 'Waiting for wallet...';
                 statusEl.textContent = 'Please confirm the transaction in your wallet.';
 
-                const tx = await sendCanvasPharosPayment(
+                const tx = await sendCanvasAleoPayment(
                     invoice.recipient,
                     amount,
                     invoice.decimals || 18
@@ -268,12 +283,12 @@ function show402InvoiceModal(invoice, workflow) {
                     explorerUrl: explorerBase + '/' + tx.hash
                 });
             } catch (err) {
-                console.error('x402 canvas payment error:', err);
+                console.error('Aleo canvas payment error:', err);
                 statusEl.textContent =
                     'Payment failed or was rejected: ' +
                     (err && err.message ? err.message : err);
                 payBtn.disabled = false;
-                payBtn.textContent = `Pay ${amount.toFixed(6)} PHRS`;
+                payBtn.textContent = `Pay ${amount.toFixed(6)} ALEO`;
             }
         });
     });
@@ -291,12 +306,12 @@ function showWorkflowExplorerToast(signature, amount, explorerUrlOverride) {
         const toast = document.createElement('div');
         toast.id = 'workflow-payment-toast';
         toast.className = 'workflow-payment-toast';
-        const explorerUrl = explorerUrlOverride || `https://pharos-testnet.socialscan.io/tx/${encodeURIComponent(signature)}`;
+        const explorerUrl = explorerUrlOverride || (window.AleoPayment ? window.AleoPayment.getExplorerUrl(signature) : `https://explorer.aleo.org/transaction/${encodeURIComponent(signature)}`);
         
         toast.innerHTML = `
             <button class="workflow-payment-toast__close" aria-label="Dismiss">×</button>
             <h4>✅ Workflow Payment Settled</h4>
-            <p>Amount: <strong>${Number(amount).toFixed(6)} PHRS</strong></p>
+            <p>Amount: <strong>${Number(amount).toFixed(6)} ALEO</strong></p>
             <a href="${explorerUrl}" target="_blank" rel="noopener noreferrer">View on Explorer →</a>
         `;
         
@@ -315,7 +330,7 @@ function showWorkflowExplorerToast(signature, amount, explorerUrlOverride) {
 
 /**
  * 预付费购买Canvas workflow
- * 完整的x402支付流程:
+ * 完整的Aleo支付流程:
  * 1. 请求402发票
  * 2. 显示发票并等待用户支付
  * 3. 提交支付凭证验证
@@ -429,8 +444,8 @@ async function purchaseAndPrepayCanvasWorkflow(options = {}) {
 
         console.log('✅ Payment info collected:', paymentResult);
 
-        // ✅ 正确的 X-Payment 格式：必须以 x402 开头，nonce 用 invoiceData.nonce
-        const xPaymentHeader = `x402 ${invoiceData.network}; ` +
+        // ✅ 正确的 X-Payment 格式：Aleo 支付头
+        const xPaymentHeader = `aleo ${invoiceData.network}; ` +
             `tx=${paymentResult.hash}; ` +
             `amount=${paymentResult.amount ?? invoiceData.amount_usdc}; ` +
             `nonce=${invoiceData.nonce}`;
@@ -2162,7 +2177,7 @@ function saveAndRunWorkflow() {
     // 4. 关闭弹窗
     hideSaveRunModal();
     
-    // 5. 执行workflow：走预付费分支，触发 X402 支付
+    // 5. 执行workflow：走预付费分支，触发 Aleo 支付
     executeCanvasWorkflow({
         workflowId: workflowId,
         workflowName: workflowName,

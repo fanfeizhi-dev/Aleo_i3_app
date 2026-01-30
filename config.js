@@ -10,9 +10,9 @@ const config = {
         temperature: 0.7
     },
 
-    // Pricing configuration (PHRS)
+    // Pricing configuration (ALEO)
     pricing: {
-        currency: 'PHRS',
+        currency: 'ALEO',
         pricePerApiCallUsdc: 0.0008,
         gasEstimatePerCallUsdc: 0.00025,
         sharePurchaseMinUsdc: 1,

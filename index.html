@@ -2476,7 +2476,7 @@
             }
         }
 
-        // ===== Usage accounting & PHRS deduction helpers =====
+        // ===== Usage accounting & ALEO deduction helpers =====
         function estimateTokenCount(text) {
             try {
                 const t = (text || '').toString();
@@ -2538,7 +2538,7 @@
                 const amount = Number((perCall + gas).toFixed(6));
 
                 let spend = { success: false, error: 'walletManager not available' };
-                console.log('[PHRS Charge] Preparing to charge model usage', {
+                console.log('[ALEO Charge] Preparing to charge model usage', {
                     model: modelName,
                     perCall,
                     gas,
@@ -2566,9 +2566,9 @@
                 });
 
                 if (spend && spend.success === false && spend.error) {
-                    console.warn('PHRS deduction failed:', spend.error);
+                    console.warn('ALEO deduction failed:', spend.error);
                 } else {
-                    console.log('[PHRS Charge] Spend result:', spend);
+                    console.log('[ALEO Charge] Spend result:', spend);
                     try {
                         const cur = getAvailableCredits();
                         try { firebasePersistCredits(cur); } catch (_) {}
@@ -2604,40 +2604,312 @@
 
         function showInsufficientCreditsModal(required, available) {
              try { const old = document.getElementById('insufficientCreditsModal'); if (old) old.remove(); } catch (_) {}
+             
+             const isWalletConnected = window.walletManager && window.walletManager.isConnected;
+             const isLeoWallet = window.walletManager && window.walletManager.walletType === 'leo';
+             const hasAnonymousToken = window.AleoPayment && window.AleoPayment.hasAnonymousToken();
+             
              const modal = document.createElement('div');
              modal.id = 'insufficientCreditsModal';
              modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;';
+             
+             // 根据钱包连接状态显示不同内容
+             if (!isWalletConnected) {
+                 // 未连接钱包 - 提供两种选择：连接钱包 或 匿名充值
+                 modal.innerHTML = `
+                     <div style="background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.2);max-width:500px;width:92%;padding:24px;border:1px solid #e5e7eb;">
+                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                             <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;">
+                                 <span style="font-size:24px;">🔒</span>
+                             </div>
+                             <div>
+                                 <h3 style="margin:0;font-size:18px;font-weight:600;">Privacy-First Payment</h3>
+                                 <p style="margin:4px 0 0;font-size:13px;color:#6b7280;">Choose your preferred payment method</p>
+                             </div>
+                         </div>
+                         <p style="margin:0 0 16px 0;color:#374151;font-size:14px;">This action requires <strong>${required.toFixed(6)} ALEO</strong></p>
+                         
+                         <!-- 匿名充值选项 (方案 B) -->
+                         <div style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:12px;">
+                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                                 <span style="font-size:16px;">🔐</span>
+                                 <span style="font-size:14px;font-weight:600;color:#166534;">Anonymous Mode (Recommended)</span>
+                             </div>
+                             <p style="font-size:12px;color:#15803d;margin:0 0 12px 0;">Deposit ALEO once, get an access token. Server never knows your identity.</p>
+                             <button id="icm-anonymous" style="width:100%;padding:12px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;cursor:pointer;font-size:14px;font-weight:600;">
+                                 🔒 Anonymous Deposit
+                             </button>
+                         </div>
+                         
+                         <!-- 普通钱包连接选项 -->
+                         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:16px;">
+                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                                 <span style="font-size:16px;">👛</span>
+                                 <span style="font-size:14px;font-weight:500;color:#374151;">Connect Wallet</span>
+                             </div>
+                             <p style="font-size:12px;color:#6b7280;margin:0 0 12px 0;">Pay per request. Server knows your wallet address.</p>
+                             <button id="icm-connect" style="width:100%;padding:10px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#374151;cursor:pointer;font-size:14px;">
+                                 Connect Leo Wallet
+                             </button>
+                         </div>
+                         
+                         <div style="display:flex;justify-content:flex-end;">
+                             <button id="icm-cancel" style="padding:10px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;">Cancel</button>
+                         </div>
+                     </div>
+                 `;
+                 document.body.appendChild(modal);
+                 modal.querySelector('#icm-cancel').onclick = () => modal.remove();
+                 modal.querySelector('#icm-connect').onclick = () => {
+                     modal.remove();
+                     // 触发钱包连接
+                     if (typeof showWalletSelectionModal === 'function') {
+                         showWalletSelectionModal();
+                     } else if (window.walletManager && typeof window.walletManager.connectLeo === 'function') {
+                         window.walletManager.connectLeo();
+                     }
+                 };
+                 modal.querySelector('#icm-anonymous').onclick = () => {
+                     modal.remove();
+                     showAnonymousDepositModal();
+                 };
+             } else {
+                 // 已连接钱包但内部积分不足
+                 modal.innerHTML = `
+                     <div style="background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.2);max-width:500px;width:92%;padding:24px;border:1px solid #e5e7eb;">
+                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                             <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;">
+                                 <span style="font-size:24px;">💰</span>
+                             </div>
+                             <div>
+                                 <h3 style="margin:0;font-size:18px;font-weight:600;">Get Credits</h3>
+                                 <p style="margin:4px 0 0;font-size:13px;color:#6b7280;">Choose your preferred method</p>
+                             </div>
+                         </div>
+                         <p style="margin:0 0 4px 0;color:#374151;font-size:14px;">Needed: <strong>${required.toFixed(6)} ALEO</strong></p>
+                         <p style="margin:0 0 16px 0;color:#374151;font-size:14px;">Free credits: <strong>${available.toFixed(6)} ALEO</strong></p>
+                         
+                         <!-- 匿名充值选项 -->
+                         <div style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:12px;">
+                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                                 <span style="font-size:16px;">🔐</span>
+                                 <span style="font-size:14px;font-weight:600;color:#166534;">Anonymous Mode</span>
+                                 ${hasAnonymousToken ? '<span style="background:#10b981;color:white;padding:2px 8px;border-radius:4px;font-size:10px;">Active</span>' : ''}
+                             </div>
+                             <p style="font-size:12px;color:#15803d;margin:0 0 12px 0;">Deposit ALEO once, server never knows your identity.</p>
+                             <button id="icm-anonymous" style="width:100%;padding:12px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;cursor:pointer;font-size:14px;font-weight:600;">
+                                 ${hasAnonymousToken ? '➕ Add More Credits' : '🔒 Anonymous Deposit'}
+                             </button>
+                         </div>
+                         
+                         <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:16px;">
+                             <div style="font-size:12px;color:#92400e;font-weight:500;">💡 Tip</div>
+                             <div style="font-size:11px;color:#b45309;margin-top:4px;">Daily check-in gives you free credits. Or use Anonymous Mode for maximum privacy.</div>
+                         </div>
+                         <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+                             <button id="icm-cancel" style="padding:10px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;">Cancel</button>
+                             <button id="icm-checkin" style="padding:10px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;cursor:pointer;font-size:14px;font-weight:500;">Daily Check-in</button>
+                         </div>
+                     </div>
+                 `;
+                 document.body.appendChild(modal);
+                 modal.querySelector('#icm-cancel').onclick = () => modal.remove();
+                 modal.querySelector('#icm-anonymous').onclick = () => {
+                     modal.remove();
+                     showAnonymousDepositModal();
+                 };
+                 modal.querySelector('#icm-checkin').onclick = async () => {
+                     try {
+                         if (window.walletManager && typeof window.walletManager.dailyCheckin === 'function') {
+                             const result = window.walletManager.dailyCheckin();
+                             Promise.resolve(result).then(r => {
+                                 if (!r || !r.success) {
+                                     alert(r?.error || 'Check-in unavailable right now.');
+                                 } else {
+                                     alert(`✅ Check-in success! +${r.reward} ALEO. New balance: ${r.newBalance} ALEO`);
+                                     modal.remove();
+                                 }
+                             });
+                         } else {
+                             alert('Wallet not connected. Please connect your wallet first.');
+                         }
+                     } catch (e) { alert('Check-in error: ' + e.message); }
+                 };
+             }
+         }
+         
+         // ========== 匿名充值 UI (方案 B: 隐私优先) ==========
+         
+         function showAnonymousDepositModal() {
+             try { const old = document.getElementById('anonymousDepositModal'); if (old) old.remove(); } catch (_) {}
+             
+             const hasToken = window.AleoPayment && window.AleoPayment.hasAnonymousToken();
+             
+             const modal = document.createElement('div');
+             modal.id = 'anonymousDepositModal';
+             modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;';
+             
              modal.innerHTML = `
-                 <div style="background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,0.2);max-width:460px;width:92%;padding:20px;border:1px solid #e5e7eb;">
-                     <h3 style="margin:0 0 8px 0;font-size:18px;">Insufficient PHRS balance</h3>
-                     <p style="margin:0 0 4px 0;color:#374151;">Needed now: <strong>${required.toFixed(6)} PHRS</strong></p>
-                     <p style="margin:0 0 16px 0;color:#374151;">Current balance: <strong>${available.toFixed(6)} PHRS</strong></p>
+                 <div style="background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.2);max-width:480px;width:92%;padding:24px;border:1px solid #e5e7eb;">
+                     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                         <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;">
+                             <span style="font-size:24px;">🔐</span>
+                         </div>
+                         <div>
+                             <h3 style="margin:0;font-size:18px;font-weight:600;">Anonymous Deposit</h3>
+                             <p style="margin:4px 0 0;font-size:13px;color:#6b7280;">Privacy-first payment via Leo Wallet</p>
+                         </div>
+                     </div>
+                     
+                     <div style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:20px;">
+                         <div style="font-size:12px;color:#166534;font-weight:600;margin-bottom:8px;">🔒 How it works</div>
+                         <ol style="margin:0;padding-left:20px;font-size:12px;color:#15803d;line-height:1.8;">
+                             <li>You deposit ALEO via <strong>transfer_private</strong></li>
+                             <li>Server gives you a random <strong>access token</strong></li>
+                             <li>Use the token to call APIs - server never knows who you are</li>
+                         </ol>
+                     </div>
+                     
+                     <div id="adm-balance-section" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:16px;${hasToken ? '' : 'display:none;'}">
+                         <div style="font-size:12px;color:#6b7280;">Current Balance</div>
+                         <div style="font-size:20px;font-weight:600;color:#374151;" id="adm-balance">Loading...</div>
+                     </div>
+                     
+                     <div style="margin-bottom:20px;">
+                         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:8px;">Deposit Amount (ALEO)</label>
+                         <div style="display:flex;gap:8px;margin-bottom:12px;">
+                             <button class="adm-amount-btn" data-amount="1" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-weight:500;">1 ALEO</button>
+                             <button class="adm-amount-btn" data-amount="5" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-weight:500;">5 ALEO</button>
+                             <button class="adm-amount-btn" data-amount="10" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-weight:500;">10 ALEO</button>
+                         </div>
+                         <input type="number" id="adm-amount-input" placeholder="Custom amount" min="0.1" step="0.1" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">
+                     </div>
+                     
+                     <div id="adm-status" style="display:none;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:16px;">
+                         <div style="font-size:12px;color:#92400e;" id="adm-status-text">Processing...</div>
+                     </div>
+                     
                      <div style="display:flex;gap:8px;justify-content:flex-end;">
-                         <button id="icm-cancel" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;">Cancel</button>
-                         <button id="icm-checkin" style="padding:8px 12px;border:1px solid #10b981;border-radius:8px;background:#34d399;color:#fff;cursor:pointer;">Daily Check-in (+0.01)</button>
-                         <button id="icm-buy" style="padding:8px 12px;border:1px solid #2563eb;border-radius:8px;background:#3b82f6;color:#fff;cursor:pointer;">Explore Workflows</button>
+                         <button id="adm-cancel" style="padding:12px 20px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;">Cancel</button>
+                         <button id="adm-deposit" style="padding:12px 20px;border:none;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;cursor:pointer;font-size:14px;font-weight:600;">
+                             🔒 Deposit Privately
+                         </button>
                      </div>
                  </div>
              `;
+             
              document.body.appendChild(modal);
-             modal.querySelector('#icm-cancel').onclick = () => modal.remove();
-             modal.querySelector('#icm-buy').onclick = () => { modal.remove(); try { window.location.href = 'workflow.html'; } catch (_) {} };
-             modal.querySelector('#icm-checkin').onclick = async () => {
-                 try {
-                     if (window.walletManager && typeof window.walletManager.dailyCheckin === 'function') {
-                         const result = window.walletManager.dailyCheckin();
-                         Promise.resolve(result).then(r => {
-                             if (!r || !r.success) {
-                                 alert(r?.error || 'Check-in unavailable right now.');
-                             } else {
-                                 alert(`✅ Check-in success! +${r.reward} PHRS. New balance: ${r.newBalance} PHRS`);
-                                 modal.remove();
-                             }
-                         });
+             
+             // 加载当前余额
+             if (hasToken) {
+                 window.AleoPayment.getAnonymousBalance().then(result => {
+                     const balanceEl = modal.querySelector('#adm-balance');
+                     if (result) {
+                         balanceEl.textContent = `${result.balance.toFixed(6)} ALEO`;
                      } else {
-                         alert('Wallet not connected. Please connect your wallet first.');
+                         balanceEl.textContent = '0 ALEO';
                      }
-                 } catch (e) { alert('Check-in error: ' + e.message); }
+                 });
+             }
+             
+             // 金额按钮点击
+             const amountBtns = modal.querySelectorAll('.adm-amount-btn');
+             const amountInput = modal.querySelector('#adm-amount-input');
+             amountBtns.forEach(btn => {
+                 btn.onclick = () => {
+                     amountBtns.forEach(b => b.style.background = '#fff');
+                     btn.style.background = 'linear-gradient(135deg,#d1fae5,#a7f3d0)';
+                     amountInput.value = btn.dataset.amount;
+                 };
+             });
+             
+             // 取消按钮
+             modal.querySelector('#adm-cancel').onclick = () => modal.remove();
+             
+             // 充值按钮
+             modal.querySelector('#adm-deposit').onclick = async () => {
+                 const amount = parseFloat(amountInput.value);
+                 if (!amount || amount <= 0) {
+                     alert('Please enter a valid amount');
+                     return;
+                 }
+                 
+                 const statusEl = modal.querySelector('#adm-status');
+                 const statusText = modal.querySelector('#adm-status-text');
+                 const depositBtn = modal.querySelector('#adm-deposit');
+                 
+                 statusEl.style.display = 'block';
+                 statusText.textContent = '🔄 Requesting Leo Wallet signature...';
+                 depositBtn.disabled = true;
+                 depositBtn.textContent = 'Processing...';
+                 
+                 try {
+                     // 检查钱包连接
+                     if (!window.AleoPayment || !window.AleoPayment.isLeoWalletReady().ready) {
+                         // 需要先连接钱包
+                         statusText.textContent = '⚠️ Please connect Leo Wallet first';
+                         statusEl.style.background = '#fef3c7';
+                         depositBtn.disabled = false;
+                         depositBtn.textContent = '🔒 Deposit Privately';
+                         
+                         // 弹出钱包连接
+                         setTimeout(() => {
+                             if (typeof showWalletSelectionModal === 'function') {
+                                 showWalletSelectionModal();
+                             }
+                         }, 1000);
+                         return;
+                     }
+                     
+                     const result = await window.AleoPayment.anonymousDeposit({ amount });
+                     
+                     if (result.cancelled) {
+                         statusText.textContent = '❌ Transaction cancelled';
+                         depositBtn.disabled = false;
+                         depositBtn.textContent = '🔒 Deposit Privately';
+                         return;
+                     }
+                     
+                     if (!result.success) {
+                         statusEl.style.background = '#fee2e2';
+                         statusText.innerHTML = `❌ Failed: ${result.error}`;
+                         if (result.transactionId) {
+                             statusText.innerHTML += `<br><small>Transaction was sent but confirmation failed. TX: ${result.transactionId.slice(0,12)}...</small>`;
+                         }
+                         depositBtn.disabled = false;
+                         depositBtn.textContent = '🔒 Retry';
+                         return;
+                     }
+                     
+                     // 成功
+                     statusEl.style.background = '#d1fae5';
+                     const privacyIcon = result.privacyLevel === 'private' ? '🔒' : '📢';
+                     statusText.innerHTML = `
+                         ✅ ${privacyIcon} Deposit successful!<br>
+                         <strong>Balance: ${result.balance.toFixed(6)} ALEO</strong><br>
+                         <small style="color:#6b7280;">Your access token is saved locally. Keep it safe!</small>
+                     `;
+                     
+                     depositBtn.textContent = '✓ Done';
+                     
+                     // 更新余额显示
+                     const balanceSection = modal.querySelector('#adm-balance-section');
+                     const balanceEl = modal.querySelector('#adm-balance');
+                     balanceSection.style.display = 'block';
+                     balanceEl.textContent = `${result.balance.toFixed(6)} ALEO`;
+                     
+                     // 触发 UI 更新
+                     window.dispatchEvent(new CustomEvent('anonymousBalanceUpdated', { detail: result }));
+                     
+                     // 3秒后关闭
+                     setTimeout(() => modal.remove(), 3000);
+                     
+                 } catch (error) {
+                     statusEl.style.background = '#fee2e2';
+                     statusText.textContent = `❌ Error: ${error.message}`;
+                     depositBtn.disabled = false;
+                     depositBtn.textContent = '🔒 Retry';
+                 }
              };
          }
 
@@ -2656,14 +2928,86 @@
                     }
                 }
             } catch (_) {}
+            
             const { total: need } = estimateInvocationCost(modelName);
             const have = getAvailableCredits();
+            
+            // ========== 方案 B: 优先检查匿名 token ==========
+            const hasAnonymousToken = window.AleoPayment && window.AleoPayment.hasAnonymousToken();
+            
+            if (hasAnonymousToken) {
+                // 有匿名 token，允许继续（使用匿名模式，不走 402）
+                console.log('[Payment] 🔒 Anonymous token found, using anonymous mode');
+                return true;
+            }
+            
+            // 检查是否连接了 Leo Wallet
+            const wm = window.walletManager;
+            const isLeoConnected = wm && wm.isConnected && wm.walletType === 'leo';
+            
+            // 如果 Leo Wallet 已连接，允许继续（让 402 支付流程处理）
+            if (isLeoConnected) {
+                console.log('[Payment] 🔗 Leo Wallet connected, allowing 402 payment flow');
+                return true;
+            }
+            
+            // 如果内部 credits 不足且没有 anonymous token 且 Leo Wallet 未连接
             if (have < need) {
-                console.warn('PHRS preflight gating: insufficient credits', { modelName, need, have });
+                console.log('[Payment] Internal credits insufficient, no anonymous token, no Leo Wallet', { 
+                    modelName, need, have, hasAnonymousToken 
+                });
+                
+                // 显示充值选项弹窗
+                console.log('[Payment] Showing deposit options');
                 showInsufficientCreditsModal(need, have);
                 return false;
             }
             return true;
+        }
+        
+        // 显示即将使用链上支付的提示（非阻塞）
+        function showOnChainPaymentNotice(amount) {
+            // 检查是否已有提示在显示
+            if (document.getElementById('onchain-payment-notice')) return;
+            
+            const notice = document.createElement('div');
+            notice.id = 'onchain-payment-notice';
+            notice.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 24px;
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+                color: white;
+                padding: 12px 16px;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+                font-family: 'Inter', system-ui, sans-serif;
+                font-size: 13px;
+                max-width: 300px;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            notice.innerHTML = `
+                <style>
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                </style>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 16px;">🔒</span>
+                    <div>
+                        <div style="font-weight: 600;">Private Payment</div>
+                        <div style="font-size: 11px; opacity: 0.9;">~${amount.toFixed(6)} ALEO via Leo Wallet</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notice);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                try { notice.remove(); } catch (_) {}
+            }, 3000);
         }
 
         function isWorkflowRunning() {
@@ -2979,7 +3323,7 @@
             if (wf.prepaid) {
                 const summary =
                     `✅ Workflow ready: **${wf.name}**\n` +
-                    (wf.prepaidAmountUsdc ? `\n💰 Prepaid: ${wf.prepaidAmountUsdc} PHRS\n` : '') +
+                    (wf.prepaidAmountUsdc ? `\n💰 Prepaid: ${wf.prepaidAmountUsdc} ALEO\n` : '') +
                     (experts && experts.length ? `\n**Experts:** ${experts.join(', ')}\n` : '') +
                     (expertLines
                         ? `\n**Expert Details:**\n${expertLines}\n`
@@ -3742,6 +4086,61 @@
                     return;
                 }
 
+                // ========== 方案 B: 优先使用匿名模式 (无 402) ==========
+                const hasAnonymousToken = window.AleoPayment && window.AleoPayment.hasAnonymousToken();
+                
+                if (hasAnonymousToken && window.MCPClient && typeof window.MCPClient.anonymousInvokeModel === 'function') {
+                    // 匿名模式：不发送钱包地址，不走 402
+                    console.log('[handleChatSend] 🔒 Using Anonymous Mode (no 402)');
+                    try {
+                        const invocation = await window.MCPClient.anonymousInvokeModel({
+                            prompt: q,
+                            modelName: selectedModel?.name
+                        });
+                        
+                        if (invocation && invocation.status === 'ok') {
+                            const assistantText = invocation.result?.output || '[No output]';
+                            appendMessageDark('assistant', assistantText);
+                            addMessageToCurrentChat('assistant', assistantText);
+                            // 显示剩余余额提示
+                            console.log(`[Anonymous] Cost: ${invocation.cost} ALEO, Remaining: ${invocation.remaining_balance} ALEO`);
+                            isChatSending = false;
+                            return;
+                        }
+                        
+                        if (invocation && invocation.status === 'insufficient_balance') {
+                            // 余额不足，显示充值弹窗
+                            console.warn('[Anonymous] Insufficient balance:', invocation);
+                            showAnonymousDepositModal();
+                            isChatSending = false;
+                            return;
+                        }
+                        
+                        if (invocation && invocation.status === 'no_token') {
+                            // Token 丢失，显示充值弹窗
+                            console.warn('[Anonymous] No token found');
+                            showAnonymousDepositModal();
+                            isChatSending = false;
+                            return;
+                        }
+                        
+                        // 其他错误
+                        if (invocation && invocation.error) {
+                            appendMessageDark('assistant', `❌ Error: ${invocation.error}`);
+                            addMessageToCurrentChat('assistant', `❌ Error: ${invocation.error}`);
+                            isChatSending = false;
+                            return;
+                        }
+                    } catch (anonError) {
+                        console.error('[Anonymous] Error:', anonError);
+                        appendMessageDark('assistant', `❌ Anonymous call failed: ${anonError.message}`);
+                        addMessageToCurrentChat('assistant', `❌ Anonymous call failed: ${anonError.message}`);
+                        isChatSending = false;
+                        return;
+                    }
+                }
+                
+                // ========== 旧模式: 402 + Leo Wallet 支付 ==========
                 const walletAddress = (window.walletManager && window.walletManager.walletAddress) ? window.walletManager.walletAddress : undefined;
                 if (window.MCPClient && typeof window.MCPClient.invokeModel === 'function') {
                     try {
@@ -3764,6 +4163,14 @@
                         if (invocation && invocation.status === 'cancelled') {
                             appendMessageDark('assistant', '⚠️ Payment incomplete. Invocation cancelled.');
                             addMessageToCurrentChat('assistant', '⚠️ Payment incomplete. Invocation cancelled.');
+                            isChatSending = false;
+                            return;
+                        }
+                        if (invocation && invocation.status === 'invoice_error') {
+                            // 发票错误（比如验证失败），提示用户重试
+                            const errorMsg = invocation.invoice?.message || 'Invoice error occurred';
+                            appendMessageDark('assistant', `⚠️ Payment issue: ${errorMsg}. Please try again.`);
+                            addMessageToCurrentChat('assistant', `⚠️ Payment issue: ${errorMsg}. Please try again.`);
                             isChatSending = false;
                             return;
                         }
@@ -3972,13 +4379,63 @@
                     // 图片/多模态先保持原来的 APIManager 逻辑
                     res = await callImageAPI(remoteImageUrls.length ? remoteImageUrls : base64ImageUrls);
                 } else {
-                    // 这里强制走 MCP + X402 通路（和 Solana 版一致）
-                    if (!window.MCPClient || typeof window.MCPClient.invokeModel !== 'function') {
+                    // ========== 方案 B: 优先使用匿名模式 (无 402) ==========
+                    const hasAnonymousToken = window.AleoPayment && window.AleoPayment.hasAnonymousToken();
+                    
+                    if (hasAnonymousToken && window.MCPClient && typeof window.MCPClient.anonymousInvokeModel === 'function') {
+                        // 匿名模式：不发送钱包地址，不走 402
+                        console.log('[handleChatSend][chat] 🔒 Using Anonymous Mode (no 402)');
+                        try {
+                            const invocation = await window.MCPClient.anonymousInvokeModel({
+                                prompt: finalPromptForModel,
+                                modelName: selectedModel.name
+                            });
+                            
+                            if (invocation && invocation.status === 'ok') {
+                                const finalText = invocation.result?.output || '[No output]';
+                                full = finalText;
+                                
+                                if (assistantEl) {
+                                    assistantEl.innerHTML = renderMarkdownSafe(finalText);
+                                    const box = document.getElementById('chatMessages');
+                                    if (box) box.scrollTop = box.scrollHeight;
+                                }
+                                addMessageToCurrentChat('assistant', finalText);
+                                console.log(`[Anonymous] Cost: ${invocation.cost} ALEO, Remaining: ${invocation.remaining_balance} ALEO`);
+                                res = { success: true, text: finalText };
+                            } else if (invocation && invocation.status === 'insufficient_balance') {
+                                const msg = `⚠️ Insufficient balance. Need ${invocation.required} ALEO. Please deposit more.`;
+                                if (assistantEl) assistantEl.textContent = msg;
+                                addMessageToCurrentChat('assistant', msg);
+                                showAnonymousDepositModal();
+                                res = { success: false, error: 'insufficient_balance' };
+                            } else if (invocation && invocation.status === 'no_token') {
+                                const msg = '⚠️ No access token. Please deposit first.';
+                                if (assistantEl) assistantEl.textContent = msg;
+                                addMessageToCurrentChat('assistant', msg);
+                                showAnonymousDepositModal();
+                                res = { success: false, error: 'no_token' };
+                            } else {
+                                const msg = invocation?.error || 'Unknown error in anonymous mode.';
+                                if (assistantEl) assistantEl.textContent = '❌ ' + msg;
+                                addMessageToCurrentChat('assistant', '❌ ' + msg);
+                                res = { success: false, error: msg };
+                            }
+                        } catch (anonError) {
+                            console.error('[Anonymous][chat] Error:', anonError);
+                            const msg = '❌ Anonymous call failed: ' + anonError.message;
+                            if (assistantEl) assistantEl.textContent = msg;
+                            addMessageToCurrentChat('assistant', msg);
+                            res = { success: false, error: anonError.message };
+                        }
+                    } else if (!window.MCPClient || typeof window.MCPClient.invokeModel !== 'function') {
+                        // MCPClient 未初始化
                         const msg = 'MCPClient not initialized – please refresh the page.';
                         if (assistantEl) assistantEl.textContent = msg;
                         addMessageToCurrentChat('assistant', msg);
                         res = { success: false, error: 'no_mcp' };
                     } else {
+                        // ========== 旧模式: 402 + Leo Wallet 支付 ==========
                         try {
                             const walletAddress =
                                 (window.walletManager && window.walletManager.walletAddress)
@@ -5111,8 +5568,8 @@
     </script>
     <script src="config.js"></script>
     <script src="api-manager.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="wallet-manager.js"></script>
+    <script src="aleo-payment.js"></script>
     <script src="wallet-integration.js"></script>
     <script src="account-dropdown.js"></script>
     <script type="module" src="chains.js"></script>
@@ -5413,10 +5870,16 @@
                 if (ws) ws.style.display = 'block';
             })();
             
-            // 更新账户按钮文本
+            // 更新账户按钮文本（如果钱包已连接，保持显示钱包地址）
             const accountBtnText = document.getElementById('accountBtnText');
             if (accountBtnText) {
-                accountBtnText.textContent = user.displayName || user.email;
+                // 如果钱包已连接，不要用用户名覆盖钱包地址
+                if (window.walletManager && window.walletManager.isConnected && window.walletManager.walletAddress) {
+                    // 保持钱包地址显示，由 walletManager.updateUI() 处理
+                    console.log('✅ 钱包已连接，保持显示钱包地址');
+                } else {
+                    accountBtnText.textContent = user.displayName || user.email;
+                }
             }
             
             // 显示 logout 按钮
@@ -5444,10 +5907,15 @@
                 if (ws) ws.style.display = 'block';
             })();
             
-            // 恢复账户按钮文本
+            // 恢复账户按钮文本（如果钱包已连接，保持显示钱包地址）
             const accountBtnText = document.getElementById('accountBtnText');
             if (accountBtnText) {
-                accountBtnText.textContent = 'Login';
+                // 如果钱包已连接，不要覆盖钱包地址
+                if (window.walletManager && window.walletManager.isConnected && window.walletManager.walletAddress) {
+                    console.log('✅ 钱包已连接，保持显示钱包地址');
+                } else {
+                    accountBtnText.textContent = 'Login';
+                }
             }
             
             // 隐藏 logout 按钮
@@ -5999,12 +6467,8 @@
                     }
                 }
 
-                // 3) UI 提示
-                const info = document.getElementById('walletInfo');
-                if (info) {
-                    info.style.display = 'block';
-                    info.textContent = `已连接钱包：${address}${chainId ? `（链ID: ${chainId}）` : ''}`;
-                }
+                // 3) UI 提示由 account-dropdown.js 的 refreshWalletInfoUI 统一处理
+                // 这里不再重复设置，避免 UI 闪烁
 
                 // Log client-side connection time
                 console.log('🕒 Wallet connected at (client):', new Date().toISOString());
@@ -6081,17 +6545,17 @@
             
             <div class="wallet-modal-header">
                 <h2 class="wallet-modal-title">Log in or sign up</h2>
-                <p class="wallet-modal-subtitle">Log in and connect wallet to earn PHRS credits</p>
+                <p class="wallet-modal-subtitle">Log in and connect wallet to earn ALEO credits</p>
             </div>
 
             <div class="wallet-options">
-                <div class="wallet-option available" onclick="connectMetaMaskWallet()">
+                <div class="wallet-option available" onclick="connectLeoWallet()">
                     <span class="wallet-icon-wrap">
-                        <img src="svg/metamask.svg" alt="MetaMask">
+                        <img src="svg/leo.svg" alt="Leo Wallet">
                     </span>
                     <div class="wallet-info">
-                        <div class="wallet-name">MetaMask (Pharos Testnet)</div>
-                        <div class="wallet-desc">Pay with PHRS on Pharos Testnet</div>
+                        <div class="wallet-name">Leo Wallet (Aleo Testnet)</div>
+                        <div class="wallet-desc">Connect to Aleo Network</div>
                     </div>
                 </div>
                 <div class="wallet-footer">
@@ -6110,14 +6574,14 @@
             </div>
             <div class="wallet-options">
                 <div class="wallet-option available"
-                     data-network-key="pharos-testnet"
-                     onclick="selectNetwork('pharos-testnet')">
+                     data-network-key="aleo-testnet"
+                     onclick="selectNetwork('aleo-testnet')">
                     <span class="wallet-icon-wrap">
-                        <img src="svg/chains/pharos.jpg" alt="Pharos Testnet">
+                        <img src="svg/leo.svg" alt="Aleo Testnet">
                     </span>
                     <div class="wallet-info">
-                        <div class="wallet-name">Pharos Testnet</div>
-                        <div class="wallet-description">Pay with PHRS on Pharos Testnet</div>
+                        <div class="wallet-name">Aleo Testnet</div>
+                        <div class="wallet-description">Connect to Aleo Testnet</div>
                     </div>
                     <span class="selected-indicator" style="display: none;">✓</span>
                 </div>
@@ -6137,13 +6601,13 @@
             </div>
             <div style="padding: 16px 0;">
                 <p style="font-size: 14px; color: #374151; line-height: 1.6; margin-bottom: 16px;" id="insufficientBalanceMessage">
-                    Your wallet does not have sufficient PHRS balance to complete this transaction.
+                    Your wallet does not have sufficient ALEO balance to complete this transaction.
                 </p>
-                <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-                    <p style="font-size: 13px; color: #92400e; margin: 0; line-height: 1.5;">
+                <div style="background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                    <p style="font-size: 13px; color: #0d6e5b; margin: 0; line-height: 1.5;">
                         <strong>What you need to do:</strong><br>
-                        1. Add PHRS to your wallet on Pharos Testnet<br>
-                        2. Close this dialog after adding PHRS<br>
+                        1. Add ALEO to your Leo Wallet<br>
+                        2. Close this dialog after obtaining credits<br>
                         3. Try the operation again
                     </p>
                 </div>
@@ -6171,7 +6635,7 @@
             
             <div class="wallet-modal-header">
                 <h2 class="wallet-modal-title">✅ Check-In on Chain</h2>
-                <p class="wallet-modal-subtitle">Complete your daily on-chain check-in to earn PHRS credits</p>
+                <p class="wallet-modal-subtitle">Complete your daily on-chain check-in to earn ALEO credits</p>
             </div>
 
             <div id="userStatusSection" style="margin: 20px 0; padding: 16px; background: #f0fdf4; border-radius: 12px;">
@@ -6199,7 +6663,7 @@
             </div>
 
             <div style="margin: 20px 0; padding: 12px; background: #fef3c7; border-radius: 8px; border: 1px solid #fcd34d;">
-                <p style="font-size: 13px; color: #92400e; margin: 0;">⛽ Gas fee: ≈0.00025 PHRS per call</p>
+                <p style="font-size: 13px; color: #92400e; margin: 0;">⛽ Gas fee: ≈0.00025 ALEO per call</p>
             </div>
 
             <button id="executeCheckInBtn" onclick="executeOnChainCheckIn()" 

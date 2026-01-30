@@ -1,4 +1,4 @@
-// wallet-integration.js - 通用钱包集成脚本 (更新为I3 tokens术语，添加钱包选择功能)
+// wallet-integration.js - Leo Wallet 集成脚本 (Aleo Testnet)
 // 在所有需要钱包功能的页面中使用
 
 /**
@@ -43,7 +43,7 @@ function closeWalletModal() {
 }
 
 function notifyUnsupportedWallet(name) {
-  const message = `${name} is not available. Please connect with Phantom (Solana Devnet).`;
+  const message = `${name} is not available. Please connect with Leo Wallet (Aleo Testnet).`;
   if (typeof showNotification === 'function') {
     showNotification(message, 'error');
   } else if (typeof alert === 'function') {
@@ -53,245 +53,39 @@ function notifyUnsupportedWallet(name) {
   }
 }
 
-// === 工具函数 ===
-// 等待 provider 返回非空账户（初次授权常见需要等几百毫秒）
-async function waitForAccounts(provider, { totalMs = 15000, stepMs = 300 } = {}) {
-  const deadline = Date.now() + totalMs;
-  while (Date.now() < deadline) {
-    try {
-      const accts = await provider.request({ method: 'eth_accounts' });
-      if (Array.isArray(accts) && accts[0]) return accts[0];
-    } catch {}
-    await new Promise(r => setTimeout(r, stepMs));
-  }
-  throw new Error('Timed out waiting for wallet accounts');
-}
-
 /**
- * 连接 MetaMask 钱包 - 从模态框调用
+ * 连接 Leo Wallet (Aleo) - 从模态框调用
  */
-// 1) MetaMask
-// 1) MetaMask —— 先切链 → 再请求账户 → 等到账户 → 刷UI → 关弹窗
-// 1) MetaMask —— Switch-first: 先切链 → 再请求账户 → 等到账户 → 刷UI → 关弹窗
-async function connectMetaMaskWallet() {
-  const preferred = getPreferredNetwork();
-  if (!preferred || preferred.kind !== 'evm') {
-    showNotification('Invalid network: Please choose an EVM network first.', 'error');
-    return;
-  }
-  console.log('[Connect][MetaMask] start (switch-first)');
+async function connectLeoWallet() {
+  console.log('[Connect][Leo] start');
 
   try {
-    // ① 取得 provider（尽量用已注入的）
-    const provider = window.walletManager?.getMetaMaskProvider?.()
-                  || window.walletManager?.ethereum
-                  || window.ethereum;
-    if (!provider || typeof provider.request !== 'function') {
-      throw new Error('MetaMask provider not found');
+    if (!window.walletManager) {
+      throw new Error('Wallet manager not available');
     }
 
-    // ② 先确保切到“用户选的链”（必要时添加链）
-    await enforcePreferredEvmChain(provider);
-
-    // ③ 再请求账户授权 + 等到账户（一次完成授权，避免第二次点击）
-    await provider.request({ method: 'eth_requestAccounts' });
-    const address = await waitForAccounts(provider);
-
-    // ④ 写入状态 & 刷UI & 广播
-    if (window.walletManager) {
-      window.walletManager.walletType = 'metamask';
-      window.walletManager.walletAddress = address;
-      window.walletManager.isConnected = true;
-      window.walletManager.saveToStorage?.();
-      window.walletManager.updateUI?.();
-      window.dispatchEvent(new CustomEvent('walletConnected', {
-        detail: { address, credits: window.walletManager.credits || 0, isNewUser: !window.walletManager.getWalletData?.(address) }
-      }));
-    }
-
-    // ⑤ 成功后再关你的白色弹窗
-    const modal = document.getElementById('walletModal');
-    if (modal) { modal.classList.remove('show'); modal.style.display = 'none'; }
-
-    showNotification('MetaMask connected.', 'success');
-    console.log('[Connect][MetaMask] success ->', address);
-  } catch (e) {
-    console.error('[Connect][MetaMask] error:', e);
-    showNotification(e?.message || 'Failed to connect MetaMask', 'error');
-  }
-}
-
-
-/**
- * 连接 Coinbase Wallet
- */
-// 3) Coinbase（CDP）—— 先拿地址 → 若有 provider 再切链与请求账户 → 刷UI → 关弹窗
-async function connectCoinbaseWallet() {
-  const preferred = getPreferredNetwork();
-  if (!preferred || preferred.kind !== 'evm') {
-    showNotification('Invalid network: Please choose an EVM network first.', 'error');
-    return;
-  }
-  console.log('[Connect][CDP] start');
-
-  try {
-    if (!window.cdpConnect) throw new Error('CDP not ready. Check SDK loader.');
-
-    // ① 二维码/授权，返回地址
-    const { address } = await window.cdpConnect();
-    if (!address) throw new Error('CDP returned empty address');
-
-    // ② 若有 provider，补齐切链与账户授权（有些实现可能没有 provider，此步自动跳过）
-    const provider = window.walletManager?.ethereum || window.ethereum;
-    if (provider?.request) {
-      try { await enforcePreferredEvmChain(provider); } catch (e) { console.warn('[CDP] switch chain skipped:', e); }
-      try { await provider.request({ method: 'eth_requestAccounts' }); } catch {}
-      try { await waitForAccounts(provider); } catch {}
-    }
-
-    // ③ 写入状态 & 刷UI & 广播
-    if (window.walletManager) {
-      window.walletManager.walletAddress = address;
-      window.walletManager.isConnected = true;
-      window.walletManager.walletType = 'coinbase';
-      window.walletManager.saveToStorage?.();
-      window.walletManager.updateUI?.();
-      window.dispatchEvent(new CustomEvent('walletConnected', {
-        detail: { address, credits: window.walletManager.credits || 0, isNewUser: !window.walletManager.getWalletData?.(address) }
-      }));
-    }
-
-    // ④ 关你的白弹窗
-    const modal = document.getElementById('walletModal');
-    if (modal) { modal.classList.remove('show'); modal.style.display = 'none'; }
-
-    const dropdown = document.getElementById('accountDropdown');
-    if (dropdown) dropdown.classList.remove('show');
-
-    showNotification('Coinbase (Base Smart Wallet) connected!', 'success');
-  } catch (error) {
-    console.error('[Connect][CDP] error:', error);
-    showNotification(error?.message || 'Failed to connect Coinbase (CDP)', 'error');
-  }
-}
-
-
-// 2) WalletConnect —— 先切链 → 请求账户 → 等到账户 → 刷UI → 关弹窗
-// 2) WalletConnect —— 先关自家弹窗 → 发起连接(二维码) → 切链 → 要账户 → 等到账户 → 刷UI → 兜底再关
-async function connectWalletConnect() {
-  const preferred = getPreferredNetwork();
-  if (!preferred || preferred.kind !== 'evm') {
-    showNotification('Invalid network: Please choose an EVM network first.', 'error');
-    try { openNetworkPickerModal?.(); } catch {}
-    return;
-  }
-  console.log('[Connect][WalletConnect] start');
-
-  // 小工具：安全关闭你自己的登录弹窗（白色那个）
-  const safeCloseLoginModal = () => {
-    try {
-      if (typeof closeWalletModal === 'function') {
-        closeWalletModal();
-      } else {
-        const m = document.getElementById('walletModal');
-        if (m) { m.classList.remove('show'); m.style.display = 'none'; }
-      }
-      const dropdown = document.getElementById('accountDropdown');
-      if (dropdown) dropdown.classList.remove('show');
-    } catch {}
-  };
-
-  try {
-    if (!window.walletManager) throw new Error('Wallet manager not available');
-
-    // ✅ 先关你自己的白色登录弹窗，避免与 WalletConnect 的二维码弹窗重叠
-    safeCloseLoginModal();
-
-    // ① 发起 WalletConnect 连接（会弹出二维码）
-    const result = await window.walletManager.connectWallet('walletconnect');
+    const result = await window.walletManager.connectWallet('leo');
+    
     if (!result?.success) {
-      const msg = String(result?.error || 'WalletConnect failed');
-      if (/connect\(\)\s*before\s*request\(\)/i.test(msg)) {
-        console.warn('[WC] Ignored handshake noise:', msg);
-      } else {
-        throw new Error(msg);
-      }
+      throw new Error(result?.error || 'Failed to connect Leo Wallet');
     }
 
-    // ② 拿到 provider
-    const provider = window.walletManager?.ethereum || window.ethereum;
-    if (!provider) throw new Error('WalletConnect provider not found');
-
-    // ③ 先切到你偏好的链（必要时添加链）
-    try { await enforcePreferredEvmChain(provider); }
-    catch (switchErr) {
-      console.error('[WC] enforcePreferredEvmChain error:', switchErr);
-      showNotification('Failed to switch network: ' + (switchErr?.message || switchErr), 'error');
-    }
-
-    // ④ 请求账户授权 + 等到账户（兜底保证有地址）
-    try { await provider.request({ method: 'eth_requestAccounts' }); } catch {}
-    let address = null;
-    try { address = await waitForAccounts(provider); } catch {}
-
-    // ⑤ 若 walletManager 尚未写入地址，则写入并刷新 UI & 广播事件
-    if (address && window.walletManager && !window.walletManager.walletAddress) {
-      window.walletManager.walletType = 'walletconnect';
-      window.walletManager.walletAddress = address;
-      window.walletManager.isConnected = true;
-      window.walletManager.saveToStorage?.();
-      window.walletManager.updateUI?.();
-      window.dispatchEvent(new CustomEvent('walletConnected', {
-        detail: { address, credits: window.walletManager.credits || 0, isNewUser: !window.walletManager.getWalletData?.(address) }
-      }));
-    } else {
-      // 已有地址也刷新一次 UI
-      try { window.walletManager?.updateUI?.(); } catch {}
-    }
-
-    // ⑥ 成功后兜底再关一次你的弹窗/下拉（幂等）
-    safeCloseLoginModal();
-    showNotification('WalletConnect connected.', 'success');
-
-  } catch (error) {
-    console.error('[Connect][WalletConnect] error:', error);
-    const msg = String(error?.message || error || 'Failed to connect WalletConnect');
-    showNotification(msg, 'error');
-
-    // 失败也兜底关一次，避免界面卡在半开状态
-    safeCloseLoginModal();
-  }
-}
-
-
-    // 连接 Phantom (Solana)
-// 4) Phantom (Solana)
-async function connectSolanaPhantom() {
-  const preferred = getPreferredNetwork();
-  if (!preferred || preferred.kind !== 'solana') {
-    showNotification('Invalid network: Please switch to Solana before using Phantom.', 'error');
-    return;
-  }
-  console.log('Solana Phantom connection initiated');
-
-  try {
-    // ⚠️ 不要先关弹窗；保持手势先连接
-    if (!window.walletManager) throw new Error('Wallet manager not available');
-    const result = await window.walletManager.connectSolana('phantom');
-    if (!result?.success) throw new Error(result?.error || 'Failed to connect Phantom');
-
-    // 成功后再关你的白色弹窗
+    // 成功后关闭弹窗
     const modal = document.getElementById('walletModal');
-    if (modal) { modal.classList.remove('show'); modal.style.display = 'none'; }
+    if (modal) { 
+      modal.classList.remove('show'); 
+      modal.style.display = 'none'; 
+    }
 
-    try { window.walletManager?.updateUI?.(); } catch {}
     const dropdown = document.getElementById('accountDropdown');
     if (dropdown) dropdown.classList.remove('show');
-    showNotification('Phantom (Solana) connected!', 'success');
+
+    showNotification('Leo Wallet connected!', 'success');
+    console.log('[Connect][Leo] success ->', result.address);
+    
   } catch (e) {
-    console.error('Phantom connection error:', e);
-    const msg = e?.message || 'Failed to connect Phantom';
-    showNotification(msg, 'error');
+    console.error('[Connect][Leo] error:', e);
+    showNotification(e?.message || 'Failed to connect Leo Wallet', 'error');
   }
 }
 
@@ -531,11 +325,16 @@ function initializeWalletUI() {
  */
 function updateWalletUI(address, credits) {
     const accountBtnText = document.getElementById('accountBtnText');
-    const usdcDisplay = document.getElementById('usdcDisplay');
+    const paymentModeStatus = document.getElementById('paymentModeStatus');
 
     if (accountBtnText && address) {
         // 已连接：显示截断的钱包地址
-        accountBtnText.textContent = `${address.slice(0, 6)}...${address.slice(-4)}`;
+        // Aleo 地址格式: aleo1... (较长，截取前10后6)
+        if (address.startsWith('aleo1')) {
+            accountBtnText.textContent = `${address.slice(0, 10)}...${address.slice(-6)}`;
+        } else {
+            accountBtnText.textContent = `${address.slice(0, 6)}...${address.slice(-4)}`;
+        }
     } else if (accountBtnText) {
         // 未连接：显示 Login
         accountBtnText.textContent = 'Login';
@@ -543,12 +342,12 @@ function updateWalletUI(address, credits) {
 
     setWalletTypeIcon(window.walletManager?.walletType || null);
 
-    // 不再显示I3 tokens，改为显示PHRS（仅Solana）
-    if (usdcDisplay && address && window.walletManager?.walletType?.includes('solana')) {
-        window.walletManager?.updatePHRSBalance?.();
-    } else if (usdcDisplay) {
-        // 未连接或非Solana钱包：隐藏
-        usdcDisplay.style.display = 'none';
+    // 显示支付模式状态（仅 Leo Wallet，不显示余额保护隐私）
+    if (paymentModeStatus && address && window.walletManager?.walletType === 'leo') {
+        window.walletManager?.updatePaymentModeStatus?.();
+    } else if (paymentModeStatus) {
+        // 未连接或非 Leo 钱包：隐藏
+        paymentModeStatus.style.display = 'none';
     }
 }
 
@@ -558,15 +357,15 @@ function updateWalletUI(address, credits) {
  */
 function resetWalletUI() {
     const accountBtnText = document.getElementById('accountBtnText');
-    const usdcDisplay = document.getElementById('usdcDisplay');
+    const paymentModeStatus = document.getElementById('paymentModeStatus');
     
     if (accountBtnText) {
         accountBtnText.textContent = 'Login';
     }
     setWalletTypeIcon(null);
     
-    if (usdcDisplay) {
-      usdcDisplay.style.display = 'none';
+    if (paymentModeStatus) {
+      paymentModeStatus.style.display = 'none';
     }
 
 }
@@ -591,12 +390,9 @@ function setWalletTypeIcon(walletType) {
         }
     }
 
-    // 本地 SVG 映射（把路径替换成你项目里已存在的 svg 资源路径）
+    // 本地 SVG 映射
     const ICONS = {
-        metamask:        'svg/metamask.svg',
-        walletconnect:   'svg/walletconnect.svg',
-        coinbase:        'svg/coinbase.svg',
-        'solana-phantom':'svg/phantom.svg'
+        leo: 'svg/leo.svg'
     };
 
     // 根据类型设置
@@ -604,7 +400,7 @@ function setWalletTypeIcon(walletType) {
     if (ICONS[key]) {
         iconEl.src = ICONS[key];
         iconEl.alt = key;
-        iconEl.title = key === 'solana-phantom' ? 'Phantom (Solana)' : key.charAt(0).toUpperCase() + key.slice(1);
+        iconEl.title = key === 'leo' ? 'Leo Wallet (Aleo)' : key.charAt(0).toUpperCase() + key.slice(1);
         iconEl.style.display = 'inline-block';
     } else {
         // 未连接或未知类型 -> 隐藏
@@ -707,7 +503,7 @@ function checkWalletManager() {
     }, 100);
 }
 
-// 钱包事件监听器 - 更新为I3 tokens术语
+// 钱包事件监听器
 window.addEventListener('walletConnected', function(event) {
     console.log('Wallet connected event received:', event.detail);
     const { address, credits, isNewUser } = event.detail;
@@ -716,21 +512,17 @@ window.addEventListener('walletConnected', function(event) {
     updateConnectButton(true);
     updateCheckinButton();
     
+    // 渲染网络徽章
+    const preferredNetwork = getPreferredNetwork();
+    const info = mapChainIdToDisplay(null, window.walletManager?.walletType, preferredNetwork?.network);
+    renderNetworkBadge(info);
+    
     // Persist wallet linkage to Firestore after Firebase is ready
     const writeWalletLinkage = () => {
         try {
             if (typeof window.onWalletConnected !== 'function') return;
-            const mm = window.walletManager?.getMetaMaskProvider?.();
-			if (mm && typeof mm.request === 'function') {
-			  mm.request({ method: 'eth_chainId' }).then((cid) => {
-			    const networkName = mapChainIdToName(cid);
-                const info = mapChainIdToDisplay(cid, window.walletManager?.walletType);
-                renderNetworkBadge(info);
-			    window.onWalletConnected(address, cid, networkName);
-			  }).catch(() => window.onWalletConnected(address));
-			} else {
-			  window.onWalletConnected(address);
-			}
+            const networkName = preferredNetwork?.name || 'Aleo';
+            window.onWalletConnected(address, null, networkName);
         } catch (e) {
             console.warn('Failed to write wallet linkage to Firestore:', e);
         }
@@ -753,28 +545,17 @@ window.addEventListener('walletConnected', function(event) {
     }
     
     if (isNewUser) {
-        showNotification('Welcome! You can earn 30 I3 tokens daily by checking in!', 'success');
+        showNotification('Welcome! You can earn credits daily by checking in!', 'success');
     }
 });
-
-// Helper: map EVM chainId to human-readable name
-function mapChainIdToName(chainId) {
-    const map = {
-        '0x1': 'Ethereum Mainnet',
-        '0x5': 'Goerli Testnet',
-        '0x38': 'BSC Mainnet',
-        '0x61': 'BSC Testnet',
-        '0x89': 'Polygon Mainnet'
-    };
-    return map[chainId] || chainId || null;
-}
 
 window.addEventListener('walletDisconnected', function() {
     console.log('Wallet disconnected event received');
     resetWalletUI();
     updateConnectButton(false);
     updateCheckinButton();
-    renderNetworkBadge({ name: getPreferredNetwork().name, icon: getPreferredNetwork().icon });
+    const preferred = getPreferredNetwork();
+    renderNetworkBadge({ name: preferred.name, icon: preferred.icon });
     showNotification('Wallet disconnected', 'success');
 });
 
@@ -782,29 +563,17 @@ window.addEventListener('dailyCheckinSuccess', function(event) {
     console.log('Daily checkin success event received:', event.detail);
     const { reward, newBalance, totalCheckins } = event.detail;
     
-    // 不再显示I3 tokens
-    // 如果是Solana钱包，更新PHRS余额
-    if (window.walletManager?.walletType?.includes('solana')) {
-        window.walletManager?.updatePHRSBalance?.();
-    }
-    
     updateCheckinButton();
     
     // 显示更详细的成功信息
-    showNotification(`Check-in #${totalCheckins} complete! +${reward} I3 tokens earned`, 'success');
+    showNotification(`Check-in #${totalCheckins} complete! +${reward} credits earned`, 'success');
 });
 
 window.addEventListener('creditsSpent', function(event) {
     console.log('Credits spent event received:', event.detail);
     const { amount, newBalance, reason } = event.detail;
     
-    // 不再显示I3 tokens
-    // 如果是Solana钱包，更新PHRS余额
-    if (window.walletManager?.walletType?.includes('solana')) {
-        window.walletManager?.updatePHRSBalance?.();
-    }
-    
-    showNotification(`Spent ${amount} I3 tokens for ${reason}`, 'success');
+    showNotification(`Spent ${amount} credits for ${reason}`, 'success');
 });
 
 // ESC 键关闭模态框
@@ -855,57 +624,33 @@ window.showNotification = showNotification;
 window.initializeWalletUI = initializeWalletUI;
 window.showWalletSelectionModal = showWalletSelectionModal;
 window.closeWalletModal = closeWalletModal;
-window.connectMetaMaskWallet = connectMetaMaskWallet;
-window.connectSolanaPhantom = () =>
-  notifyUnsupportedWallet('Phantom (Solana wallets are not supported in this build)');
+window.connectLeoWallet = connectLeoWallet;
+
+// 其他钱包不再支持
+window.connectMetaMaskWallet = () => notifyUnsupportedWallet('MetaMask');
+window.connectSolanaPhantom = () => notifyUnsupportedWallet('Phantom');
 window.connectWalletConnect = () => notifyUnsupportedWallet('WalletConnect');
 window.connectCoinbaseWallet = () => notifyUnsupportedWallet('Coinbase Wallet');
 
+console.log('✅ Leo Wallet integration functions loaded successfully');
 
-console.log('✅ Wallet integration functions loaded successfully');
 
-
-function getAddChainParams(preferred) {
-  const MAP = {
-    '0x1':    { chainName:'Ethereum Mainnet', rpcUrls:['https://rpc.ankr.com/eth'] },
-    '0x38':   { chainName:'BNB Smart Chain',  rpcUrls:['https://bsc-dataseed.binance.org'] },
-    '0x2105': { chainName:'Base',             rpcUrls:['https://mainnet.base.org'] },
-    '0xa4b1': { chainName:'Arbitrum One',     rpcUrls:['https://arb1.arbitrum.io/rpc'] },
-    '0x144':  { chainName:'ZKsync Era',       rpcUrls:['https://mainnet.era.zksync.io'] },
-    '0x44d':  { chainName:'Polygon zkEVM',    rpcUrls:['https://zkevm-rpc.com'] },
-    '0xa':    { chainName:'Optimism',         rpcUrls:['https://mainnet.optimism.io'] },
-    '0xcc':   { chainName:'opBNB',            rpcUrls:['https://opbnb-mainnet-rpc.bnbchain.org'] },
-    '0xa8230': {
-      chainName: 'Pharos Testnet',
-      rpcUrls: ['https://api.zan.top/node/v1/pharos/testnet/35905838255149eaa94c610c79294f0f']
-    },
-  };
-  const base = MAP[preferred.chainId] || { chainName: preferred.name, rpcUrls: [] };
-  return { chainId: preferred.chainId, chainName: base.chainName, rpcUrls: base.rpcUrls, nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18} };
-}
-
-console.log('✅ Unified wallet connection function loaded');
+console.log('✅ Leo Wallet connection function loaded');
 
 // === Network badge helpers ===
-function mapChainIdToDisplay(chainId, walletType, solanaNetworkHint) {
-  const CHAINS = {
-    '0x1':     { name:'Ethereum',      icon:'svg/chains/ethereum.svg' },
-    '0x38':    { name:'BNB Chain',     icon:'svg/chains/bnb.svg' },
-    '0x61':    { name:'BSC Testnet',   icon:'svg/chains/bnb.svg' },
-    '0x44d':   { name:'Polygon zkEVM', icon:'svg/chains/polygon-zkevm.svg' },
-    '0xa':     { name:'Optimism',      icon:'svg/chains/optimism.svg' },
-    '0xa4b1':  { name:'Arbitrum One',  icon:'svg/chains/arbitrum.svg' },
-    '0x2105':  { name:'Base',          icon:'svg/chains/base.svg' },
-    '0x144':   { name:'ZKsync Era',    icon:'svg/chains/zksync.svg' },
-    '0xcc':    { name:'opBNB',         icon:'svg/chains/opbnb.svg' },
-    '0xa8230': { name:'Pharos Testnet', icon:'svg/chains/pharos.jpg' },
-  };
-  // Solana（用 walletType + network hint）
-  if ((walletType || '').startsWith('solana')) {
-    const net = (solanaNetworkHint || 'devnet').toLowerCase();
-    return { name: `Solana ${net[0].toUpperCase()+net.slice(1)}`, icon:'svg/chains/solana.svg' };
+function mapChainIdToDisplay(chainId, walletType, networkHint) {
+  // Aleo (Leo Wallet)
+  if (walletType === 'leo') {
+    // 优先从配置获取网络名称
+    const preferredNetwork = getPreferredNetwork();
+    if (preferredNetwork) {
+      return { name: preferredNetwork.name, icon: preferredNetwork.icon };
+    }
+    // 兜底
+    const net = (networkHint || 'mainnet').toLowerCase();
+    return { name: `Aleo ${net.charAt(0).toUpperCase() + net.slice(1)}`, icon: 'svg/leo.svg' };
   }
-  return CHAINS[chainId] || null; // 未匹配则不显示
+  return null; // 未匹配则不显示
 }
 
 function renderNetworkBadge(info) {
@@ -956,33 +701,7 @@ function renderNetworkBadge(info) {
 }
 
 
-async function enforcePreferredEvmChain(provider) {
-  const preferred = getPreferredNetwork();
-  if (!preferred || preferred.kind !== 'evm' || !provider || typeof provider.request !== 'function') return;
-  try {
-    const current = await provider.request({ method: 'eth_chainId' });
-    if (current.toLowerCase() !== preferred.chainId.toLowerCase()) {
-      await provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: preferred.chainId }]
-      });
-    }
-  } catch (e) {
-    if (e.code === 4902) {
-      // 链还没加，先加再切
-      await provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [getAddChainParams(preferred)]
-      });
-      await provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: preferred.chainId }]
-      });
-    } else {
-      throw e;
-    }
-  }
-}
+// Aleo 不需要 enforcePreferredEvmChain 函数
 
 function openNetworkPickerModal() {
   const modal = document.getElementById('networkModal');
@@ -1048,17 +767,15 @@ function selectNetwork(key) {
 
 // ===== Preferred Network (pre-connect) =====
 const I3_NETWORKS = {
-  'pharos-testnet': {
-    kind: 'evm',
-    key: 'pharos-testnet',
-    name: 'Pharos Testnet',
-    icon: 'svg/chains/pharos.jpg', // 临时复用一个现有图标，你可以以后换成 pharos 图标
-    network: 'pharos-testnet',
-    chainId: '0xa8230', // 688688
-    rpcEndpoint: 'https://api.zan.top/node/v1/pharos/testnet/35905838255149eaa94c610c79294f0f',
-    // 下面两个只是为了兼容旧的 updateNetworkConfig，不会真正用到
-    usdcMint: '0x0000000000000000000000000000000000000000',
-    explorerBaseUrl: 'https://pharos-testnet.socialscan.io/tx'
+  'aleo-testnet': {
+    kind: 'aleo',
+    key: 'aleo-testnet',
+    name: 'Aleo Testnet',
+    icon: 'svg/leo.svg',
+    network: 'testnetbeta',       // Leo Wallet 网络参数
+    chainId: null,
+    rpcEndpoint: 'https://api.explorer.aleo.org/v1/testnet3',
+    explorerBaseUrl: 'https://explorer.aleo.org/testnet3/transaction'
   }
 };
 
@@ -1068,14 +785,14 @@ function getPreferredNetwork() {
     const data = raw ? JSON.parse(raw) : null;
     if (data && I3_NETWORKS[data.key]) return I3_NETWORKS[data.key];
   } catch {}
-  // 默认使用 Pharos Testnet
-  return I3_NETWORKS['pharos-testnet'];
+  // 默认使用 Aleo Testnet
+  return I3_NETWORKS['aleo-testnet'];
 }
 
 function setPreferredNetwork(key) {
-  const n = I3_NETWORKS[key] || I3_NETWORKS['pharos-testnet'];
+  const n = I3_NETWORKS[key] || I3_NETWORKS['aleo-testnet'];
   localStorage.setItem('i3_preferred_network', JSON.stringify({ key: n.key }));
-  // 更新全局配置（主要是给 MCP 用 explorerBaseUrl）
+  // 更新全局配置
   updateNetworkConfig(n);
   // 刷新徽章
   renderNetworkBadge({ name: n.name, icon: n.icon });
@@ -1086,16 +803,12 @@ function setPreferredNetwork(key) {
 function updateNetworkConfig(network) {
   // 更新 window.APP_CONFIG
   if (window.APP_CONFIG) {
-    if (!window.APP_CONFIG.solana) window.APP_CONFIG.solana = {};
-    window.APP_CONFIG.solana.cluster = network.network;
-    window.APP_CONFIG.solana.rpcEndpoint = network.rpcEndpoint;
-    window.APP_CONFIG.solana.usdcMint = network.usdcMint;
-    window.APP_CONFIG.mcp.receiptExplorerBaseUrl = network.explorerBaseUrl;
-  }
-  
-  // 更新 chains.js 中的 SOLANA 配置
-  if (window.SOLANA) {
-    window.SOLANA.cluster = network.network;
+    if (!window.APP_CONFIG.aleo) window.APP_CONFIG.aleo = {};
+    window.APP_CONFIG.aleo.network = network.network;
+    window.APP_CONFIG.aleo.rpcEndpoint = network.rpcEndpoint;
+    if (window.APP_CONFIG.mcp) {
+      window.APP_CONFIG.mcp.receiptExplorerBaseUrl = network.explorerBaseUrl;
+    }
   }
   
   console.log('✅ Network configuration updated:', network.name);

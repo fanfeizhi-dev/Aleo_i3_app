@@ -30,12 +30,12 @@ function checkWalletConnection() {
     return {
         connected: userInfo.isConnected,
         address: userInfo.address,
-        tokens: userInfo.credits, // 使用 PHRS 余额
+        tokens: userInfo.credits, // 使用 ALEO 余额
         error: userInfo.isConnected ? null : 'Please connect your wallet first'
     };
 }
 
-// 验证用户是否有足够的 PHRS 余额
+// 验证用户是否有足够的 ALEO 余额
 function validatePayment(totalCost) {
     const walletStatus = checkWalletConnection();
     
@@ -51,7 +51,7 @@ function validatePayment(totalCost) {
     if (walletStatus.tokens < totalCost) {
         return {
             valid: false,
-            error: `Insufficient PHRS balance. You need ${totalCost} PHRS but only have ${walletStatus.tokens} PHRS.`,
+            error: `Insufficient ALEO balance. You need ${totalCost} ALEO but only have ${walletStatus.tokens} ALEO.`,
             required: totalCost,
             available: walletStatus.tokens
         };
@@ -173,7 +173,7 @@ function populateCartTable() {
             </td>
             <td class="price-display">
                 <div class="purchase-option">
-                    <div class="price-info">${tokenPricePerCall.toFixed(6)} PHRS/call</div>
+                    <div class="price-info">${tokenPricePerCall.toFixed(6)} ALEO/call</div>
                     <div class="quantity-controls">
                         <button class="quantity-btn" onclick="updateTokenQuantity(${index}, ${tokenQuantity - 1})" ${tokenQuantity <= 0 ? 'disabled' : ''}>−</button>
                         <input type="number" class="quantity-input" value="${tokenQuantity}" min="0" max="999999" 
@@ -183,12 +183,12 @@ function populateCartTable() {
                                title="输入API调用次数（例如：2 = 2次调用）">
                         <button class="quantity-btn" onclick="updateTokenQuantity(${index}, ${tokenQuantity + 1})" ${tokenQuantity >= 999999 ? 'disabled' : ''}>+</button>
                     </div>
-                    <div class="subtotal-small">Subtotal: ${tokenSubtotal} PHRS (${tokenQuantity.toLocaleString()} API calls)</div>
+                    <div class="subtotal-small">Subtotal: ${tokenSubtotal} ALEO (${tokenQuantity.toLocaleString()} API calls)</div>
                 </div>
             </td>
             <td class="price-display">
                 <div class="purchase-option">
-                    <div class="price-info">${sharePriceUsdc.toFixed(6)} PHRS</div>
+                    <div class="price-info">${sharePriceUsdc.toFixed(6)} ALEO</div>
                     <div class="quantity-controls">
                         <button class="quantity-btn" onclick="updateShareQuantity(${index}, ${shareQuantity - 1})" ${shareQuantity <= 0 ? 'disabled' : ''}>−</button>
                         <input type="number" class="quantity-input" value="${shareQuantity}" min="0" max="999" 
@@ -196,11 +196,11 @@ function populateCartTable() {
                                onkeypress="if(event.key==='Enter') updateShareQuantity(${index}, parseInt(this.value))">
                         <button class="quantity-btn" onclick="updateShareQuantity(${index}, ${shareQuantity + 1})" ${shareQuantity >= 999 ? 'disabled' : ''}>+</button>
                     </div>
-                    <div class="subtotal-small">Subtotal: ${shareSubtotal} PHRS (${shareQuantity} shares)</div>
+                    <div class="subtotal-small">Subtotal: ${shareSubtotal} ALEO (${shareQuantity} shares)</div>
                 </div>
             </td>
             <td class="total-subtotal">
-                <div class="total-amount">${(parseFloat(tokenSubtotal) + parseFloat(shareSubtotal)).toFixed(6)} PHRS</div>
+                <div class="total-amount">${(parseFloat(tokenSubtotal) + parseFloat(shareSubtotal)).toFixed(6)} ALEO</div>
             </td>
             <td>
                 <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
@@ -335,9 +335,9 @@ function showCheckoutModal() {
                     <div class="order-item">
                         <div class="order-item-name">${item.modelName}</div>
                         <div class="order-item-details">
-                            ${tokenQuantity > 0 ? `${tokenQuantity.toLocaleString()} API calls (${tokenSubtotal.toFixed(6)} PHRS)` : ''}
+                            ${tokenQuantity > 0 ? `${tokenQuantity.toLocaleString()} API calls (${tokenSubtotal.toFixed(6)} ALEO)` : ''}
                             ${tokenQuantity > 0 && shareQuantity > 0 ? ' + ' : ''}
-                            ${shareQuantity > 0 ? `${shareQuantity} shares (${shareSubtotal.toFixed(6)} PHRS)` : ''}
+                            ${shareQuantity > 0 ? `${shareQuantity} shares (${shareSubtotal.toFixed(6)} ALEO)` : ''}
                         </div>
                     </div>
                 `;
@@ -351,7 +351,7 @@ function showCheckoutModal() {
     document.getElementById('modalModels').textContent = modelCount;
     document.getElementById('modalTokens').textContent = totalTokenQuantity.toLocaleString() + ' API Calls';
     document.getElementById('modalShares').textContent = totalShareQuantity;
-    document.getElementById('modalTotal').textContent = `${grandTotal.toFixed(6)} PHRS`;
+    document.getElementById('modalTotal').textContent = `${grandTotal.toFixed(6)} ALEO`;
     document.getElementById('modalOrderItems').innerHTML = orderItemsHtml;
 
     // 显示弹窗
@@ -364,7 +364,7 @@ function closeCheckoutModal() {
     
     // 清除余额信息（如果有的话）
     const modalBody = document.querySelector('.modal-body');
-    const balanceInfo = modalBody.querySelector('div[style*="Your PHRS Balance"]');
+    const balanceInfo = modalBody.querySelector('div[style*="Your ALEO Balance"]');
     if (balanceInfo) {
         balanceInfo.remove();
     }
@@ -512,7 +512,7 @@ function placeOrder() {
         // 处理Token购买
         for (const order of tokenOrders) {
             MCPClient.logStatus('invoice', `准备购买 ${order.modelName} API调用`, {
-                description: `${order.quantity}K calls × ${order.pricePerK} PHRS`
+                description: `${order.quantity}K calls × ${order.pricePerK} ALEO`
             });
             const response = await MCPClient.purchaseShare({
                 share_id: order.modelName + '_tokens',
@@ -544,7 +544,7 @@ function placeOrder() {
         // 处理Share购买
         for (const order of shareOrders) {
             MCPClient.logStatus('invoice', `准备购买 ${order.modelName} 份额`, {
-                description: `${order.quantity} × ${order.pricePerShare} PHRS`
+                description: `${order.quantity} × ${order.pricePerShare} ALEO`
             });
             const response = await MCPClient.purchaseShare({
                 share_id: order.modelName,
@@ -624,7 +624,7 @@ function showPurchaseSuccessToast(signature, order, explorerUrl) {
             animation: slideInRight 0.3s ease-out;
         `;
         
-        const amount = order.amount ? `${order.amount.toFixed(6)} PHRS` : 'N/A';
+        const amount = order.amount ? `${order.amount.toFixed(6)} ALEO` : 'N/A';
         const quantity = order.quantity ? `${order.quantity.toLocaleString()} API calls` : `${order.quantity} shares`;
         
         toast.innerHTML = `

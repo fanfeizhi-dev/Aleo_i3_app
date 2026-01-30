@@ -24,7 +24,7 @@
 <!-- Base Account SDK -->
     <script src="https://unpkg.com/@base-org/account/dist/base-account.min.js"></script>
     
-    <!-- Ethers.js for Pharos payment -->
+    <!-- Ethers.js for legacy compatibility -->
     <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
     
     <script>
@@ -795,9 +795,9 @@
     <script src="contract-config.js"></script>
     <script src="config.js"></script>
     <script src="workflow.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="social-tasks.js"></script>
     <script src="wallet-manager.js"></script>
+    <script src="aleo-payment.js"></script>
 	<script src="wallet-integration.js"></script>
     <script src="onchain-checkin.js"></script>
     <!-- Follow X Modal -->
@@ -1093,10 +1093,14 @@
                 if (ws) ws.style.display = 'block';
             })();
             
-            // 更新账户按钮文本
+            // 更新账户按钮文本（如果钱包已连接，保持显示钱包地址）
             const accountBtnText = document.getElementById('accountBtnText');
             if (accountBtnText) {
-                accountBtnText.textContent = user.displayName || user.email;
+                if (window.walletManager && window.walletManager.isConnected && window.walletManager.walletAddress) {
+                    console.log('✅ 钱包已连接，保持显示钱包地址');
+                } else {
+                    accountBtnText.textContent = user.displayName || user.email;
+                }
             }
             
             // 显示 logout 按钮
@@ -1123,10 +1127,14 @@
                 if (ws) ws.style.display = 'block';
             })();
             
-            // 恢复账户按钮文本
+            // 恢复账户按钮文本（如果钱包已连接，保持显示钱包地址）
             const accountBtnText = document.getElementById('accountBtnText');
             if (accountBtnText) {
-                accountBtnText.textContent = 'Login';
+                if (window.walletManager && window.walletManager.isConnected && window.walletManager.walletAddress) {
+                    console.log('✅ 钱包已连接，保持显示钱包地址');
+                } else {
+                    accountBtnText.textContent = 'Login';
+                }
             }
             
             // 隐藏 logout 按钮
@@ -1735,22 +1743,22 @@
             
             <div class="wallet-modal-header">
                 <h2 class="wallet-modal-title">Log in or sign up</h2>
-                <p class="wallet-modal-subtitle">Log in and connect wallet to earn PHRS credits</p>
+                <p class="wallet-modal-subtitle">Log in and connect wallet to earn ALEO credits</p>
             </div>
 
             <div class="wallet-options">
-                <div class="wallet-option available" onclick="connectMetaMaskWallet()">
+                <div class="wallet-option available" onclick="connectLeoWallet()">
                     <span class="wallet-icon-wrap">
-                        <img src="svg/metamask.svg" alt="MetaMask">
+                        <img src="svg/leo.svg" alt="Leo Wallet">
                     </span>
                     <div class="wallet-info">
-                        <div class="wallet-name">MetaMask (Pharos Testnet)</div>
-                        <div class="wallet-desc">Pay with PHRS on Pharos Testnet</div>
+                        <div class="wallet-name">Leo Wallet (Aleo Network)</div>
+                        <div class="wallet-desc">Pay with ALEO Credits • Private & Secure</div>
                     </div>
                 </div>
 
                 <div class="wallet-footer">
-                    By Intelligence Cubed
+                    Powered by Aleo • By Intelligence Cubed
                 </div>
 
             </div>
@@ -1764,7 +1772,7 @@
             
             <div class="wallet-modal-header">
                 <h2 class="wallet-modal-title">✅ Check-In on Chain</h2>
-                <p class="wallet-modal-subtitle">Complete your daily on-chain check-in to earn PHRS credits</p>
+                <p class="wallet-modal-subtitle">Complete your daily on-chain check-in to earn ALEO credits</p>
             </div>
 
             <div id="userStatusSection" style="margin: 20px 0; padding: 16px; background: #f0fdf4; border-radius: 12px;">
@@ -1787,12 +1795,12 @@
             <div style="margin: 20px 0;">
                 <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px;">Network</label>
                 <select id="chainSelector" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" disabled>
-                    <option value="PHAROS_TESTNET">Pharos Testnet</option>
+                    <option value="ALEO_TESTNET">Aleo Testnet</option>
                 </select>
             </div>
 
             <div style="margin: 20px 0; padding: 12px; background: #fef3c7; border-radius: 8px; border: 1px solid #fcd34d;">
-                <p style="font-size: 13px; color: #92400e; margin: 0;">⛽ Gas fee: ≈0.00025 PHRS per call</p>
+                <p style="font-size: 13px; color: #92400e; margin: 0;">⛽ Gas fee: ≈0.00025 ALEO per call</p>
             </div>
 
             <button id="executeCheckInBtn" onclick="executeOnChainCheckIn()" 

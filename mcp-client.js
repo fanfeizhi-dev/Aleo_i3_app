@@ -186,23 +186,39 @@
     panel.id = 'mcp-status-panel';
     panel.innerHTML = `
       <style>
-        #mcp-status-panel { position: fixed; right: 24px; bottom: 24px; width: 320px; max-height: 50vh; overflow-y: auto; background: rgba(17, 24, 39, 0.92); color: #fff; border-radius: 16px; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.45); padding: 18px 20px; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.45; z-index: 99999; display: none; }
+        #mcp-status-panel { 
+          position: fixed; right: 24px; bottom: 24px; width: 360px; max-height: 60vh; overflow-y: auto; 
+          background: linear-gradient(135deg, rgba(0, 40, 35, 0.95), rgba(0, 60, 50, 0.95)); 
+          color: #fff; border-radius: 20px; 
+          box-shadow: 0 20px 50px rgba(0, 212, 170, 0.15), 0 0 0 1px rgba(0, 212, 170, 0.2); 
+          padding: 20px 22px; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; z-index: 99999; display: none; 
+        }
         #mcp-status-panel.show { display: block; }
-        #mcp-status-panel h4 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
-        #mcp-status-panel .mcp-close { position: absolute; top: 12px; right: 14px; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,0.6); font-size: 14px; }
-        #mcp-status-panel .mcp-close:hover { color: #fff; }
+        #mcp-status-panel .mcp-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        #mcp-status-panel .mcp-logo { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #00d4aa, #00b894); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        #mcp-status-panel h4 { margin: 0; font-size: 16px; font-weight: 600; flex: 1; }
+        #mcp-status-panel .mcp-subtitle { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(0, 212, 170, 0.2); }
+        #mcp-status-panel .mcp-close { position: absolute; top: 14px; right: 16px; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 16px; }
+        #mcp-status-panel .mcp-close:hover { color: #00d4aa; }
         #mcp-status-panel .mcp-log { margin: 0; padding: 0; list-style: none; }
-        #mcp-status-panel .mcp-log li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        #mcp-status-panel .mcp-log li:last-child { border-bottom: none; }
-        #mcp-status-panel .mcp-pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
-        #mcp-status-panel .pill-invoice { background: rgba(59, 130, 246, 0.18); color: #bfdbfe; }
-        #mcp-status-panel .pill-pay { background: rgba(16, 185, 129, 0.18); color: #bbf7d0; }
-        #mcp-status-panel .pill-result { background: rgba(244, 114, 182, 0.18); color: #fbcfe8; }
-        #mcp-status-panel .pill-cancel { background: rgba(248, 113, 113, 0.18); color: #fecaca; }
-        #mcp-status-panel .mcp-log small { display: block; margin-top: 3px; color: rgba(255,255,255,0.65); }
+        #mcp-status-panel .mcp-log li { padding: 10px 12px; margin-bottom: 8px; background: rgba(0, 212, 170, 0.08); border-radius: 10px; border-left: 3px solid #00d4aa; }
+        #mcp-status-panel .mcp-log li:last-child { margin-bottom: 0; }
+        #mcp-status-panel .mcp-pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+        #mcp-status-panel .pill-invoice { background: rgba(0, 212, 170, 0.2); color: #7dffe5; }
+        #mcp-status-panel .pill-pay { background: rgba(0, 212, 170, 0.3); color: #00ffcc; }
+        #mcp-status-panel .pill-result { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; }
+        #mcp-status-panel .pill-cancel { background: rgba(248, 113, 113, 0.2); color: #fecaca; }
+        #mcp-status-panel .mcp-log small { display: block; margin-top: 6px; color: rgba(255,255,255,0.6); font-size: 11px; }
+        #mcp-status-panel .mcp-log small a { color: #00d4aa; }
+        #mcp-status-panel .mcp-privacy-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(0, 212, 170, 0.8); margin-left: 8px; }
       </style>
       <button class="mcp-close" aria-label="Close">✕</button>
-      <h4>402 Payment Progress</h4>
+      <div class="mcp-header">
+        <img src="svg/chains/aleo.svg" alt="Aleo" style="width:28px;height:28px;border-radius:50%;">
+        <h4>Aleo Payment</h4>
+        <span class="mcp-privacy-badge">🔒 Private</span>
+      </div>
+      <div class="mcp-subtitle">Offchain execution • Encrypted state • Zero-knowledge proofs</div>
       <ul class="mcp-log"></ul>
     `;
     panel.querySelector('.mcp-close').addEventListener('click', () => {
@@ -235,19 +251,32 @@
       lines.push(`🤖 Auto Router → <strong style="color: #a78bfa;">${meta.autoRouterModel}</strong>`);
     }
     
-    if (meta.amount) lines.push(`Amount: ${meta.amount} PHRS`);
+    if (meta.amount) lines.push(`Amount: ${meta.amount} ALEO`);
     if (meta.memo) lines.push(`Memo: ${meta.memo}`);
     if (meta.tx) {
-      // 生成 Pharos explorer 链接
-      let explorer = meta.explorer;
-      if (!explorer) {
-        // 默认使用 Pharos Testnet explorer
-        explorer = `https://pharos-testnet.socialscan.io/tx/${encodeURIComponent(meta.tx)}`;
+      // 检查是否是有效的 Aleo 交易 ID（at1... 开头）
+      // Leo Wallet 返回的本地 ID 是 UUID 格式，不是真正的链上交易 ID
+      const isValidAleoTxId = meta.tx && meta.tx.startsWith('at1');
+      const isUuidFormat = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(meta.tx);
+      
+      if (isValidAleoTxId) {
+        // 有效的 Aleo 交易 ID，显示链接
+        let explorer = meta.explorer;
+        if (!explorer) {
+          if (window.AleoPayment && typeof window.AleoPayment.getExplorerUrl === 'function') {
+            explorer = window.AleoPayment.getExplorerUrl(meta.tx);
+          } else {
+            explorer = `https://explorer.aleo.org/transaction/${encodeURIComponent(meta.tx)}`;
+          }
+        }
+        const short = `${meta.tx.slice(0, 6)}…${meta.tx.slice(-4)}`;
+        lines.push(
+          `Tx: <a href="${explorer}" target="_blank" rel="noopener noreferrer">${short}</a>`
+        );
+      } else if (isUuidFormat) {
+        // Leo Wallet 本地 ID，显示等待提示而不是链接
+        lines.push(`⏳ Processing in wallet...`);
       }
-      const short = `${meta.tx.slice(0, 6)}…${meta.tx.slice(-4)}`;
-      lines.push(
-        `Tx: <a href="${explorer}" target="_blank" rel="noopener noreferrer">${short}</a>`
-      );
     }
     if (meta.node) lines.push(`Node: ${meta.node}`);
     if (meta.description) lines.push(meta.description);
@@ -263,208 +292,67 @@
 
   async function settleInvoice(invoice) {
     try {
-      console.log('[MCPClient] settleInvoice (Pharos)', invoice);
-      const PHAROS_CHAIN_ID = '0xa8230'; // 688688
-      const FALLBACK_EXPLORER_BASE =
-        invoice.explorer_base_url ||
-        (window.APP_CONFIG &&
-          window.APP_CONFIG.mcp &&
-          window.APP_CONFIG.mcp.receipt_explorer_base_url) ||
-        'https://pharos-testnet.socialscan.io/tx';
-
-      // —— 1. 基本检查 ——
-      const recipient = (invoice.recipient || '').trim();
-      if (!recipient) {
-        throw new Error('Invoice missing recipient address');
-      }
-      const amount = invoice.amount_usdc ?? invoice.amount;
-      if (amount == null) {
-        throw new Error('Invoice missing amount');
-      }
-      const decimals =
-        typeof invoice.decimals === 'number'
-          ? invoice.decimals
-          : (window.APP_CONFIG &&
-             window.APP_CONFIG.mcp &&
-             window.APP_CONFIG.mcp.decimals) || 18;
-
-      // —— 2. 拿到 MetaMask provider + 当前账户 ——
+      console.log('[MCPClient] settleInvoice (Aleo/Leo Wallet)', invoice);
+      
+      // 检查是否使用 Leo Wallet (Aleo)
       const wm = window.walletManager;
-      if (!wm) {
-        throw new Error('Wallet manager not available. Please refresh the page.');
-      }
-      const user =
-        typeof wm.getUserInfo === 'function'
-          ? wm.getUserInfo()
-          : { isConnected: false };
-      if (!user.isConnected || !user.address) {
-        throw new Error('Please connect MetaMask before making a payment.');
-      }
-      let provider = null;
-      if (typeof wm.getMetaMaskProvider === 'function') {
-        provider = wm.getMetaMaskProvider();
-      }
-      if (!provider && window.ethereum && window.ethereum.isMetaMask) {
-        provider = window.ethereum;
-      }
-      if (!provider || typeof provider.request !== 'function') {
-        throw new Error('MetaMask provider not detected. Please install or enable MetaMask.');
-      }
-
-      // —— 3. 确保链是 Pharos Testnet（必要时自动切链 / 加链） ——
-      let currentChainId = null;
-      try {
-        currentChainId = await provider.request({ method: 'eth_chainId' });
-      } catch (e) {
-        console.warn('[MCPClient] Failed to read chainId:', e);
-      }
-      let targetChainId = PHAROS_CHAIN_ID;
-      try {
-        if (typeof getPreferredNetwork === 'function') {
-          const preferred = getPreferredNetwork();
-          if (preferred && preferred.chainId) {
-            targetChainId = preferred.chainId;
-          }
+      const isLeoWallet = wm && wm.walletType === 'leo';
+      
+      if (isLeoWallet && window.AleoPayment) {
+        // —— 使用 Leo Wallet 进行 Aleo 支付 (优先私密转账) ——
+        console.log('[MCPClient] Using Leo Wallet for Aleo payment (Privacy-First Mode)');
+        
+        const amount = invoice.amount_usdc ?? invoice.amount ?? invoice.amount_aleo ?? 0;
+        if (amount == null || amount <= 0) {
+          throw new Error('Invoice missing amount');
         }
-      } catch (e) {
-        console.warn('[MCPClient] getPreferredNetwork failed, using default Pharos chainId', e);
-      }
-
-      if (
-        currentChainId &&
-        currentChainId.toLowerCase() !== targetChainId.toLowerCase()
-      ) {
-        console.log('[MCPClient] Switching chain to Pharos Testnet', {
-          from: currentChainId,
-          to: targetChainId
+        
+        // 使用 AleoPayment 模块 (优先私密转账)
+        const result = await window.AleoPayment.sendAleoPayment({
+          recipient: invoice.recipient || window.AleoPayment.PLATFORM_RECIPIENT,
+          amount: amount,
+          memo: invoice.request_id || invoice.memo || '',
+          preferPrivate: true  // 优先使用 transfer_private
         });
+        
+        if (result.cancelled) {
+          return null; // 用户取消
+        }
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Aleo payment failed');
+        }
+        
+        const txId = result.transactionId;
+        const network = result.network || window.AleoPayment.getCurrentNetwork();
+        const explorerUrl = window.AleoPayment.getExplorerUrl(txId, network);
+        const privacyLevel = result.privacyLevel || 'public';
+        
+        console.log(`[MCPClient] Aleo payment sent via ${privacyLevel} transfer:`, txId);
+        
+        // 显示成功 Toast (包含隐私级别)
         try {
-          await provider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: targetChainId }]
-          });
-        } catch (switchErr) {
-          console.warn('[MCPClient] wallet_switchEthereumChain failed:', switchErr);
-          const canAdd =
-            switchErr &&
-            (switchErr.code === 4902 || switchErr.code === '4902') &&
-            typeof getAddChainParams === 'function';
-          if (canAdd) {
-            try {
-              const addParams = getAddChainParams({
-                chainId: targetChainId,
-                name: 'Pharos Testnet'
-              });
-              await provider.request({
-                method: 'wallet_addEthereumChain',
-                params: [addParams]
-              });
-              await provider.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: targetChainId }]
-              });
-            } catch (addErr) {
-              console.error('[MCPClient] Failed to add/switch to Pharos chain', addErr);
-              if (typeof showNotification === 'function') {
-                showNotification(
-                  'Please manually switch MetaMask to Pharos Testnet and try again.',
-                  'error'
-                );
-              }
-              throw addErr;
-            }
-          } else {
-            if (typeof showNotification === 'function') {
-              showNotification(
-                'Please switch MetaMask to Pharos Testnet in your wallet and try again.',
-                'error'
-              );
-            }
-            throw switchErr;
-          }
+          window.AleoPayment.showPaymentSuccessToast(txId, amount, network, privacyLevel);
+        } catch (e) {
+          console.warn('[MCPClient] Failed to show payment toast:', e);
         }
-      }
-
-      // —— 4. 把 amount 转成 wei(hex) ——
-      function toHexWei(amountInput, decimalsInput) {
-        const decs =
-          typeof decimalsInput === 'number' && Number.isFinite(decimalsInput)
-            ? decimalsInput
-            : 18;
-        const s = String(amountInput).trim();
-        if (!s) return '0x0';
-        const parts = s.split('.');
-        const intRaw = parts[0] || '0';
-        const fracRaw = parts[1] || '';
-        const intPart = intRaw.replace(/^0+/, '') || '0';
-        const fracStr = fracRaw.replace(/0+$/, '');
-        if (fracStr.length > decs) {
-          throw new Error(
-            `Too many decimal places in amount (max ${decs}, got ${fracStr.length}).`
-          );
-        }
-        const fracPadded = fracStr + '0'.repeat(decs - fracStr.length);
-        const combined = (intPart === '0' ? '' : intPart) + fracPadded;
-        const big =
-          combined === '' ? 0n : BigInt(combined.replace(/^0+/, '') || '0');
-        return '0x' + big.toString(16);
-      }
-
-      const valueHex = toHexWei(amount, decimals);
-      const txParams = {
-        from: user.address,
-        to: recipient,
-        value: valueHex
-      };
-
-      if (typeof logStatus === 'function') {
-        logStatus('payment', `Sending PHRS payment of ${amount} on Pharos Testnet…`, {
-          to: recipient,
-          valueHex,
-          request_id: invoice.request_id,
-          nonce: invoice.nonce
-        });
-      }
-
-      console.log('[MCPClient] eth_sendTransaction params:', txParams);
-
-      // —— 5. 通过 MetaMask 发送交易 ——
-      const txHash = await provider.request({
-        method: 'eth_sendTransaction',
-        params: [txParams]
-      });
-
-      if (!txHash) {
-        throw new Error('No transaction hash returned from MetaMask');
-      }
-
-      console.log('[MCPClient] Payment transaction sent:', txHash);
-
-      const explorerUrl =
-        FALLBACK_EXPLORER_BASE.replace(/\/+$/, '') +
-        '/' +
-        encodeURIComponent(txHash);
-
-      try {
-        if (typeof showExplorerToast === 'function') {
-          showExplorerToast({
-            url: explorerUrl,
-            title: 'Payment submitted',
-            subtitle: 'Click to view on Pharos explorer.'
+        
+        // 日志显示隐私级别
+        const privacyIcon = privacyLevel === 'private' ? '🔒' : '📢';
+        if (typeof logStatus === 'function') {
+          logStatus('payment', `${privacyIcon} Aleo ${privacyLevel} payment of ${amount} ALEO sent`, {
+            tx: txId,
+            explorerUrl
           });
         }
-      } catch (e) {
-        console.warn('[MCPClient] Failed to show explorer toast:', e);
+        
+        return txId;
       }
-
-      if (typeof logStatus === 'function') {
-        logStatus('payment', 'Payment transaction submitted. Awaiting verification…', {
-          tx: txHash,
-          explorerUrl
-        });
-      }
-
-      return txHash;
+      
+      // —— Leo Wallet 必须连接才能支付 ——
+      console.warn('[MCPClient] Leo Wallet not available');
+      throw new Error('Please connect Leo Wallet to make payments on Aleo Network.');
+      
     } catch (error) {
       console.error('[MCPClient] settleInvoice error:', error);
       if (typeof logStatus === 'function') {
@@ -501,7 +389,7 @@
       if (networkRaw) {
         const network = JSON.parse(networkRaw);
         if (network && network.key) {
-          baseHeaders['X-Pharos-Network'] = network.key;
+          baseHeaders['X-Aleo-Network'] = network.key;
           if (!payload.network) {
             payload.network = network.key;
           }
@@ -789,7 +677,7 @@
         const memoPart = invoice.memo ? `; memo=${invoice.memo}` : '';
         paymentHeaders = {
           'X-Request-Id': invoice.request_id,
-          'X-PAYMENT': `x402 tx=${tx}; amount=${invoice.amount_usdc}; nonce=${invoice.nonce}${memoPart}`
+          'X-PAYMENT': `aleo tx=${tx}; amount=${invoice.amount_usdc}; nonce=${invoice.nonce}${memoPart}`
         };
         continue;
       }
@@ -808,12 +696,20 @@
           result?.explorer ||
           result?.receipt?.explorer ||
           result?.meta?.verification?.explorerUrl;
-        if (explorerUrl) {
+        
+        // 检查 Explorer URL 是否有效（排除 Leo Wallet 本地 ID - UUID 格式）
+        // 有效的 Aleo 交易 ID 格式是 at1... 开头
+        const isValidExplorerUrl = explorerUrl && !explorerUrl.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i);
+        
+        if (isValidExplorerUrl) {
           showExplorerToast({
             url: explorerUrl,
             title: 'On-chain Transaction',
-            subtitle: 'Click to view on Pharos explorer.'
+            subtitle: 'Click to view on Aleo Explorer.'
           });
+        } else if (explorerUrl) {
+          // 如果是本地 ID，显示等待提示
+          console.log('[MCPClient] Explorer URL contains local ID, skipping toast:', explorerUrl);
         }
       } catch (toastError) {
         console.warn('[MCPClient] failed to display explorer toast', toastError);
@@ -829,6 +725,119 @@
       metadata: metadata || {}
     };
     return request('/mcp/models.invoke', body, {});
+  }
+
+  // ========== 匿名调用系统 (方案 B: 隐私优先) ==========
+
+  /**
+   * 匿名调用 AI 模型
+   * 使用 access_token 而不是钱包地址，保护用户隐私
+   * 
+   * @param {Object} options
+   * @param {string} options.prompt - 用户输入
+   * @param {string} options.modelName - 模型名称
+   * @returns {Promise<{status: string, result?: Object, error?: string}>}
+   */
+  async function anonymousInvokeModel({ prompt, modelName } = {}) {
+    // 检查是否有 AleoPayment 模块
+    if (!window.AleoPayment) {
+      return { status: 'error', error: 'AleoPayment module not loaded' };
+    }
+
+    // 检查是否有匿名 token
+    if (!window.AleoPayment.hasAnonymousToken()) {
+      logStatus('cancel', 'No access token. Please deposit first.', {});
+      return { 
+        status: 'no_token', 
+        error: 'Please deposit ALEO first to get an access token',
+        deposit_required: true
+      };
+    }
+
+    // 调用匿名 API
+    logStatus('invoice', `Calling ${modelName || 'AI model'} anonymously...`, {});
+    
+    const result = await window.AleoPayment.anonymousInvoke({
+      prompt,
+      model: modelName
+    });
+
+    if (!result.success) {
+      if (result.error === 'insufficient_balance') {
+        logStatus('cancel', `Insufficient balance. Need ${result.required} ALEO`, {
+          amount: result.required
+        });
+        return {
+          status: 'insufficient_balance',
+          error: 'Insufficient balance',
+          required: result.required,
+          balance: result.balance,
+          pricing: result.pricing,
+          deposit_info: result.deposit_info
+        };
+      }
+      
+      logStatus('cancel', result.error || 'Anonymous call failed', {});
+      return { status: 'error', error: result.error };
+    }
+
+    // 成功
+    logStatus('result', 'Anonymous call completed', {
+      description: `Cost: ${result.cost} ALEO, Remaining: ${result.remaining_balance} ALEO`
+    });
+
+    return {
+      status: 'ok',
+      result: result.result,
+      cost: result.cost,
+      remaining_balance: result.remaining_balance
+    };
+  }
+
+  /**
+   * 获取当前匿名余额
+   */
+  async function getAnonymousBalance() {
+    if (!window.AleoPayment) {
+      return null;
+    }
+    return window.AleoPayment.getAnonymousBalance();
+  }
+
+  /**
+   * 匿名充值
+   * @param {number} amount - 充值金额 (ALEO)
+   */
+  async function anonymousDeposit(amount) {
+    if (!window.AleoPayment) {
+      return { success: false, error: 'AleoPayment module not loaded' };
+    }
+
+    logStatus('invoice', `Depositing ${amount} ALEO anonymously...`, { amount });
+
+    const result = await window.AleoPayment.anonymousDeposit({ amount });
+
+    if (!result.success) {
+      if (result.cancelled) {
+        logStatus('cancel', 'Deposit cancelled by user', {});
+        return { success: false, cancelled: true };
+      }
+      logStatus('cancel', result.error || 'Deposit failed', {});
+      return { success: false, error: result.error };
+    }
+
+    const privacyIcon = result.privacyLevel === 'private' ? '🔒' : '📢';
+    logStatus('payment', `${privacyIcon} Deposited ${result.deposited} ALEO`, {
+      tx: result.transactionId,
+      description: `Balance: ${result.balance} ALEO`
+    });
+
+    return {
+      success: true,
+      balance: result.balance,
+      token: result.token,
+      transactionId: result.transactionId
+    };
   }
 
   async function executeWorkflow(payload, hooks = {}) {
@@ -878,6 +887,10 @@
     purchaseShare,
     claimCheckin,
     logStatus,
+    // 匿名调用系统 (方案 B: 隐私优先)
+    anonymousInvokeModel,
+    anonymousDeposit,
+    getAnonymousBalance,
     // Debug helpers
     debugPrepaidCredits() {
       const prepaidCreditsRaw = localStorage.getItem('prepaidCredits');

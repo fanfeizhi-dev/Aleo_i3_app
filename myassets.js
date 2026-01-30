@@ -117,9 +117,9 @@ function calculateShareStats() {
 
 // ========== UPDATE DISPLAY FUNCTIONS ==========
 
-// 更新 PHRS 余额显示（已移除卡片，保留函数以防其他地方调用）
+// 更新 ALEO 余额显示（已移除卡片，保留函数以防其他地方调用）
 function updateI3TokenBalance() {
-    // PHRS Balance card has been removed from the UI
+    // ALEO Balance card has been removed from the UI
     return;
 }
 
@@ -133,7 +133,7 @@ function updateOverview() {
     const totalTokenValueK = tokenStats.totalUsdcSpent.toFixed(6);
     document.getElementById('totalTokenValue').innerHTML = `
         ${tokenStats.totalTokensK}K tokens
-        <small>Value: ${totalTokenValueK}K <img src="svg/chains/pharos.jpg" class="token-logo" alt="PHRS" style="width: 16px; height: 16px; vertical-align: middle;"></small>
+        <small>Value: ${totalTokenValueK}K <img src="svg/chains/aleo.svg" class="token-logo" alt="ALEO" style="width: 16px; height: 16px; vertical-align: middle;"></small>
     `;
     
     // Update Total Share Value card with detailed info
@@ -143,7 +143,7 @@ function updateOverview() {
     
     document.getElementById('totalShareValue').innerHTML = `
         ${shareStats.totalShares} shares
-        <small>Value: ${totalShareValueK}K <img src="svg/chains/pharos.jpg" class="token-logo" alt="PHRS" style="width: 16px; height: 16px; vertical-align: middle;"></small>
+        <small>Value: ${totalShareValueK}K <img src="svg/chains/aleo.svg" class="token-logo" alt="ALEO" style="width: 16px; height: 16px; vertical-align: middle;"></small>
     `;
     // Remove share change display
     document.getElementById('totalShareChange').style.display = 'none';
@@ -151,7 +151,7 @@ function updateOverview() {
     // Remove token change display (tokens don't fluctuate like shares)
     document.getElementById('totalTokenChange').style.display = 'none';
     
-    // Update PHRS balance
+    // Update ALEO balance
     updateI3TokenBalance();
 }
 
@@ -201,7 +201,7 @@ function updateTokensDisplay() {
             </td>
             <td><span class="category">${token.category}</span></td>
             <td><strong class="api-calls-count">${apiCalls} API calls</strong></td>
-            <td><strong>${totalValueUsdc} <img src="svg/chains/pharos.jpg" class="token-logo" alt="PHRS" style="width: 16px; height: 16px; vertical-align: middle;"></strong></td>
+            <td><strong>${totalValueUsdc} <img src="svg/chains/aleo.svg" class="token-logo" alt="ALEO" style="width: 16px; height: 16px; vertical-align: middle;"></strong></td>
             <td>
                 <div class="action-buttons">
                     <button class="action-btn use-btn" onclick="useTokens('${token.modelName}')">Use</button>
@@ -249,10 +249,10 @@ function updateSharesDisplay() {
             </td>
             <td><span class="category">${share.category}</span></td>
             <td><strong>${share.quantity}</strong></td>
-            <td>${modelData.sharePrice.toFixed(2)}K <img src="svg/chains/pharos.jpg" class="token-logo" alt="PHRS" style="width: 16px; height: 16px; vertical-align: middle;"></td>
+            <td>${modelData.sharePrice.toFixed(2)}K <img src="svg/chains/aleo.svg" class="token-logo" alt="ALEO" style="width: 16px; height: 16px; vertical-align: middle;"></td>
             <td><span class="market-change ${changeClass}">${changeSymbol}${modelData.change.toFixed(2)}%</span></td>
             <td><span class="pool-ownership">${poolOwnership}%</span></td>
-            <td><strong>${totalValueK}K <img src="svg/chains/pharos.jpg" class="token-logo" alt="PHRS" style="width: 16px; height: 16px; vertical-align: middle;"></strong></td>
+            <td><strong>${totalValueK}K <img src="svg/chains/aleo.svg" class="token-logo" alt="ALEO" style="width: 16px; height: 16px; vertical-align: middle;"></strong></td>
             <td>
                 <div class="action-buttons">
                     <button class="action-btn use-btn" onclick="useShares('${share.modelName}')">Use</button>

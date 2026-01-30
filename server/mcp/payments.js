@@ -44,7 +44,7 @@ function build402Body(entry, extras = {}, networkConfig = null) {
     request_id: entry.request_id,
     nonce: entry.nonce,
     amount_usdc: entry.amount_usdc,
-    currency: 'PHRS',
+    currency: 'ALEO',
     recipient: paymentConfig.recipient || MCP_CONFIG.payments.recipient,
     network: paymentConfig.network || MCP_CONFIG.payments.network,
     expires_at: entry.expires_at,
@@ -92,8 +92,8 @@ function parsePaymentHeader(header) {
     };
   }
   
-  // 原有的 x402 支付逻辑
-  if (!trimmed.toLowerCase().startsWith('x402')) return null;
+  // Aleo 支付逻辑（支持 aleo 和 x402 前缀以保持向后兼容）
+  if (!trimmed.toLowerCase().startsWith('aleo') && !trimmed.toLowerCase().startsWith('x402')) return null;
   const [, ...rest] = trimmed.split(/\s+/);
   const paramsString = rest.join(' ');
   const parts = paramsString

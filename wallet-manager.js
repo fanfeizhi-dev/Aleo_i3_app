@@ -1,18 +1,5 @@
-// wallet-manager.js - MetaMask SDK wallet manager (I3 tokens / credits)
-async function waitForAccounts(p, { totalMs = 15000, stepMs = 400 } = {}) {
-  const t0 = Date.now();
-
-  try { await p.request({ method: 'eth_requestAccounts' }); } catch (_) {}
-
-  while (Date.now() - t0 < totalMs) {
-    try {
-      const accs = await p.request({ method: 'eth_accounts' });
-      if (accs && accs.length) return accs;
-    } catch (_) {}
-    await new Promise(r => setTimeout(r, stepMs));
-  }
-  return [];
-}
+// wallet-manager.js - Leo Wallet manager for Aleo (I3 tokens / credits)
+// Leo Wallet 不需要 waitForAccounts 函数
 
 class WalletManager {
     constructor() {
@@ -20,450 +7,226 @@ class WalletManager {
         this.isConnected = false;
         this.credits = 0;
         this.totalEarned = 0;
-        this.sdk = null;
-        this.ethereum = null;
         this.isConnecting = false;
 
         this.walletType = null;
-    	this.appKit = null;
-		this.solana = null;         // window.solana (Phantom provider)
-		this.solanaConn = null;     // window.SOL.Connection
-		this.solanaAddress = null;  // base58 public key
+        
+        // Leo Wallet (Aleo)
+        this.leoAdapter = null;
+        this.aleoPublicKey = null;
 
         this.loadFromStorage();
-        this.initializeSDK();
+        this.initializeLeoWallet();
     }
 
 
 
-	    // 只锁定 MetaMask 的 provider，避免多个钱包并存时被劫持
-    getMetaMaskProvider() {
-        const eth = window.ethereum;
-        try {
-            // 多注入场景（Chrome 会把所有 provider 放在 providers 数组里）
-            if (eth && Array.isArray(eth.providers) && eth.providers.length) {
-                const mm = eth.providers.find(p => p && p.isMetaMask);
-                if (mm) return mm;
-            }
-            // MetaMask SDK provider（优先）
-            if (this.sdk && typeof this.sdk.getProvider === 'function') {
-                const p = this.sdk.getProvider();
-                if (p && p.isMetaMask) return p;
-            }
-            // 单 provider 场景：确认是 MetaMask 再用
-            if (eth && eth.isMetaMask) return eth;
-        } catch (_) {}
-        return null;
+    // ========== Leo Wallet (Aleo) 初始化 ==========
+    async initializeLeoWallet() {
+        // Leo Wallet 通过浏览器扩展注入 window.leoWallet
+        // 这里只做初始化检查，实际连接在 connectLeo() 中进行
+        console.log('Leo Wallet manager initialized (waiting for extension)');
     }
 
+    // 获取 Leo Wallet provider
+    getLeoProvider() {
+        // Leo Wallet 扩展会注入 window.leoWallet
+        return window.leoWallet || window.leo || null;
+    }
 
-	// ========== MetaMask 初始化 ==========
-	async initializeSDK() {
-		// Wait up to ~5s for MetaMaskSDK global to appear (if loaded via script tag)
-		let attempts = 0;
-		while (typeof MetaMaskSDK === 'undefined' && attempts < 50) {
-			await new Promise(resolve => setTimeout(resolve, 100));
-			attempts++;
-		}
+    // 设置 Leo Wallet 事件监听
+    setupLeoEventListeners() {
+        const provider = this.getLeoProvider();
+        if (!provider) return;
 
-		try {
-			if (typeof MetaMaskSDK !== 'undefined' && MetaMaskSDK.MetaMaskSDK) {
-				this.sdk = new MetaMaskSDK.MetaMaskSDK({
-					dappMetadata: {
-						name: 'Intelligence Cubed',
-						url: 'https://intelligencecubed.netlify.app',
-						iconUrl: [
-    						'https://intelligencecubed.netlify.app/png/i3-token-logo.png', // ← PNG 放第一个
-    						'https://intelligencecubed.netlify.app/svg/i3-token-logo.svg'  // ← 可保留 SVG 作备选
-  						]
-					},
-					useDeeplink: true,
-					forceInjectProvider: true,
-					enableAnalytics: false
-				});
-			}
+        // Leo Wallet 事件监听
+        if (typeof provider.on === 'function') {
+            provider.on('accountChange', (data) => {
+                console.log('Leo Wallet account changed:', data);
+                
+                // data 可能是对象 {publicKey: '...'} 或字符串
+                const newPublicKey = this.extractPublicKey(data);
+                
+                if (newPublicKey) {
+                    if (this.walletAddress) {
+                        this.saveWalletSpecificData();
+                    }
+                    this.aleoPublicKey = newPublicKey;
+                    this.walletAddress = newPublicKey;
+                    this.loadWalletSpecificData();
+                    this.saveToStorage();
+                    this.updateUI();
+                    window.dispatchEvent(new CustomEvent('walletConnected', {
+                        detail: { 
+                            address: this.walletAddress, 
+                            credits: this.credits, 
+                            isNewUser: !this.getWalletData(this.walletAddress) 
+                        }
+                    }));
+                } else {
+                    this.disconnectWallet();
+                }
+            });
 
-			this.ethereum = this.getMetaMaskProvider();
-
-			if (this.ethereum) {
-    			this.setupEventListeners();
-    			console.log('MetaMask initialized');
-			} else {
-    			console.warn('MetaMask provider not found (another wallet may be default)');
-			}
-		} catch (error) {
-			console.error('Failed to initialize wallet provider:', error);
-			this.ethereum = this.getMetaMaskProvider();
-            if (this.ethereum) {
-                this.setupEventListeners();
-                console.log('MetaMask initialized (fallback)');
-            }
-		}
-	}
-
-    async initializeWalletConnect() {
-        try {
-            if (!window.appkit) {
-                await new Promise(resolve => 
-                    window.addEventListener('reownAppKitLoaded', resolve, { once: true })
-                );
-            }
-            this.appKit = window.appkit;
-            return !!this.appKit;
-        } catch (e) {
-            console.error('Failed to init AppKit:', e);
-            return false;
+            provider.on('disconnect', () => {
+                console.log('Leo Wallet disconnected');
+                this.disconnectWallet();
+            });
         }
     }
 
-	// 初始化 Solana Connection（只负责 RPC；provider 由钱包注入）
-	initSolanaConnection(network = 'devnet', customRpc = '') {
-	  try {
-	    const { Connection, clusterApiUrl } = window.SOL || {};
-	    if (!Connection) throw new Error('Solana web3.js not loaded');
-	    const endpoint = customRpc || clusterApiUrl(network);
-	    this.solanaConn = new Connection(endpoint, 'confirmed');
-	    return true;
-	  } catch (e) {
-	    console.error('Failed to init Solana connection:', e);
-	    return false;
-	  }
-	}
+    // 从 Leo Wallet 返回的数据中提取 publicKey 字符串
+    extractPublicKey(data) {
+        if (!data) return null;
+        
+        // 如果是字符串，直接返回
+        if (typeof data === 'string') {
+            return data;
+        }
+        
+        // 如果是对象，尝试提取 publicKey
+        if (typeof data === 'object') {
+            // 尝试多种属性名
+            const key = data.publicKey || data.address || data.public_key;
+            if (typeof key === 'string') {
+                return key;
+            }
+        }
+        
+        return null;
+    }
 
 	/**
-	 * 连接 Solana（目前支持 phantom）
-	 * @param {'phantom'} kind
-	 */
-// 直接用这段替换你现在的 connectSolana()
-	async connectSolana(kind = 'phantom') {
-	  if (this.isConnecting) return { success: false, error: 'Connection already in progress' };
+     * 连接 Leo Wallet (Aleo)
+     */
+    async connectLeo() {
+        if (this.isConnecting) {
+            return { success: false, error: 'Connection already in progress' };
+        }
 	  this.isConnecting = true;
-	  try {
-	    // 从 localStorage 读取选择的网络
-	    let network = 'mainnet-beta'; // 默认 mainnet
-	    try {
-	      const networkRaw = localStorage.getItem('i3_preferred_network');
-	      if (networkRaw) {
-	        const networkData = JSON.parse(networkRaw);
-	        if (networkData && networkData.key) {
-	          // 将 'solana-mainnet' 转换为 'mainnet-beta'，'solana-devnet' 转换为 'devnet'
-	          network = networkData.key === 'solana-mainnet' ? 'mainnet-beta' : 'devnet';
-	        }
-	      }
-	    } catch (e) {
-	      console.warn('[WalletManager] Failed to read network from localStorage, using default:', e);
-	    }
-	    
-	    // 仅当后面要读取链上数据时才需要 RPC；使用选择的网络
-	    if (!this.initSolanaConnection(network)) {
-	      throw new Error('Failed to initialize Solana connection');
-	    }
-	    if (kind !== 'phantom') {
-	      throw new Error(`Unsupported Solana wallet: ${kind}`);
-	    }
-	    // ① 检测 Phantom 是否存在
-	    const provider =
-	      (window.solana && window.solana.isPhantom && window.solana) ||
-	      (window.phantom && window.phantom.solana && window.phantom.solana.isPhantom && window.phantom.solana) ||
-	      null;
-	    if (!provider || !provider.isPhantom) {
-	      // 更友好的提示 + 合理跳转
+
+        try {
+            // 检测 Leo Wallet 是否安装
+            const leoWallet = this.getLeoProvider();
+            
+            // 调试：输出 Leo Wallet 对象结构
+            console.log('[Leo] Provider found:', leoWallet);
+            if (leoWallet) {
+                console.log('[Leo] Provider methods:', Object.keys(leoWallet));
+                console.log('[Leo] Provider prototype:', Object.getOwnPropertyNames(Object.getPrototypeOf(leoWallet)));
+            }
+            
+            if (!leoWallet) {
 	      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 	      if (typeof showNotification === 'function') {
 	        showNotification(
 	          isMobile
-	            ? 'Open this page inside the Phantom app to connect.'
-	            : 'Phantom not detected. Opening download page in a new tab…',
+                            ? 'Please open this page in Leo Wallet browser.'
+                            : 'Leo Wallet not detected. Opening download page...',
 	          isMobile ? 'error' : 'info'
 	        );
 	      }
-	      // 移动端：引导到 Phantom 的 in-app browser（用户点"在 Phantom 中打开"）
-	      if (isMobile) {
-	        const target = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
-	        try { window.open(target, '_blank', 'noopener,noreferrer'); } catch (_) {}
-	        return { success: false, error: 'Please open this site in the Phantom app browser.' };
-	      }
-	      // 桌面：打开扩展下载页（必须由用户点击触发，当前函数即来源于点击事件，可避免被拦截）
-	      try { window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer'); } catch (_) {}
-	      return { success: false, error: 'Phantom not installed. Download page opened.' };
-	    }
-	    // ② 授权连接（会弹 Phantom 授权）
-	    const res = await provider.connect();
-	    const pubkey = res?.publicKey || provider.publicKey;
-	    if (!pubkey) throw new Error('No public key returned from Phantom');
-	    // ③ 同步本地会话（沿用你的统一 UI / 事件 / Firestore 流）
-	    this.walletType = 'solana-phantom';
-	    this.solana = provider;
-	    this.solanaAddress = String(pubkey.toBase58());
-	    this.walletAddress = this.solanaAddress;
-	    this.isConnected = true;
-	    // ④ 监听断开/账户变化
-	    try {
-	      provider.on?.('disconnect', () => this.disconnectWallet());
-	      provider.on?.('accountChanged', (pk) => {
-	        if (!pk) return this.disconnectWallet();
-	        const next = String(pk.toBase58());
-	        if (next !== this.solanaAddress) {
-	          this.saveWalletSpecificData?.();
-	          this.solanaAddress = next;
-	          this.walletAddress = next;
-	          this.loadWalletSpecificData?.();
-	          this.saveToStorage?.();
-	          this.updateUI?.();
-			  try { window.setWalletTypeIcon && window.setWalletTypeIcon(null); } catch {}
-	          window.dispatchEvent(new CustomEvent('walletConnected', {
-	            detail: { address: this.walletAddress, credits: this.credits, isNewUser: !this.getWalletData?.(this.walletAddress) }
-	          }));
-	          try { window.onWalletConnected?.(this.walletAddress, 'solana', 'devnet'); } catch {}
-	        }
-	      });
-	    } catch {}
-	    // ⑤ （可选）读取余额做校验
-	    try {
-	      const { PublicKey } = window.SOL || {};
-	      const lamports = await this.solanaConn.getBalance(new PublicKey(this.solanaAddress));
-	      console.log('SOL balance (lamports):', lamports);
-	    } catch (e) {
-	      console.warn('Failed to fetch SOL balance:', e);
-	    }
-	    // ⑥ 与既有流程对齐
-	    await this.fetchRemoteWalletDataIfAvailable?.();
-	    this.loadWalletSpecificData?.();
-	    this.saveToStorage?.();
-	    this.updateUI?.();
-	    window.dispatchEvent(new CustomEvent('walletConnected', {
-	      detail: { address: this.walletAddress, credits: this.credits, isNewUser: !this.getWalletData?.(this.walletAddress) }
-	    }));
-		renderNetworkBadge(mapChainIdToDisplay(null, 'solana-phantom', 'devnet'));
-	    try { window.onWalletConnected?.(this.walletAddress, 'solana', 'devnet'); } catch {}
-	    return { success: true, address: this.walletAddress, credits: this.credits };
-  } catch (error) {
-    console.error('Solana connect error:', error);
-    const rawMessage = error?.message || String(error);
-    let friendlyMessage = rawMessage;
-    if (/Phantom not installed/i.test(rawMessage)) {
-      friendlyMessage = 'Phantom not detected. Please install or enable the Phantom extension and try again.';
-    } else if (/Unexpected error/i.test(rawMessage)) {
-      friendlyMessage = 'Phantom reported an unexpected error. Please make sure the Phantom extension is installed, unlocked, and switched to Solana Devnet, then try connecting again.';
-    } else if (/Failed to initialize Solana connection/i.test(rawMessage)) {
-      friendlyMessage = 'Unable to reach Solana Devnet RPC. Please check your network connection and retry.';
-    }
-    return { success: false, error: friendlyMessage };
-	  } finally {
-	    this.isConnecting = false;
-	  }
-	}
-
-		// 获取Solana PHRS余额
-	async updatePHRSBalance() {
-		try {
-			const usdcDisplay = document.getElementById('usdcDisplay');
-			if (!usdcDisplay || !this.solanaConn || !this.solanaAddress) {
-				return;
-			}
-
-			// Solana PHRS mint地址 (从配置读取，默认为mainnet)
-			const PHRS_MINT = (window.APP_CONFIG && window.APP_CONFIG.solana && window.APP_CONFIG.solana.usdcMint) || 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
-			
-			// 动态导入 @solana/spl-token
-			const { getAssociatedTokenAddress, getAccount } = await import('https://esm.sh/@solana/spl-token@0.4.8');
-			const { PublicKey } = window.SOL || {};
-			
-			if (!PublicKey) {
-				console.warn('Solana web3.js not loaded');
-				return;
-			}
-
-			const walletPubkey = new PublicKey(this.solanaAddress);
-			const usdcMintPubkey = new PublicKey(PHRS_MINT);
-			
-			// 获取关联的token账户地址
-			const tokenAccountAddress = await getAssociatedTokenAddress(
-				usdcMintPubkey,
-				walletPubkey
-			);
-			
-			try {
-				// 获取token账户信息
-				const tokenAccount = await getAccount(this.solanaConn, tokenAccountAddress);
-				const balance = Number(tokenAccount.amount) / 1e6; // PHRS有6位小数
-				const rounded = balance.toFixed(2);
-				
-				usdcDisplay.style.display = 'inline';
-				usdcDisplay.textContent = `${rounded} PHRS`;
-				console.log('PHRS balance:', rounded);
-			} catch (err) {
-				// Token账户不存在或余额为0
-				if (err.name === 'TokenAccountNotFoundError') {
-					usdcDisplay.style.display = 'inline';
-					usdcDisplay.textContent = '0.00 PHRS';
-					console.log('PHRS balance: 0.00 (no token account)');
-				} else {
-					throw err;
-				}
-			}
-		} catch (error) {
-			console.warn('Failed to fetch PHRS balance:', error);
-			const usdcDisplay = document.getElementById('usdcDisplay');
-			if (usdcDisplay) {
-				usdcDisplay.style.display = 'inline';
-				usdcDisplay.textContent = '-- PHRS';
-			}
-		}
-	}
-
-	async connectWalletConnect() {
-	  console.log('Starting AppKit connection...');
-	  if (this.isConnecting) return { success: false, error: 'Connection already in progress' };
-	  this.isConnecting = true;
-
-	  try {
-	    // 1) 准备 AppKit
-	    const ready = await this.initializeWalletConnect();
-	    if (!ready) throw new Error('AppKit not initialized');
-	    const modal = this.appKit || window.appkit;
-	    if (!modal) throw new Error('AppKit instance missing');
-
-	    // 2) 拿到 EIP-1193 provider（订阅 + 轮询 + 稳开弹窗）
-	    const provider = await new Promise((resolve, reject) => {
-	      let timeoutId;
-	      let pollId;
-	      let reopened = false;
-
-	      const done = (p) => {
-	        if (!p) return;
-	        try { clearTimeout(timeoutId); } catch {}
-	        try { clearInterval(pollId); } catch {}
-	        try { off?.(); } catch {}
-	        resolve(p);
-	      };
-
-	      // 订阅状态
-	      const off = modal.subscribeProviders?.((state) => {
-	        try {
-	          const p =
-	            state?.eip155 ||
-	            state?.['eip155'] ||
-	            state?.providers?.eip155 ||
-	            state?.provider || null;
-	          if (p) done(p);
-	        } catch (e) {
-	          console.warn('[providers cb error]', e);
-	        }
-	      });
-
-	      // 轮询兜底
-	      const tryGrab = async () => {
-	        try {
-	          if (typeof modal.getProvider === 'function') {
-	            let p = null;
-	            try { p = await modal.getProvider('eip155'); } catch {}
-	            if (!p) { try { p = await modal.getProvider({ namespace: 'eip155' }); } catch {} }
-	            if (p) return done(p);
-	          }
-	          const s = (typeof modal.getState === 'function' ? modal.getState() : (modal.state || {}));
-	          const p3 = s?.eip155 || s?.['eip155'] || s?.providers?.eip155 || s?.provider || null;
-	          if (p3) return done(p3);
-	        } catch {}
-	      };
-	      pollId = setInterval(tryGrab, 400);
-	      tryGrab();
-
-	      // 稳开弹窗：立刻开 + 500ms 再开一次兜底
-	      queueMicrotask(() => {
-	        try { modal.open?.({ view: 'Connect', namespace: 'eip155' }); }
-	        catch { modal.open?.(); }
-	      });
-	      setTimeout(() => {
-	        if (!reopened) {
-	          reopened = true;
-	          try { modal.open?.({ view: 'Connect', namespace: 'eip155' }); }
-	          catch { modal.open?.(); }
-	        }
-	      }, 500);
-
-	      // 超时
-	      timeoutId = setTimeout(() => {
-	        try { clearInterval(pollId); off?.(); } catch {}
-	        reject(new Error('Timeout waiting for wallet'));
-	      }, 60_000);
-	    });
-
-	    // 3) （可选）有的环境需要先显式 connect，一旦报错不当致命处理
-	    if (typeof provider.connect === 'function') {
-	      try { await provider.connect(); }
-	      catch (e) { console.debug('[WC] provider.connect() skipped:', e?.message || e); }
-	    }
-
-	    // 4) 关键：等待账户真正就绪（解决"第一次扫码回来没反应"）
-	    const accounts = await waitForAccounts(provider, { totalMs: 15000, stepMs: 400 });
-	    if (!accounts.length) throw new Error('Wallet connected but no accounts are ready yet');
-
-	    // 5) 成功后只更新一次状态（去掉你原文件里重复的第二套更新）
-	    this.walletType = 'walletconnect';
-	    this.ethereum = provider;
-	    this.walletAddress = accounts[0];
-	    this.isConnected = true;
-
-		try {
-			if (typeof window.enforcePreferredEvmChain === 'function') {
-				await window.enforcePreferredEvmChain(provider);
-			}
-		} catch (e) {
-			console.warn('[WC] enforcePreferredEvmChain failed:', e);
-		}
-
-	    // 监听器
-	    this.setupAppKitListeners?.(provider);
-
-	    // 关闭弹窗（先关 reown，再关你自己的白色登录框）
-	    try { modal?.close?.(); } catch {}
-	    try { window.closeWalletModal?.(); } catch {}
-
-	    // 6) 同步远端 & 刷新 UI
-	    await this.fetchRemoteWalletDataIfAvailable?.();
-	    this.loadWalletSpecificData?.();
-	    this.saveToStorage?.();
-	    this.updateUI?.();
-
-	    // 7) 广播事件
-	    window.dispatchEvent(new CustomEvent('walletConnected', {
-	      detail: {
-	        address: this.walletAddress,
-	        credits: this.credits,
-	        isNewUser: !this.getWalletData?.(this.walletAddress)
-	      }
-	    }));
-
-	    return { success: true, address: this.walletAddress, credits: this.credits };
-	  } catch (error) {
-	    console.error('AppKit connection error:', error);
-	    return { success: false, error: error.message || String(error) };
-	  } finally {
-	    this.isConnecting = false;
-	  }
-	}
-
-
-    setupAppKitListeners(provider) {
-        if (!provider) return;
-
-        provider.on?.('accountsChanged', (accounts) => {
-            if (!accounts?.length) {
-                this.disconnectWallet();
-                return;
+                // 打开 Leo Wallet 下载页
+                try { 
+                    window.open('https://www.leo.app/', '_blank', 'noopener,noreferrer'); 
+                } catch (_) {}
+                return { success: false, error: 'Leo Wallet not installed. Download page opened.' };
             }
+
+            // 连接钱包 - Leo Wallet API
+            // 参数文档：
+            // - decryptPermission: 'NoDecrypt' | 'UponRequest' | 'AutoDecrypt' | 'ViewKeyAccess' | 'OnChainHistory'
+            // - network: 'mainnet' | 'testnetbeta'
+            // - programs: string[] (需要交互的程序列表)
             
-            const nextAddress = accounts[0];
-            if (nextAddress !== this.walletAddress) {
-                if (this.walletAddress) {
-                    this.saveWalletSpecificData();
+            let publicKey = null;
+            
+            if (typeof leoWallet.connect === 'function') {
+                try {
+                    // 需要 OnChainHistory 权限才能读取私密记录 (用于 transfer_private)
+                    // 可选值: 'NoDecrypt' | 'UponRequest' | 'AutoDecrypt' | 'ViewKeyAccess' | 'OnChainHistory'
+                    const decryptPermission = 'OnChainHistory';
+                    
+                    // 从用户选择的网络配置中读取 network 参数
+                    // Leo Wallet 支持: 'mainnet' | 'testnetbeta'
+                    let network = 'mainnet';  // 默认主网
+                    try {
+                        const preferredNetwork = typeof getPreferredNetwork === 'function' ? getPreferredNetwork() : null;
+                        if (preferredNetwork && preferredNetwork.network) {
+                            network = preferredNetwork.network;
+                        }
+                    } catch (e) {
+                        console.warn('[Leo] Could not get preferred network, using mainnet:', e);
+                    }
+                    
+                    // programs 参数：需要交互的程序列表
+                    // 注意：传递字符串数组，Leo Wallet 会显示这些程序
+                    const programs = ['credits.aleo'];
+                    
+                    console.log('[Leo] Connecting with params:', { decryptPermission, network, programs });
+                    
+                    // 调用 connect
+                    // Leo Wallet API: connect(decryptPermission, network, programs)
+                    // 返回值可能是 publicKey 字符串或包含 publicKey 的对象
+                    let result;
+                    try {
+                        result = await leoWallet.connect(decryptPermission, network, programs);
+                    } catch (connectErr) {
+                        // 某些版本的 Leo Wallet 可能不支持 programs 参数
+                        // 尝试不传 programs 参数
+                        console.warn('[Leo] connect() with programs failed, trying without programs:', connectErr.message);
+                        result = await leoWallet.connect(decryptPermission, network);
+                    }
+                    
+                    console.log('[Leo] connect() returned:', result);
+                    
+                    // 从返回结果或 leoWallet.publicKey 提取 publicKey
+                    publicKey = this.extractPublicKey(result) || this.extractPublicKey(leoWallet.publicKey);
+                    
+                    console.log('[Leo] Extracted publicKey:', publicKey);
+                    
+                } catch (e) {
+                    console.error('[Leo] connect() failed:', e);
+                    
+                    // 如果是用户拒绝
+                    if (e?.message?.includes('reject') || e?.message?.includes('cancel') || 
+                        e?.message?.includes('denied') || e?.name === 'UserRejectedRequestError') {
+                        throw new Error('Connection rejected by user');
+                    }
+                    throw e;
                 }
-                this.walletAddress = nextAddress;
+            }
+
+            // 备用：直接读取 publicKey 属性（如果已经连接）
+            if (!publicKey && leoWallet.publicKey) {
+                console.log('[Leo] Reading existing publicKey property...');
+                publicKey = this.extractPublicKey(leoWallet.publicKey);
+            }
+
+            if (!publicKey) {
+                throw new Error('No public key returned from Leo Wallet. Please make sure Leo Wallet is unlocked.');
+            }
+
+            // 转换为字符串（如果是对象）
+            const publicKeyStr = typeof publicKey === 'string' ? publicKey : publicKey.toString();
+
+            // 更新状态
+            this.walletType = 'leo';
+            this.aleoPublicKey = publicKeyStr;
+            this.walletAddress = publicKeyStr;
+            this.isConnected = true;
+            this.leoAdapter = leoWallet; // 保存 provider 引用
+
+            // 设置事件监听
+            this.setupLeoEventListeners();
+
+            // 同步数据
+            await this.fetchRemoteWalletDataIfAvailable();
                 this.loadWalletSpecificData();
                 this.saveToStorage();
                 this.updateUI();
                 
+            // 广播事件
                 window.dispatchEvent(new CustomEvent('walletConnected', {
                     detail: { 
                         address: this.walletAddress, 
@@ -471,188 +234,153 @@ class WalletManager {
                         isNewUser: !this.getWalletData(this.walletAddress) 
                     }
                 }));
-            }
-        });
 
-        provider.on?.('chainChanged', (chainId) => {
-            console.log('Chain changed to:', chainId);
+            // 渲染网络徽章
             try {
-              const info = mapChainIdToDisplay(chainId, this.walletType);
-              renderNetworkBadge(info);
+                const preferredNetwork = typeof getPreferredNetwork === 'function' ? getPreferredNetwork() : null;
+                const networkName = preferredNetwork?.name || 'Aleo';
+                renderNetworkBadge({ name: networkName, icon: 'svg/leo.svg' });
             } catch (e) {}
-        });
 
-        provider.on?.('disconnect', () => {
-            console.log('AppKit disconnected');
-            this.disconnectWallet();
-        });
+            console.log('Leo Wallet connected:', this.walletAddress);
+            return { success: true, address: this.walletAddress, credits: this.credits };
+
+        } catch (error) {
+            console.error('Leo Wallet connect error:', error);
+            let friendlyMessage = error?.message || String(error);
+            
+            if (/user reject/i.test(friendlyMessage) || /cancelled/i.test(friendlyMessage)) {
+                friendlyMessage = 'Connection cancelled by user';
+            } else if (/not installed/i.test(friendlyMessage)) {
+                friendlyMessage = 'Leo Wallet not detected. Please install the Leo Wallet extension.';
+            }
+            
+            return { success: false, error: friendlyMessage };
+        } finally {
+            this.isConnecting = false;
+        }
     }
 
+    /**
+     * 更新支付模式状态显示
+     * 不显示余额（保护隐私），只显示当前是 Private 还是 Public 支付模式
+     * 
+     * 注意：使用缓存避免频繁调用 getPrivateRecords()（会触发钱包弹窗）
+     */
+    async updatePaymentModeStatus(forceRefresh = false) {
+        try {
+            const statusDisplay = document.getElementById('paymentModeStatus');
+            if (!statusDisplay || !this.aleoPublicKey) {
+                return;
+            }
 
-	// ========== 统一连接入口（MetaMask 默认） ==========
-	async connectWallet(walletType = 'metamask') {
-		if (walletType === 'coinbase') {
-    		return this.connectCoinbaseWallet();
-    	}
-		if (walletType === 'walletconnect') {
-        	return this.connectWalletConnect();
-    	}
-		if (this.isConnecting) {
-			return { success: false, error: 'Connection already in progress. Please approve MetaMask.' };
-		}
-		this.isConnecting = true;
-		try {
-			// Ensure provider (do not reset SDK unless missing)
-            if (!this.ethereum) {
-                this.ethereum = this.getMetaMaskProvider();
-                if (!this.ethereum) {
-                    throw new Error('No MetaMask provider available. Please install/enable MetaMask.');
+            // 缓存机制：避免频繁调用 getPrivateRecords（会触发钱包弹窗）
+            // 缓存 5 分钟，除非强制刷新
+            const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+            const now = Date.now();
+            
+            if (!forceRefresh && 
+                this._paymentModeCache && 
+                this._paymentModeCacheTime && 
+                (now - this._paymentModeCacheTime) < CACHE_DURATION) {
+                // 使用缓存的结果更新 UI
+                this._updatePaymentModeUI(statusDisplay, this._paymentModeCache);
+                return;
+            }
+
+            // 检查是否有 private records（异步检测）
+            // 注意：这可能会触发 Leo Wallet 弹窗，所以我们使用缓存
+            let hasPrivateBalance = false;
+            try {
+                if (window.AleoPayment && typeof window.AleoPayment.getPrivateRecords === 'function') {
+                    const records = await window.AleoPayment.getPrivateRecords();
+                    hasPrivateBalance = records && records.length > 0;
+                }
+            } catch (e) {
+                console.warn('[WalletManager] Failed to check private records:', e);
+                // 如果检测失败，使用之前的缓存（如果有）
+                if (this._paymentModeCache !== undefined) {
+                    hasPrivateBalance = this._paymentModeCache;
                 }
             }
 
-			// Give provider a brief moment to settle after init
-			await new Promise(resolve => setTimeout(resolve, 150));
+            // 更新缓存
+            this._paymentModeCache = hasPrivateBalance;
+            this._paymentModeCacheTime = now;
+            this._hasPrivateBalance = hasPrivateBalance;
+            
+            // 更新 UI
+            this._updatePaymentModeUI(statusDisplay, hasPrivateBalance);
+            
+            console.log('[WalletManager] Payment mode:', hasPrivateBalance ? 'Private' : 'Public');
+        } catch (error) {
+            console.warn('Failed to update payment mode status:', error);
+        }
+    }
+    
+    /**
+     * 更新支付模式 UI（内部方法）
+     */
+    _updatePaymentModeUI(statusDisplay, hasPrivateBalance) {
+        statusDisplay.style.display = 'inline-flex';
+        if (hasPrivateBalance) {
+            statusDisplay.innerHTML = '<span style="color:#10b981;">🔒</span> Private';
+            statusDisplay.title = 'Private Payment Mode - Your transactions are encrypted';
+            statusDisplay.style.background = 'rgba(16, 185, 129, 0.15)';
+            statusDisplay.style.color = '#10b981';
+        } else {
+            statusDisplay.innerHTML = '<span style="color:#f59e0b;">👁️</span> Public';
+            statusDisplay.title = 'Public Payment Mode - Enable private payments in wallet menu';
+            statusDisplay.style.background = 'rgba(245, 158, 11, 0.15)';
+            statusDisplay.style.color = '#f59e0b';
+        }
+    }
+    
+    /**
+     * 强制刷新支付模式状态（用于启用隐私支付后）
+     */
+    refreshPaymentModeStatus() {
+        return this.updatePaymentModeStatus(true);
+    }
 
-			// First try to read existing accounts (handles cases where another flow already requested access)
-			let accounts = await this.ethereum.request({ method: 'eth_accounts' }).catch(() => []);
-			if (!accounts || accounts.length === 0) {
-				const timeoutPromise = new Promise((_, reject) => {
-					setTimeout(() => reject(new Error('Connection timeout after 10 seconds')), 10000);
-				});
-				const connectPromise = this.ethereum.request({ method: 'eth_requestAccounts' });
-				accounts = await Promise.race([connectPromise, timeoutPromise]);
-			}
 
-			if (accounts && accounts.length > 0) {
-				this.walletAddress = accounts[0];
-				this.isConnected = true;
-				this.walletType = 'metamask';
-
-				try {
-					if (typeof window.enforcePreferredEvmChain === 'function') {
-						await window.enforcePreferredEvmChain(this.ethereum);
-					}
-				} catch (e) {
-					console.warn('[MM] enforcePreferredEvmChain failed:', e);
-				}
-
-				// Always try to hydrate from Firestore so server-side credit changes are reflected
-				await this.fetchRemoteWalletDataIfAvailable();
-				this.loadWalletSpecificData();
-				this.saveToStorage();
-				this.updateUI();
-
-				console.log('Wallet connected:', this.walletAddress, 'Credits:', this.credits);
-
-				window.dispatchEvent(new CustomEvent('walletConnected', {
-					detail: {
-						address: this.walletAddress,
-						credits: this.credits,
-						// Flag new user based on prior local archive (after remote hydrate, check again)
-						isNewUser: !this.getWalletData(this.walletAddress)
-					}
-				}));
-
-				return {
-					success: true,
-					address: this.walletAddress,
-					credits: this.credits
-				};
-			}
-
-			throw new Error('No accounts returned from MetaMask');
-		} catch (error) {
-			console.error('Wallet connection failed:', error);
-			// If a request is already pending or popup blocked, try to read granted accounts
-			if (error && (error.code === -32002 || error.code === 'RESOURCE_BUSY')) {
-				try {
-					const accounts = await this.ethereum.request({ method: 'eth_accounts' });
-					if (accounts && accounts.length > 0) {
-						this.walletAddress = accounts[0];
-						this.isConnected = true;
-						await this.fetchRemoteWalletDataIfAvailable();
-						this.loadWalletSpecificData();
-						this.saveToStorage();
-						this.updateUI();
-						window.dispatchEvent(new CustomEvent('walletConnected', {
-							detail: { address: this.walletAddress, credits: this.credits, isNewUser: !this.getWalletData(this.walletAddress) }
-						}));
-						return { success: true, address: this.walletAddress, credits: this.credits };
-					}
-				} catch (_) {}
-			}
-			if (error && error.code === 4001) {
-				// Retry once after a short delay
-				try {
-					await new Promise(resolve => setTimeout(resolve, 800));
-					const accounts = await this.ethereum.request({ method: 'eth_accounts' });
-					if (accounts && accounts.length > 0) {
-						this.walletAddress = accounts[0];
-						this.isConnected = true;
-						const hadLocalArchive = !!this.getWalletData(this.walletAddress);
-						if (!hadLocalArchive) {
-							await this.fetchRemoteWalletDataIfAvailable();
-						}
-						this.loadWalletSpecificData();
-						this.saveToStorage();
-						this.updateUI();
-						window.dispatchEvent(new CustomEvent('walletConnected', {
-							detail: { address: this.walletAddress, credits: this.credits, isNewUser: !hadLocalArchive }
-						}));
-						return { success: true, address: this.walletAddress, credits: this.credits };
-					}
-				} catch (_) {}
-				return { success: false, error: 'Connection cancelled by user' };
-			}
-			return { success: false, error: error.message };
-		} finally {
-			this.isConnecting = false;
-		}
+    // ========== 统一连接入口（Leo Wallet 默认） ==========
+    async connectWallet(walletType = 'leo') {
+        if (walletType === 'leo') {
+            return this.connectLeo();
+        }
+        // 其他钱包类型不再支持
+        return { success: false, error: 'Only Leo Wallet is supported' };
 	}
 
 disconnectWallet() {
 	    if (this.walletAddress) {
 	        this.saveWalletSpecificData?.();
 	    }
-	    // AppKit 断开连接方式（原样保留）
-	    if (this.walletType === 'walletconnect') {
-	        try {
-	            // 方式1：通过 AppKit 实例断开
-	            if (this.appKit?.adapter?.connectionControllerClient) {
-	                this.appKit.adapter.connectionControllerClient.disconnect();
-	            }
-	            
-	            // 方式2：或者通过保存的 provider 断开
-	            if (this.ethereum && typeof this.ethereum.disconnect === 'function') {
-	                this.ethereum.disconnect();
+        
+        // Leo Wallet 断开连接
+        if (this.walletType === 'leo') {
+            try {
+                const provider = this.getLeoProvider();
+                if (provider && typeof provider.disconnect === 'function') {
+                    provider.disconnect();
 	            }
 	        } catch (error) {
-	            console.warn('Error disconnecting AppKit:', error);
-	        }
-	        
-	        // 清理 AppKit 相关属性
-	        this.appKit = null;
-	    }
-	    // === 新增：Solana（Phantom 等）相关清理 ===
-	    try {
-	        // 只有当当前钱包类型是 solana* 且 provider 存在并支持 disconnect 时才调用
-	        if (this.walletType?.startsWith?.('solana') && this.solana && typeof this.solana.disconnect === 'function') {
-	            this.solana.disconnect();
-	        }
-	    } catch (e) {
-	        console.warn('Error disconnecting Solana provider:', e);
-	    }
-	    // 不论是否成功调用 disconnect，都将本地引用置空
-	    this.solana = null;
-	    this.solanaConn = null;
-	    this.solanaAddress = null;
-	    // 统一清理所有钱包类型的通用属性（原样保留）
+                console.warn('Error disconnecting Leo Wallet:', error);
+            }
+        }
+        
+        // 清理 Leo Wallet 相关属性
+        this.aleoPublicKey = null;
+        this.leoAdapter = null;
+        
+        // 统一清理所有钱包类型的通用属性
 	    this.walletAddress = null;
 	    this.isConnected = false;
 	    this.walletType = null;
 	    this.credits = 0;
 	    this.totalEarned = 0;
-	    this.ethereum = null; // 移到这里，所有钱包类型都清理
+        
 	    // Clear current session data (do not delete per-wallet archives)
 	    try {
 	        localStorage.removeItem('wallet_connected');
@@ -660,6 +388,7 @@ disconnectWallet() {
 	        localStorage.removeItem('user_credits');
 	        localStorage.removeItem('total_earned');
 	    } catch (_) {}
+        
 	    this.updateUI?.();
 	    window.dispatchEvent(new CustomEvent('walletDisconnected'));
 	    console.log('Wallet disconnected');
@@ -670,7 +399,9 @@ disconnectWallet() {
 	saveWalletSpecificData() {
 		if (!this.walletAddress) return;
 		try {
-			const walletKey = `wallet_data_${this.walletAddress.toLowerCase()}`;
+			// 确保地址是字符串
+			const addrStr = typeof this.walletAddress === 'string' ? this.walletAddress : String(this.walletAddress);
+			const walletKey = `wallet_data_${addrStr.toLowerCase()}`;
 			const walletData = {
 				address: this.walletAddress,
 				credits: this.credits,
@@ -755,7 +486,9 @@ disconnectWallet() {
 		try {
 			if (!window.firebaseDb) return;
 			const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js');
-			const addrLower = (this.walletAddress || '').toLowerCase();
+			// 确保地址是字符串
+			const addrStr = typeof this.walletAddress === 'string' ? this.walletAddress : String(this.walletAddress);
+			const addrLower = addrStr.toLowerCase();
 			let walletRef = doc(window.firebaseDb, 'wallets', addrLower);
 			let snap = await getDoc(walletRef);
 			if (!snap.exists()) {
@@ -800,7 +533,9 @@ disconnectWallet() {
 	getWalletData(address) {
 		if (!address) return null;
 		try {
-			const walletKey = `wallet_data_${address.toLowerCase()}`;
+			// 确保地址是字符串
+			const addrStr = typeof address === 'string' ? address : String(address);
+			const walletKey = `wallet_data_${addrStr.toLowerCase()}`;
 			const data = localStorage.getItem(walletKey);
 			return data ? JSON.parse(data) : null;
 		} catch (error) {
@@ -894,7 +629,7 @@ disconnectWallet() {
 			}
 		}));
 
-		console.log(`Daily checkin successful! Earned ${DAILY_REWARD} PHRS.`, claimResult);
+		console.log(`Daily checkin successful! Earned ${DAILY_REWARD} ALEO.`, claimResult);
 
 		return {
 			success: true,
@@ -928,6 +663,13 @@ disconnectWallet() {
 				this.walletType = localStorage.getItem('wallet_type') || 'metamask';
 				this.loadWalletSpecificData();
 				console.log(`🔄 Restored wallet session: ${this.walletAddress} with ${this.credits} I3 tokens`);
+				
+				// 如果是 Leo Wallet，自动尝试重新连接以获取 provider.publicKey
+				// 这样在页面刷新后也能正常使用支付功能
+				if (this.walletType === 'leo') {
+					this.autoReconnectLeoWallet();
+				}
+				
 				// Immediately reconcile with Firestore so server-side credit changes reflect after refresh
 				try {
 					if (typeof this.fetchRemoteWalletDataIfAvailable === 'function') {
@@ -943,6 +685,80 @@ disconnectWallet() {
 			}
 		} catch (error) {
 			console.error('Error loading wallet data:', error);
+		}
+	}
+	
+	// 自动重新连接 Leo Wallet（页面刷新后恢复 provider 连接）
+	// 重要：不主动调用 connect() 以避免触发钱包弹窗
+	// 只检查 provider 是否已经有 publicKey（用户之前已授权的情况）
+	async autoReconnectLeoWallet() {
+		console.log('[Leo] 🔄 autoReconnectLeoWallet() called');
+		
+		// 防止重复调用
+		if (this._autoReconnectInProgress) {
+			console.log('[Leo] Auto-reconnect already in progress, skipping');
+			return;
+		}
+		this._autoReconnectInProgress = true;
+		
+		try {
+			// 等待 Leo Wallet 扩展加载完成
+			let leoWallet = window.leoWallet || window.leo;
+			
+			// 如果 Leo Wallet 还没加载，等待一下
+			if (!leoWallet) {
+				console.log('[Leo] Leo Wallet not yet available, waiting 500ms...');
+				await new Promise(resolve => setTimeout(resolve, 500));
+				leoWallet = window.leoWallet || window.leo;
+			}
+			
+			if (!leoWallet) {
+				console.log('[Leo] Leo Wallet still not available after wait');
+				this._autoReconnectInProgress = false;
+				return;
+			}
+			
+			console.log('[Leo] Leo Wallet provider found, checking publicKey...');
+			console.log('[Leo] Current provider.publicKey:', leoWallet.publicKey);
+			
+			// 检查是否已经有 publicKey（用户之前已授权且浏览器会话未过期）
+			if (leoWallet.publicKey) {
+				const pk = typeof leoWallet.publicKey === 'string' 
+					? leoWallet.publicKey 
+					: leoWallet.publicKey.toString();
+				console.log('[Leo] ✅ Provider already has publicKey:', pk);
+				
+				// 验证 publicKey 与保存的地址一致
+				if (pk !== this.walletAddress) {
+					console.warn('[Leo] publicKey mismatch! Updating walletAddress from provider');
+					console.warn('[Leo] Old walletAddress:', this.walletAddress);
+					console.warn('[Leo] New publicKey:', pk);
+					this.walletAddress = pk;
+					this.aleoPublicKey = pk;
+					this.saveToStorage();
+				}
+				
+				this.leoAdapter = leoWallet;
+				this.setupLeoEventListeners();
+				this._autoReconnectInProgress = false;
+				return;
+			}
+			
+			// ======== 重要修改 ========
+			// 不主动调用 connect()，因为这会触发钱包弹窗
+			// 用户需要点击钱包按钮手动重新连接
+			// 这避免了页面加载时不停弹窗的问题
+			console.log('[Leo] ⚠️ Provider has no publicKey (session expired or not authorized)');
+			console.log('[Leo] 💡 User needs to click wallet button to reconnect manually');
+			
+			// 保持 UI 显示已连接状态（地址仍然有效），但标记需要重新授权
+			// 当用户尝试进行交易时，aleo-payment.js 的 waitForLeoWalletReady() 会处理重连
+			this._needsReauthorization = true;
+			
+		} catch (error) {
+			console.warn('[Leo] ❌ Auto-reconnect error:', error);
+		} finally {
+			this._autoReconnectInProgress = false;
 		}
 	}
 
@@ -1029,72 +845,47 @@ disconnectWallet() {
 		};
 	}
 
-	setupEventListeners() {
-		if (!this.ethereum || typeof this.ethereum.on !== 'function') return;
-
-		this.ethereum.on('accountsChanged', (accounts) => {
-			if (!accounts || accounts.length === 0) {
-				this.disconnectWallet();
-				return;
-			}
-			const nextAddress = accounts[0];
-			if (nextAddress !== this.walletAddress) {
-				if (this.walletAddress) {
-					this.saveWalletSpecificData();
-				}
-				this.walletAddress = nextAddress;
-				this.isConnected = true;
-				this.loadWalletSpecificData();
-				this.saveToStorage();
-				this.updateUI();
-				console.log(`Switched to wallet: ${this.walletAddress}`);
-				// Dispatch walletConnected so other modules can react (UI, Firebase sync)
-				try {
-					const isNewUser = !this.getWalletData(this.walletAddress);
-					window.dispatchEvent(new CustomEvent('walletConnected', {
-						detail: { address: this.walletAddress, credits: this.credits, isNewUser: isNewUser }
-					}));
-				} catch (_) {}
-			}
-		});
-
-		this.ethereum.on('chainChanged', (newCid) => {
-  			try {
-    			const info = mapChainIdToDisplay(newCid, this.walletType);
-    			renderNetworkBadge(info);
-  			} catch (e) {}
-		});
-
-	}
+    // setupEventListeners 已移至 setupLeoEventListeners
 
 	updateUI() {
 		const accountBtnText = document.getElementById('accountBtnText');
-		const usdcDisplay  = document.getElementById('usdcDisplay');
-		const connectBtn      = document.getElementById('connectWalletBtn');
-		const checkinBtn      = document.getElementById('checkinBtn');
-		const checkinStatus   = document.getElementById('checkinStatus');
+        const paymentModeStatus = document.getElementById('paymentModeStatus');
+        const connectBtn = document.getElementById('connectWalletBtn');
+        const checkinBtn = document.getElementById('checkinBtn');
+        const checkinStatus = document.getElementById('checkinStatus');
+        
 		// 右侧钱包类型小图标
 		if (typeof window.setWalletTypeIcon === 'function') {
 			window.setWalletTypeIcon(this.walletType || null);
 		}
+        
 		if (this.isConnected && this.walletAddress) {
 			// 已连接 —— 按钮显示地址
+            // Aleo 地址格式: aleo1... (较长，截取前10后6)
 			if (accountBtnText) {
-				accountBtnText.textContent =
-					`${this.walletAddress.slice(0, 6)}...${this.walletAddress.slice(-4)}`;
-			}
-			// 已连接 —— 如果是Solana钱包，显示PHRS余额
-			if (usdcDisplay && this.walletType && this.walletType.includes('solana')) {
-				this.updatePHRSBalance();
-			} else if (usdcDisplay) {
-				usdcDisplay.style.display = 'none';
-			}
+                const addr = this.walletAddress;
+                if (addr.startsWith('aleo1')) {
+                    accountBtnText.textContent = `${addr.slice(0, 10)}...${addr.slice(-6)}`;
+                } else {
+                    accountBtnText.textContent = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+                }
+            }
+            
+            // 已连接 —— 如果是 Leo Wallet，显示支付模式状态（不显示余额，保护隐私）
+            const paymentModeStatus = document.getElementById('paymentModeStatus');
+            if (paymentModeStatus && this.walletType === 'leo') {
+                this.updatePaymentModeStatus();
+            } else if (paymentModeStatus) {
+                paymentModeStatus.style.display = 'none';
+            }
+            
 			// Connect/Disconnect 按钮
 			if (connectBtn) {
 				connectBtn.textContent = 'Disconnect Wallet';
 				connectBtn.removeAttribute('onclick');
 				connectBtn.onclick = () => this.disconnectWallet();
 			}
+            
 			// Daily Check-in 状态
 			if (checkinBtn) {
 				// 检查是否是 Admin 用户
@@ -1126,12 +917,12 @@ disconnectWallet() {
 			}
 			if (checkinStatus) checkinStatus.style.display = 'block';
 		} else {
-			// 未连接 —— 只显示 Login，隐藏 PHRS
+            // 未连接 —— 只显示 Login，隐藏支付模式状态
 			if (accountBtnText) {
 				accountBtnText.textContent = 'Login';
 			}
-			if (usdcDisplay) {
-				usdcDisplay.style.display = 'none';
+            if (paymentModeStatus) {
+                paymentModeStatus.style.display = 'none';
 			}
 			// Connect/Disconnect 按钮
 			if (connectBtn) {
@@ -1198,4 +989,4 @@ document.addEventListener('DOMContentLoaded', function() {
 	}, 1000);
 });
 
-console.log('MetaMask SDK Wallet Manager loaded successfully');
+console.log('Leo Wallet Manager loaded successfully');

@@ -25,7 +25,7 @@ app.use(
 // Parse JSON request bodies
 app.use(express.json());
 
-// MCP / x402 routes
+// MCP / Aleo payment routes
 app.use('/mcp', mcpRouter);
 
 // Serve static files

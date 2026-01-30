@@ -1196,7 +1196,7 @@
         const memoPart = invoice.memo ? `; memo=${invoice.memo}` : '';
         paymentHeaders = {
           'X-Request-Id': invoice.request_id,
-          'X-PAYMENT': `x402 tx=${tx}; amount=${invoice.amount_usdc}; nonce=${invoice.nonce}${memoPart}`
+          'X-PAYMENT': `aleo tx=${tx}; amount=${invoice.amount_usdc}; nonce=${invoice.nonce}${memoPart}`
         };
         continue;
       }
@@ -1215,12 +1215,18 @@
           result?.explorer ||
           result?.receipt?.explorer ||
           result?.meta?.verification?.explorerUrl;
-        if (explorerUrl) {
+        
+        // 检查 Explorer URL 是否有效（排除本地 ID - UUID 格式）
+        const isValidExplorerUrl = explorerUrl && !explorerUrl.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i);
+        
+        if (isValidExplorerUrl) {
           showExplorerToast({
             url: explorerUrl,
             title: 'On-chain Transaction',
-            subtitle: 'Click to view in Solana Explorer.'
+            subtitle: 'Click to view on Explorer.'
           });
+        } else if (explorerUrl) {
+          console.log('[MCPClient] Explorer URL contains local ID, skipping toast:', explorerUrl);
         }
       } catch (toastError) {
         console.warn('[MCPClient] failed to display explorer toast', toastError);

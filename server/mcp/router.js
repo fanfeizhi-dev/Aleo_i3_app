@@ -13,10 +13,54 @@ const {
   parsePaymentHeader,
   isExpired
 } = require('./payments');
-const { verifyPharosTransfer } = require('./pharos-verifier');
+const { verifyAleoTransfer } = require('./aleo-verifier');
 const { getNetworkConfigFromRequest, MCP_CONFIG } = require('./config');
 
 const router = express.Router();
+
+// ========== 匿名 Token 系统辅助函数 ==========
+
+/**
+ * 从请求中提取匿名 token
+ */
+function extractAnonymousToken(req) {
+  // 从 header 提取
+  const headerToken = req.headers['x-anonymous-token'] || req.headers['x-access-token'];
+  if (headerToken) return headerToken;
+  
+  // 从 body 提取
+  if (req.body?.anonymous_token) return req.body.anonymous_token;
+  if (req.body?.access_token) return req.body.access_token;
+  
+  return null;
+}
+
+/**
+ * 验证匿名 token 并检查余额
+ */
+function validateAnonymousToken(req, requiredAmount = 0) {
+  const token = extractAnonymousToken(req);
+  if (!token) {
+    return { valid: false, error: 'no_token', message: 'Anonymous token required' };
+  }
+  
+  const tokenInfo = store.validateToken(token);
+  if (!tokenInfo) {
+    return { valid: false, error: 'invalid_token', message: 'Invalid or expired token' };
+  }
+  
+  if (tokenInfo.balance < requiredAmount) {
+    return { 
+      valid: false, 
+      error: 'insufficient_balance', 
+      message: 'Insufficient balance',
+      balance: tokenInfo.balance,
+      required: requiredAmount
+    };
+  }
+  
+  return { valid: true, token, balance: tokenInfo.balance };
+}
 
 function resolveUserId(req) {
   return (
@@ -187,7 +231,7 @@ router.post('/models.invoke', async (req, res) => {
       network: networkConfig.network,
       rpcUrl: networkConfig.rpcUrl,
       explorerBaseUrl: networkConfig.explorerBaseUrl,
-      requestHeader: req.headers['x-pharos-network'],
+      requestHeader: req.headers['x-aleo-network'],
       bodyNetwork: req.body?.network
     });
     
@@ -300,7 +344,7 @@ router.post('/models.invoke', async (req, res) => {
       return res.json(result);
     }
     
-    // 原有的 x402 支付验证逻辑
+    // Aleo 支付验证逻辑
     if (entry.tx_signature && entry.tx_signature !== paymentProof.tx) {
       return handleDuplicate(entry, paymentProof, res);
     }
@@ -327,7 +371,6 @@ router.post('/models.invoke', async (req, res) => {
       });
     }
 
-    // 完全跳过 RPC 验证，只要有交易签名就认为成功
     // 生成交易链接
     const explorerBaseUrl = networkConfig.explorerBaseUrl || MCP_CONFIG.payments.explorerBaseUrl;
     const baseUrl = explorerBaseUrl.replace(/\/$/, '');
@@ -335,7 +378,9 @@ router.post('/models.invoke', async (req, res) => {
       ? `${baseUrl}/${paymentProof.tx}?cluster=devnet`
       : `${baseUrl}/${paymentProof.tx}`;
 
-    // 直接认为验证成功，不进行 RPC 验证
+    // 注意：跳过链上验证，信任客户端提交的交易 ID
+    // Aleo 链响应较慢，Leo Wallet 返回的是本地请求 ID
+    // TODO: 未来可以添加异步验证机制
     const verification = {
       ok: true,
       payer: entry.meta?.wallet_address || walletAddress || null,
@@ -993,8 +1038,8 @@ router.post('/share/buy', async (req, res) => {
       return res.status(400).json({
         status: 'invalid_amount',
         message: isTokenPurchase 
-          ? `Token purchase must be between ${minAmount} and ${maxAmount} PHRS.`
-          : `Share purchase must be between ${minAmount} and ${maxAmount} PHRS.`
+          ? `Token purchase must be between ${minAmount} and ${maxAmount} ALEO.`
+          : `Share purchase must be between ${minAmount} and ${maxAmount} ALEO.`
       });
     }
 
@@ -1116,6 +1161,287 @@ router.post('/share/buy', async (req, res) => {
 });
 
 const DAILY_REWARD = PricingUtils.constants.dailyCheckInRewardUsdc;
+
+// ========== 匿名充值系统 (方案 B: 隐私优先) ==========
+
+/**
+ * POST /deposit
+ * 匿名充值端点
+ * 
+ * 用户通过 transfer_private 向平台充值后，调用此端点确认
+ * 服务端不记录钱包地址，只返回一个随机的 access_token
+ * 
+ * 请求体:
+ * {
+ *   tx_id: string,        // 链上交易 ID
+ *   amount: number,       // 充值金额 (ALEO)
+ *   existing_token?: string  // 可选：追加到已有 token
+ * }
+ * 
+ * 响应:
+ * {
+ *   status: 'ok',
+ *   access_token: string,  // 随机生成的访问 token（首次充值）
+ *   balance: number,       // 当前余额
+ *   message: string
+ * }
+ */
+router.post('/deposit', async (req, res) => {
+  try {
+    const { tx_id, amount, existing_token } = req.body;
+    
+    // 验证参数
+    if (!tx_id) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'missing_tx_id',
+        message: 'Transaction ID is required'
+      });
+    }
+    
+    const depositAmount = Number(amount);
+    if (!Number.isFinite(depositAmount) || depositAmount <= 0) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'invalid_amount',
+        message: 'Valid amount is required'
+      });
+    }
+    
+    console.log('[mcp/deposit] Processing anonymous deposit:', {
+      tx_id: tx_id.slice(0, 12) + '...',
+      amount: depositAmount,
+      hasExistingToken: !!existing_token
+    });
+    
+    // 如果有已存在的 token，追加充值
+    if (existing_token) {
+      const tokenInfo = store.validateToken(existing_token);
+      if (!tokenInfo) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'invalid_token',
+          message: 'The provided token is invalid'
+        });
+      }
+      
+      const result = store.addDepositToToken(existing_token, tx_id, depositAmount);
+      if (!result) {
+        return res.status(500).json({
+          status: 'error',
+          error: 'deposit_failed',
+          message: 'Failed to add deposit to token'
+        });
+      }
+      
+      console.log('[mcp/deposit] ✅ Added deposit to existing token:', {
+        newBalance: result.balance
+      });
+      
+      return res.json({
+        status: 'ok',
+        access_token: existing_token,
+        balance: result.balance,
+        deposited: depositAmount,
+        message: 'Deposit added to existing token'
+      });
+    }
+    
+    // 创建新的匿名 token
+    const { token, balance } = store.createAnonymousDeposit({
+      txId: tx_id,
+      amount: depositAmount
+    });
+    
+    console.log('[mcp/deposit] ✅ Created new anonymous token');
+    
+    return res.json({
+      status: 'ok',
+      access_token: token,
+      balance: balance,
+      deposited: depositAmount,
+      message: 'Anonymous deposit successful. Save your access_token securely - it cannot be recovered!'
+    });
+    
+  } catch (err) {
+    console.error('[mcp/deposit]', err);
+    return res.status(500).json({ 
+      status: 'error',
+      error: 'internal_error',
+      message: 'Internal server error' 
+    });
+  }
+});
+
+/**
+ * GET /token/balance
+ * 查询匿名 token 余额
+ * 
+ * Headers:
+ *   X-Anonymous-Token: string
+ * 
+ * 响应:
+ * {
+ *   status: 'ok',
+ *   balance: number,
+ *   currency: 'ALEO'
+ * }
+ */
+router.get('/token/balance', (req, res) => {
+  try {
+    const token = extractAnonymousToken(req);
+    
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        error: 'no_token',
+        message: 'Anonymous token required in X-Anonymous-Token header'
+      });
+    }
+    
+    const tokenInfo = store.validateToken(token);
+    if (!tokenInfo) {
+      return res.status(401).json({
+        status: 'error',
+        error: 'invalid_token',
+        message: 'Invalid or expired token'
+      });
+    }
+    
+    return res.json({
+      status: 'ok',
+      balance: tokenInfo.balance,
+      currency: 'ALEO',
+      created_at: tokenInfo.created_at
+    });
+    
+  } catch (err) {
+    console.error('[mcp/token/balance]', err);
+    return res.status(500).json({ 
+      status: 'error',
+      error: 'internal_error',
+      message: 'Internal server error' 
+    });
+  }
+});
+
+/**
+ * POST /anonymous/invoke
+ * 匿名 API 调用端点
+ * 
+ * 使用 access_token 调用 AI 模型，不发送钱包地址
+ * 服务端只验证 token，不追踪用户身份
+ * 
+ * Headers:
+ *   X-Anonymous-Token: string
+ * 
+ * 请求体:
+ * {
+ *   prompt: string,
+ *   model?: string
+ * }
+ * 
+ * 响应:
+ * {
+ *   status: 'ok',
+ *   result: { output, usage, model },
+ *   cost: number,
+ *   remaining_balance: number
+ * }
+ */
+router.post('/anonymous/invoke', async (req, res) => {
+  try {
+    // 1. 计算费用
+    const selection = selectModelForRequest(req.body || {});
+    const cost = selection.model.pricing.pricePerCallUsdc + selection.model.pricing.gasPerCallUsdc;
+    
+    // 2. 验证 token 和余额
+    const tokenValidation = validateAnonymousToken(req, cost);
+    if (!tokenValidation.valid) {
+      // 如果没有 token 或余额不足，返回价格信息让用户知道需要充值多少
+      return res.status(402).json({
+        status: 'payment_required',
+        error: tokenValidation.error,
+        message: tokenValidation.message,
+        required_amount: cost,
+        current_balance: tokenValidation.balance || 0,
+        model: selection.model.id,
+        pricing: {
+          price_per_call: selection.model.pricing.pricePerCallUsdc,
+          gas_per_call: selection.model.pricing.gasPerCallUsdc,
+          total: cost,
+          currency: 'ALEO'
+        },
+        deposit_info: {
+          recipient: MCP_CONFIG.payments.recipient,
+          network: MCP_CONFIG.payments.network,
+          message: 'Deposit ALEO to get an access token, then use it to call APIs anonymously'
+        }
+      });
+    }
+    
+    const { token, balance } = tokenValidation;
+    
+    console.log('[mcp/anonymous/invoke] Processing anonymous request:', {
+      model: selection.model.id,
+      cost: cost,
+      currentBalance: balance
+    });
+    
+    // 3. 扣减余额
+    const deductResult = store.deductFromToken(token, cost, {
+      model: selection.model.id,
+      request_id: randomUUID()
+    });
+    
+    if (!deductResult || !deductResult.success) {
+      return res.status(402).json({
+        status: 'payment_required',
+        error: 'deduction_failed',
+        message: deductResult?.error || 'Failed to deduct balance',
+        current_balance: deductResult?.balance || balance
+      });
+    }
+    
+    // 4. 调用 AI 模型
+    const storedPrompt = sanitizePrompt(req.body?.prompt);
+    const inference = await invokeChatCompletion({
+      prompt: storedPrompt,
+      modelId: selection.model.id,
+      metadata: {}
+    });
+    
+    const result = {
+      output: inference.output || 'No output returned',
+      usage: inference.usage || { calls: 1 },
+      model: inference.model || selection.model.id,
+      error: inference.error || null
+    };
+    
+    console.log('[mcp/anonymous/invoke] ✅ Anonymous request completed:', {
+      model: selection.model.id,
+      cost: cost,
+      remainingBalance: deductResult.remaining
+    });
+    
+    // 5. 返回结果 (不包含任何用户标识信息)
+    return res.json({
+      status: 'ok',
+      result: result,
+      cost: cost,
+      remaining_balance: deductResult.remaining,
+      currency: 'ALEO'
+    });
+    
+  } catch (err) {
+    console.error('[mcp/anonymous/invoke]', err);
+    return res.status(500).json({ 
+      status: 'error',
+      error: 'internal_error',
+      message: 'Internal server error' 
+    });
+  }
+});
 
 router.post('/checkin/claim', (req, res) => {
   try {

@@ -14,7 +14,7 @@ const MODELVERSE_PRICING = (window.PricingUtils && window.PricingUtils.constants
   sharePurchaseMaxUsdc: 20
 };
 
-const PHRS_ICON_PATH = 'svg/chains/pharos.jpg';
+const ALEO_ICON_PATH = 'svg/chains/aleo.svg';
 
 function formatNumeric(value, decimals) {
   const num = Number(value);
@@ -30,7 +30,7 @@ function renderUsdcBadge(value, decimals = 5) {
     return '<span class="usdc-amount">—</span>';
   }
   const formatted = formatNumeric(value, decimals);
-  return `<span class="usdc-amount">${formatted}</span><img src="${PHRS_ICON_PATH}" alt="PHRS" class="usdc-icon" loading="lazy">`;
+  return `<span class="usdc-amount">${formatted}</span><img src="${ALEO_ICON_PATH}" alt="ALEO" class="usdc-icon" loading="lazy">`;
 }
 
 function formatUsdc(value, options = {}) {
@@ -40,7 +40,7 @@ function formatUsdc(value, options = {}) {
   const num = Number(value || 0);
   const min = options.minimumFractionDigits ?? 4;
   const max = options.maximumFractionDigits ?? 6;
-  return `${num.toFixed(Math.min(Math.max(min, 0), max))} PHRS`;
+  return `${num.toFixed(Math.min(Math.max(min, 0), max))} ALEO`;
 }
 
 function getModelCallPricing(modelData) {

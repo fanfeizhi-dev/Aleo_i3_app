@@ -22317,6 +22317,3799 @@
       "tx_signature": "0xbde09aec106ac0f67a289aed9efb489a9fd2d4802faa1465b72b4997f1fc79e3",
       "paid_at": "2025-12-09T01:48:56.677Z",
       "completed_at": "2025-12-09T01:49:00.512Z"
+    },
+    {
+      "id": "55800823-1f0a-480f-b86a-75215a145346",
+      "status": "pending_payment",
+      "created_at": "2026-01-28T22:10:36.342Z",
+      "updated_at": "2026-01-28T22:10:36.342Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "11e4b116-19df-4ee1-9200-f9cf61d764a8",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "0xaebe932564682ead2055bf4c8ac9e7c8b9439313",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:0xaebe932564682ead2055bf4c8ac9e7c8b9439313",
+      "request_id": "f5a9570b-41d7-4486-8daa-6dccee5fb778",
+      "nonce": "2c50e847-6a58-46ae-97c4-b9d7d034f725",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-28T22:15:36.342Z"
+    },
+    {
+      "id": "86a59f36-170d-45dc-8951-0ac5818a8fc6",
+      "status": "pending_payment",
+      "created_at": "2026-01-28T22:24:46.215Z",
+      "updated_at": "2026-01-28T22:24:46.215Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "a3587119-edb5-49d6-9c48-a341e8fcc271",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 11 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what is 1+2",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "f93dcc9c-2cba-4089-9a2f-c3bbb02633d1",
+      "nonce": "1412d378-6447-49d8-b449-80693da34231",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-28T22:29:46.215Z"
+    },
+    {
+      "id": "afa83a71-cc96-404a-9942-1dcaa02484ff",
+      "status": "pending_payment",
+      "created_at": "2026-01-28T22:41:46.158Z",
+      "updated_at": "2026-01-28T22:41:46.158Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "5e6d0e82-d63a-4ee0-8d87-2894ca3ebe5a",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "0f6464a5-8628-42ba-ba9e-6d5f2cc4054b",
+      "nonce": "572b4a5b-e796-480c-a84d-df460bdbd19f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-28T22:46:46.158Z"
+    },
+    {
+      "id": "6a75625d-bb71-4db3-b9ef-355aef9a4c54",
+      "status": "pending_payment",
+      "created_at": "2026-01-28T23:21:51.751Z",
+      "updated_at": "2026-01-28T23:21:51.751Z",
+      "meta": {
+        "workflow_name": "Content Generation & Analysis Suite",
+        "nodes": [
+          {
+            "id": "97804276-ab78-4efc-95de-db46b395f185",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 4,
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00036,
+            "gasCost": 0.001,
+            "totalCost": 0.00136
+          },
+          {
+            "id": "4c261348-d426-4fc7-8067-cc0ab69ae947",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 2,
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00002,
+            "gasCost": 0.0005,
+            "totalCost": 0.00052
+          },
+          {
+            "id": "6ef3b54b-1c6f-4702-983c-33225aa327ea",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 2,
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00014,
+            "gasCost": 0.0005,
+            "totalCost": 0.00064
+          },
+          {
+            "id": "a13c0a50-3424-4fd1-af4e-0d3c77966cac",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 2,
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          }
+        ],
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "node_count": 4,
+        "description": "Prepay for workflow: Content Generation & Analysis Suite"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "25c3dbd7-7d42-433b-bf6d-32b65ea50592",
+      "nonce": "2a2a1b78-94b1-4b49-8fab-3b64cb4fa1b6",
+      "amount_usdc": 0.0032,
+      "model_or_node": "Content Generation & Analysis Suite",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-01-28T23:26:51.751Z"
+    },
+    {
+      "id": "95db4c7a-2850-42c8-b301-27b0d6c074a0",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T01:17:11.233Z",
+      "updated_at": "2026-01-29T01:17:11.233Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "fc97c783-b5bf-49d4-92d5-a2fccb15df84",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "8c9d2746-289f-41da-a697-e993041f8209",
+      "nonce": "55419013-b89d-4035-901a-4556a2c5cc17",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T01:22:11.233Z"
+    },
+    {
+      "id": "25a64273-bf97-44eb-bd81-967804ccba75",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T01:18:41.448Z",
+      "updated_at": "2026-01-29T01:18:41.448Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "94e94a6c-7113-4f64-8d2c-26f90d82bc13",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "27b6421a-2a3c-4e13-b795-44574f89d267",
+      "nonce": "a7063a24-5556-4725-8e7d-dacc6051eeff",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T01:23:41.448Z"
+    },
+    {
+      "id": "a28cfa29-065c-4e2b-a5f1-d7ab5f22d5c5",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T01:53:47.526Z",
+      "updated_at": "2026-01-29T01:53:47.526Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "88f05739-eedc-415c-8d5f-e09985e67a9c",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "1a17e8a3-0de0-4832-9add-ebafb4739d9f",
+      "nonce": "342f2410-a868-4985-9a6d-9423e6644c8e",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T01:58:47.526Z"
+    },
+    {
+      "id": "f9c25900-6fdc-4234-a08f-338f0155a315",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T01:53:47.572Z",
+      "updated_at": "2026-01-29T01:53:47.572Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "03c852a8-3df0-477c-9fb8-a06f7735ee34",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "eea32d59-0480-43d3-b20e-4e583240b67c",
+      "nonce": "2607b2db-5743-4aa9-8bdf-9100d03bb096",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T01:58:47.572Z"
+    },
+    {
+      "id": "28f8cfd3-6327-479f-95cd-4e4b81e4f060",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:12:10.596Z",
+      "updated_at": "2026-01-29T02:12:10.596Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "617cad0b-0d38-4cfe-954c-ad4b45694454",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "49e4b036-64d2-40ba-ae1b-c6dff11c14ca",
+      "nonce": "6cd46a5d-aa41-4922-b639-80388bc2a228",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:17:10.596Z"
+    },
+    {
+      "id": "e474b21a-d0bb-472a-8496-3809bee7719e",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:12:10.633Z",
+      "updated_at": "2026-01-29T02:12:10.633Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "0847e2ac-125d-40c6-9129-acf99be8fe25",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "PHRS",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "ecd930e1-7dc2-480f-8729-4960f3233150",
+      "nonce": "edc5c993-5593-4614-af3c-ca226afeb4d3",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:17:10.633Z"
+    },
+    {
+      "id": "d86f7fd9-4bba-4245-bfb2-5c0c1af227bc",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:48:06.439Z",
+      "updated_at": "2026-01-29T02:48:06.439Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "6587bf29-5567-43ec-9103-0581c5c5d459",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "616d36a1-1bca-42a3-b447-725c439ee5bf",
+      "nonce": "8bdd2923-50ca-4c39-88ea-3218bace1dea",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:53:06.439Z"
+    },
+    {
+      "id": "ed1d2124-1a9a-4542-8be4-4b51981c58ee",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:48:06.483Z",
+      "updated_at": "2026-01-29T02:48:06.483Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "56f3ad21-16d0-454a-90f7-561ca63eb52b",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "6466acca-8c3d-4f45-a793-5a16e6bb4a18",
+      "nonce": "80cd058a-a884-4ba3-8129-a57db7f2eeef",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:53:06.483Z"
+    },
+    {
+      "id": "7442fa5b-89d6-4258-8917-dca17b6cc55f",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:50:26.849Z",
+      "updated_at": "2026-01-29T02:50:26.849Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "9bb75533-7ffc-4da3-8b36-ca9389cc6350",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "07e8dc86-fed0-47f6-a513-82374a89839a",
+      "nonce": "737c5455-b8d8-41f3-afcd-aab2bd30b6f1",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:55:26.849Z"
+    },
+    {
+      "id": "fc303d6d-3617-4a8f-93b1-224438721556",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T02:50:26.887Z",
+      "updated_at": "2026-01-29T02:50:26.887Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "4012eaba-0940-45a6-acd8-f49d38562c8a",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "723c762c-8ae6-4375-9d8a-7d33e714c370",
+      "nonce": "9e9c8d05-88af-4ebc-8151-f21628727de2",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T02:55:26.886Z"
+    },
+    {
+      "id": "9326ae71-b4aa-4057-ae82-cfa01ec3eb83",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:05:53.095Z",
+      "updated_at": "2026-01-29T03:05:53.095Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "33814b70-7a12-4963-bb6d-928e22684bff",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "0c6cdb36-53c7-4033-af68-c9cccb37f080",
+      "nonce": "3bb88777-9e16-4af6-9b62-4d34a0f7c1ca",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:10:53.095Z"
+    },
+    {
+      "id": "7de80b7e-fddf-476f-a36b-10860367448c",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:06:01.409Z",
+      "updated_at": "2026-01-29T03:06:01.409Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "68ddf7dc-aa45-45b6-a5ed-42810c1454c3",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "68192275-41d0-4edb-a4c5-a5a99793116c",
+      "nonce": "7167b21a-23c4-4b3c-8b38-9d4e64c27912",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:11:01.409Z"
+    },
+    {
+      "id": "0f9e2964-beca-49bd-ab41-077543edc7b9",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:08:55.276Z",
+      "updated_at": "2026-01-29T03:08:55.276Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "9c7b6129-ca3b-41a7-a16d-a35feabf7c9c",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "a05c7c89-c694-4531-b282-267366c84192",
+      "nonce": "cbaa9768-8c19-489d-9e7f-cbf1c412e6bd",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:13:55.276Z"
+    },
+    {
+      "id": "da3bde44-468e-4165-be0f-1cbe5eeb4ae7",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:11:23.062Z",
+      "updated_at": "2026-01-29T03:11:23.062Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "95e41868-caf5-4455-a545-acda5e5a0748",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "7b9a6c19-0440-41bc-b5d3-8a58e6ee27bc",
+      "nonce": "f542ecb2-6c2f-4d09-8399-9558219488dd",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:16:23.062Z"
+    },
+    {
+      "id": "45470bd5-84fd-4b28-a942-67edc78f1e9c",
+      "status": "completed",
+      "created_at": "2026-01-29T03:17:28.638Z",
+      "updated_at": "2026-01-29T03:17:41.453Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "c7664f9f-b7f8-4d3a-a12e-9fad8b41de24",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://explorer.aleo.org/testnet/transaction/0f155e14-fdcb-4577-854c-38913de02bbe",
+          "explorerUrl": "https://explorer.aleo.org/testnet/transaction/0f155e14-fdcb-4577-854c-38913de02bbe"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, feature, or concept related to AI models or text detection?",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 30,
+            "total_tokens": 424,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3CpJ8vpnPRrBFVdN8ZLWcKHniw6j",
+              "object": "chat.completion",
+              "created": 1769656661,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, feature, or concept related to AI models or text detection?",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 30,
+                "total_tokens": 424,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3CpJ8vpnPRrBFVdN8ZLWcKHniw6j"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "3d1449f2-a4ff-46b5-b1df-d4a5dcef6e3f",
+      "nonce": "56bdabb2-81d0-4756-a8c1-e19e730e2cc8",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:22:28.638Z",
+      "tx_signature": "0f155e14-fdcb-4577-854c-38913de02bbe",
+      "paid_at": "2026-01-29T03:17:39.932Z",
+      "completed_at": "2026-01-29T03:17:41.453Z"
+    },
+    {
+      "id": "ab1bfca9-a4c1-49eb-9b2e-72b5f276f83c",
+      "status": "completed",
+      "created_at": "2026-01-29T03:20:06.162Z",
+      "updated_at": "2026-01-29T03:20:18.892Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "4d080106-bbbb-437b-90e5-3a51411b6d1f",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 33 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what could be add on to the model",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://explorer.aleo.org/testnet/transaction/a7f3349a-bca8-41ff-95a5-3bac588a5bf3",
+          "explorerUrl": "https://explorer.aleo.org/testnet/transaction/a7f3349a-bca8-41ff-95a5-3bac588a5bf3"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, To enhance the model's effectiveness in detecting AI-generated text, consider the following additions:\n\n1. **Contextual Analysis**: Incorporate methods that analyze the context and coherence of the text, not just its surface features. This helps in understanding the flow and logical structure typical of human writing.\n\n2. **Multimodal Capabilities**: Integrate analysis of non-textual elements (such as images or audio) when available. This can provide a more holistic view of content authenticity.\n\n3. **Dynamic Learning**: Implement a mechanism for continuous learning from new examples of AI-generated text, allowing the model to adapt to evolving writing styles and techniques used by text generation models.\n\n4. **User Feedback Loop**: Establish a system for users to provide feedback on detection accuracy, which can help refine and improve the model over time.\n\n5. **Cross-Model Comparison**: Develop capabilities to compare outputs across different language models, identifying unique signatures or patterns that may indicate AI generation.\n\n6. **Ethical Guidelines**: Incorporate ethical considerations in the model's design to ensure it respects privacy and avoids misuse in sensitive contexts.\n\nThese enhancements could improve reliability in various applications, including academic integrity and content verification.",
+          "usage": {
+            "prompt_tokens": 400,
+            "completion_tokens": 241,
+            "total_tokens": 641,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3CrnDae5TORjGwnUAT0zrjpjc5lm",
+              "object": "chat.completion",
+              "created": 1769656815,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, To enhance the model's effectiveness in detecting AI-generated text, consider the following additions:\n\n1. **Contextual Analysis**: Incorporate methods that analyze the context and coherence of the text, not just its surface features. This helps in understanding the flow and logical structure typical of human writing.\n\n2. **Multimodal Capabilities**: Integrate analysis of non-textual elements (such as images or audio) when available. This can provide a more holistic view of content authenticity.\n\n3. **Dynamic Learning**: Implement a mechanism for continuous learning from new examples of AI-generated text, allowing the model to adapt to evolving writing styles and techniques used by text generation models.\n\n4. **User Feedback Loop**: Establish a system for users to provide feedback on detection accuracy, which can help refine and improve the model over time.\n\n5. **Cross-Model Comparison**: Develop capabilities to compare outputs across different language models, identifying unique signatures or patterns that may indicate AI generation.\n\n6. **Ethical Guidelines**: Incorporate ethical considerations in the model's design to ensure it respects privacy and avoids misuse in sensitive contexts.\n\nThese enhancements could improve reliability in various applications, including academic integrity and content verification.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 400,
+                "completion_tokens": 241,
+                "total_tokens": 641,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3CrnDae5TORjGwnUAT0zrjpjc5lm"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "2945a14f-f29a-4d4e-92b6-adbf0f6c784c",
+      "nonce": "30cd290a-a47a-4ee5-a5dc-7b39f6fc4ee1",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:25:06.162Z",
+      "tx_signature": "a7f3349a-bca8-41ff-95a5-3bac588a5bf3",
+      "paid_at": "2026-01-29T03:20:14.327Z",
+      "completed_at": "2026-01-29T03:20:18.892Z"
+    },
+    {
+      "id": "578fd406-8502-4f27-9739-2061b6c81db0",
+      "status": "completed",
+      "created_at": "2026-01-29T03:21:58.153Z",
+      "updated_at": "2026-01-29T03:22:08.087Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "82f871e3-93f5-4961-b908-3efbfd31917f",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 7 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "really？",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://explorer.aleo.org/testnet/transaction/9220ff11-98ca-4ecf-9eab-6f6187f10de1",
+          "explorerUrl": "https://explorer.aleo.org/testnet/transaction/9220ff11-98ca-4ecf-9eab-6f6187f10de1"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify your question or provide more context? I'm here to help with any inquiries related to model analysis and AI detection systems.",
+          "usage": {
+            "prompt_tokens": 388,
+            "completion_tokens": 27,
+            "total_tokens": 415,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3CtbZiGmnOydpXodjsNsyFMj1Cww",
+              "object": "chat.completion",
+              "created": 1769656927,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify your question or provide more context? I'm here to help with any inquiries related to model analysis and AI detection systems.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 388,
+                "completion_tokens": 27,
+                "total_tokens": 415,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3CtbZiGmnOydpXodjsNsyFMj1Cww"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "5e0e064c-7e6c-4d99-8b4f-7bce32e68afe",
+      "nonce": "8762a121-81fd-4ab5-bc2d-678bfeca7df5",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:26:58.153Z",
+      "tx_signature": "9220ff11-98ca-4ecf-9eab-6f6187f10de1",
+      "paid_at": "2026-01-29T03:22:05.951Z",
+      "completed_at": "2026-01-29T03:22:08.087Z"
+    },
+    {
+      "id": "701042be-b4bf-427e-b9b3-05b8a5448580",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:24:59.166Z",
+      "updated_at": "2026-01-29T03:24:59.166Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "72dd88a0-32b6-41d4-a642-45f3bdb7ef20",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "9dba1db6-8003-4d2f-ae80-36a701e5d027",
+      "nonce": "14232e64-cf7f-4d21-bc7d-8c93e98ba27f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:29:59.166Z"
+    },
+    {
+      "id": "bba8edce-7798-4d3c-8c77-f23cda393739",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:25:14.772Z",
+      "updated_at": "2026-01-29T03:25:14.772Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "6bc7522e-9485-46af-bf9a-ccb881a840d1",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "cddae892-4d50-4aae-91db-b77ef0bf5857",
+      "nonce": "4a0598bb-afc1-41d7-b3c0-f4167ca0b32f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:30:14.772Z"
+    },
+    {
+      "id": "c784ab3e-2a6e-4a42-bcdf-b170205695e2",
+      "status": "completed",
+      "created_at": "2026-01-29T03:26:10.301Z",
+      "updated_at": "2026-01-29T03:26:18.808Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "d2d4a14e-bf15-4b05-bee5-671aaed8cc9f",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://explorer.aleo.org/testnet/transaction/0508de2b-3ef2-425b-9c7b-12fb14a21239",
+          "explorerUrl": "https://explorer.aleo.org/testnet/transaction/0508de2b-3ef2-425b-9c7b-12fb14a21239"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? That way, I can give you a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 29,
+            "total_tokens": 423,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3CxePP339jXfN8df4L6hPM3S9o3L",
+              "object": "chat.completion",
+              "created": 1769657178,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? That way, I can give you a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 29,
+                "total_tokens": 423,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3CxePP339jXfN8df4L6hPM3S9o3L"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "d1c36ec9-7f9a-4e02-90cc-d4f28128a137",
+      "nonce": "23aa81df-1d39-4937-b2e8-85effdd7b724",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:31:10.301Z",
+      "tx_signature": "0508de2b-3ef2-425b-9c7b-12fb14a21239",
+      "paid_at": "2026-01-29T03:26:17.841Z",
+      "completed_at": "2026-01-29T03:26:18.808Z"
+    },
+    {
+      "id": "a97f0b77-bb56-42b7-8a14-fe0ba8ac142f",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:27:38.346Z",
+      "updated_at": "2026-01-29T03:27:38.346Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "8ec3507c-265d-47f5-bca6-141f38493d80",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 63 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "What broader concern does DIS-CO raise about VLM training data?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "5b942c64-4073-430e-8815-557dec714c05",
+      "nonce": "3bae92a6-ba73-49ea-a6fb-591765beef29",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:32:38.346Z"
+    },
+    {
+      "id": "fc5c64e2-ca97-4e82-8b12-84a4bd8d0a85",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:27:52.963Z",
+      "updated_at": "2026-01-29T03:27:52.963Z",
+      "meta": {
+        "workflow_name": "Content Generation & Analysis Suite",
+        "nodes": [
+          {
+            "id": "2348fec9-bb06-4e38-8bb7-5d90b4ae1f62",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 4,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00036,
+            "gasCost": 0.001,
+            "totalCost": 0.00136
+          },
+          {
+            "id": "7dea4627-6938-427d-a5c0-6bef8c08726e",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00002,
+            "gasCost": 0.0005,
+            "totalCost": 0.00052
+          },
+          {
+            "id": "3b19d91e-aaa2-45e9-8615-31e9f349f30c",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00014,
+            "gasCost": 0.0005,
+            "totalCost": 0.00064
+          },
+          {
+            "id": "2529689c-b33c-4018-84d1-a65c7d75b037",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          }
+        ],
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "node_count": 4,
+        "description": "Prepay for workflow: Content Generation & Analysis Suite"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "85ccdd72-c0db-459d-a8b8-64b34a4e505b",
+      "nonce": "6dc199c3-83f7-4898-b686-9b5197f2e5c1",
+      "amount_usdc": 0.0032,
+      "model_or_node": "Content Generation & Analysis Suite",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-01-29T03:32:52.963Z"
+    },
+    {
+      "id": "1e618bf9-0d10-4c06-8341-bcb63a8f9835",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:44:15.721Z",
+      "updated_at": "2026-01-29T03:44:15.721Z",
+      "meta": {
+        "workflow_name": "Content Generation & Analysis Suite",
+        "nodes": [
+          {
+            "id": "80629d05-d0c4-4c34-8ec9-6c8132cdc857",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 4,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00036,
+            "gasCost": 0.001,
+            "totalCost": 0.00136
+          },
+          {
+            "id": "2c58a84a-d09d-4256-bf75-af754b7e408b",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00002,
+            "gasCost": 0.0005,
+            "totalCost": 0.00052
+          },
+          {
+            "id": "eba852a1-21ee-45ae-9959-1a5a24e1b937",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00014,
+            "gasCost": 0.0005,
+            "totalCost": 0.00064
+          },
+          {
+            "id": "087ae4be-be8e-406c-a5e7-1c1419a5caa9",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          }
+        ],
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "node_count": 4,
+        "description": "Prepay for workflow: Content Generation & Analysis Suite"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "910a5e32-e8b5-46ef-8425-0b6ebdf49047",
+      "nonce": "3efc3bdd-65f7-4913-8510-51634fd0db88",
+      "amount_usdc": 0.0032,
+      "model_or_node": "Content Generation & Analysis Suite",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-01-29T03:49:15.721Z"
+    },
+    {
+      "id": "8749c3b7-4275-48e8-8646-41a25c717303",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:44:33.773Z",
+      "updated_at": "2026-01-29T03:44:33.773Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "c14aa5ad-9b85-4301-b1a7-fcbfdbf9546c",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "8f583e00-ee7c-4ffc-a4d8-734c607b093f",
+      "nonce": "7d53392a-961e-422e-bed9-4891d1e84807",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:49:33.773Z"
+    },
+    {
+      "id": "e3354a29-8979-4839-89bf-85aa9fd8685a",
+      "status": "completed",
+      "created_at": "2026-01-29T03:44:51.467Z",
+      "updated_at": "2026-01-29T03:45:00.728Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "53c345e9-ad1a-4dca-ae05-f1a71e551a20",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+          "explorerLink": "https://explorer.aleo.org/testnet/transaction/579f2a2b-77f3-4f12-afda-fc5a077d2ebc",
+          "explorerUrl": "https://explorer.aleo.org/testnet/transaction/579f2a2b-77f3-4f12-afda-fc5a077d2ebc"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a particular tool, feature, or concept related to AI or text analysis?",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 33,
+            "total_tokens": 427,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3DFkQomHZsPIWkVFuLHRkkFpYLGw",
+              "object": "chat.completion",
+              "created": 1769658300,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a particular tool, feature, or concept related to AI or text analysis?",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 33,
+                "total_tokens": 427,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3DFkQomHZsPIWkVFuLHRkkFpYLGw"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "e52fd13e-e9b8-4646-9b21-a97a17381027",
+      "nonce": "94721f8a-fdd3-4f82-a74b-04078fa57fe6",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:49:51.467Z",
+      "tx_signature": "579f2a2b-77f3-4f12-afda-fc5a077d2ebc",
+      "paid_at": "2026-01-29T03:44:58.927Z",
+      "completed_at": "2026-01-29T03:45:00.728Z"
+    },
+    {
+      "id": "71b89d78-d4b8-4a17-8bdf-b99c4bb34484",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T03:45:07.899Z",
+      "updated_at": "2026-01-29T03:45:07.899Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "261eb5b1-5e10-4eca-ac5d-513fc122c9d0",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 63 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "What broader concern does DIS-CO raise about VLM training data?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "0f5f7a8b-6313-4425-9701-f024af82ecde",
+      "nonce": "20e9921e-bf2e-4d48-b74a-ed1c40c7db18",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T03:50:07.899Z"
+    },
+    {
+      "id": "c4124e3f-c76b-4523-9e6c-2b1fa907d27c",
+      "status": "completed",
+      "created_at": "2026-01-29T19:24:39.142Z",
+      "updated_at": "2026-01-29T19:24:48.916Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "b551dae6-886b-4ca0-9aef-d5a0f01c01a2",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/a121b483-828b-4641-8146-aaa7250a1f94",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/a121b483-828b-4641-8146-aaa7250a1f94"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what specific item or concept you are referring to? This will help me provide a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 26,
+            "total_tokens": 420,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3RvF1n3FBlskcCRttV6315GSRmDw",
+              "object": "chat.completion",
+              "created": 1769714689,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what specific item or concept you are referring to? This will help me provide a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 26,
+                "total_tokens": 420,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3RvF1n3FBlskcCRttV6315GSRmDw"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "a1059535-acc6-42ba-834f-3cd16110a392",
+      "nonce": "cf046546-a520-4462-a8bf-af7529e76988",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:29:39.142Z",
+      "tx_signature": "a121b483-828b-4641-8146-aaa7250a1f94",
+      "paid_at": "2026-01-29T19:24:47.150Z",
+      "completed_at": "2026-01-29T19:24:48.916Z"
+    },
+    {
+      "id": "aeae7848-5527-4a02-8b25-09d7469afb35",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:24:57.193Z",
+      "updated_at": "2026-01-29T19:24:57.193Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "8a8716ce-2e60-465d-8ca0-86ea572017d6",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "726b34ee-7327-4311-9a5c-05100fd89ce6",
+      "nonce": "94c2b9d4-7037-4f59-8d43-0db044b2f297",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:29:57.193Z"
+    },
+    {
+      "id": "3d6adc05-ab72-4fb9-8b36-557f4c78ac74",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:25:38.967Z",
+      "updated_at": "2026-01-29T19:25:38.967Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "b0da6a70-80e1-49fa-803e-774f44eac902",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "6a311bf1-ec98-4c86-bf09-0e8e188ecd0f",
+      "nonce": "32d65fb3-661b-4b40-a922-3e9fc6deff06",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:30:38.966Z"
+    },
+    {
+      "id": "709ae8db-cf3b-4ab2-9cc5-8c2feffaf484",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:30:21.710Z",
+      "updated_at": "2026-01-29T19:30:21.710Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "f15a5f95-5f5c-4ed2-a3f1-a322cad24fba",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "f0220835-90bf-40d1-b8c1-fa2daba4e0bf",
+      "nonce": "0e086406-5024-4102-950f-fa53a7fb013e",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:35:21.710Z"
+    },
+    {
+      "id": "eaa47c55-4a18-4317-b3d5-0a0501d4e885",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:30:21.752Z",
+      "updated_at": "2026-01-29T19:30:21.752Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "438c272e-9272-44d6-91fd-cd088f7ced23",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "70b65b32-bc49-4e23-bd46-faeab83e3ace",
+      "nonce": "d9c68be6-e8a9-4b13-9f48-d4a97ec99a03",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:35:21.752Z"
+    },
+    {
+      "id": "3b3384e2-1798-4300-8a03-66710537413a",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:33:18.291Z",
+      "updated_at": "2026-01-29T19:33:18.291Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "f6891d51-b1bb-49b9-a2a8-6433601be48f",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "70878d8a-294f-41bf-b929-d63db28407b2",
+      "nonce": "39fc14a5-19ad-4b32-b0a9-f9d75eeb54b1",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:38:18.291Z"
+    },
+    {
+      "id": "a431a4b7-5c02-4547-b74d-f60dfde0b64d",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:33:18.341Z",
+      "updated_at": "2026-01-29T19:33:18.341Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "aa0f09ee-a2d1-41bd-87df-ec0a1cd6bea2",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "fd9435f1-d1ed-44b9-b7e4-c4eced4fbcc5",
+      "nonce": "af7821dd-5fc7-4cd6-84c7-a149806d15b7",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:38:18.341Z"
+    },
+    {
+      "id": "e90aee41-c05c-4425-8075-bcad7a64d3a7",
+      "status": "completed",
+      "created_at": "2026-01-29T19:33:31.043Z",
+      "updated_at": "2026-01-29T19:33:40.098Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "b97be970-e45a-49ce-aa7b-66783a4b9b34",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/d846dc50-0c95-4391-9e07-717e86167532",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/d846dc50-0c95-4391-9e07-717e86167532"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 25,
+            "total_tokens": 419,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3S3oHosWR4CI5mEGCJW0V7tspiq6",
+              "object": "chat.completion",
+              "created": 1769715220,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 25,
+                "total_tokens": 419,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3S3oHosWR4CI5mEGCJW0V7tspiq6"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "644a261c-580e-41ca-961f-3d4e00952bcf",
+      "nonce": "d468489f-faf5-448a-9f64-cc8d5d368dad",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:38:31.043Z",
+      "tx_signature": "d846dc50-0c95-4391-9e07-717e86167532",
+      "paid_at": "2026-01-29T19:33:38.192Z",
+      "completed_at": "2026-01-29T19:33:40.098Z"
+    },
+    {
+      "id": "be7696db-678f-46b8-ada6-66fca7e2cdfe",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:37:18.418Z",
+      "updated_at": "2026-01-29T19:37:18.418Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "62586393-a510-442f-9d21-f6912fabfc96",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "c1688d45-5401-4005-a0f0-8016acd01990",
+      "nonce": "e4b364ce-3bab-4cee-8087-cf9567e1be61",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:42:18.418Z"
+    },
+    {
+      "id": "fa95fb1f-ab98-4436-b57e-2f45ace2818f",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:37:21.509Z",
+      "updated_at": "2026-01-29T19:37:21.509Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "69db21a5-afff-4883-b287-6459d8cd9113",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1ultapnts8mjyfv5qq8qs88d55p9c60dme6h0e5zgcwdd7fyl5cpscgjwl2",
+      "request_id": "40c6d55c-7cc4-47f7-b473-0ff67696c1b6",
+      "nonce": "a5b55306-757c-4f56-9c85-7fa9da91b29e",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:42:21.509Z"
+    },
+    {
+      "id": "9ab1b4e4-6b5a-4ad2-a883-b1405fff9f86",
+      "status": "completed",
+      "created_at": "2026-01-29T19:37:52.823Z",
+      "updated_at": "2026-01-29T19:38:01.074Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "326a67b1-35d4-4b3a-9fd4-af1201e743e3",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/8ba7a272-d5a1-4913-9060-87a8691ae0c8",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/8ba7a272-d5a1-4913-9060-87a8691ae0c8"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? That way, I can give you a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 29,
+            "total_tokens": 423,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3S81nDKjgrmXRqkI0oU8Dc23Z1KD",
+              "object": "chat.completion",
+              "created": 1769715481,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? That way, I can give you a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 29,
+                "total_tokens": 423,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3S81nDKjgrmXRqkI0oU8Dc23Z1KD"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "57708506-226d-42dd-8698-f3d1fcbac98a",
+      "nonce": "ffa2f511-7159-485d-be6a-717358c0b346",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:42:52.823Z",
+      "tx_signature": "8ba7a272-d5a1-4913-9060-87a8691ae0c8",
+      "paid_at": "2026-01-29T19:37:59.735Z",
+      "completed_at": "2026-01-29T19:38:01.074Z"
+    },
+    {
+      "id": "301581b0-fdd3-406c-843d-9b1c1d767646",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:38:09.409Z",
+      "updated_at": "2026-01-29T19:38:09.409Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "918afc8f-d759-4c53-8a46-103b60ff9826",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "515e6a37-8b65-4006-ab8c-cd546dd18ea1",
+      "nonce": "07ef225d-f74f-4d68-b885-f09b01a7274b",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:43:09.409Z"
+    },
+    {
+      "id": "45f53d76-6f75-475f-8925-a10c64a3ba26",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:38:09.445Z",
+      "updated_at": "2026-01-29T19:38:09.445Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "9116b64d-ca5b-4c0e-bf8d-02cc0111eb3c",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "1d83082d-17aa-405e-8b2b-6f88b4add7d9",
+      "nonce": "e58b1960-0349-458b-b636-283aa3b2fa1f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:43:09.445Z"
+    },
+    {
+      "id": "d4420eae-970f-4708-a947-a3a96a15ee90",
+      "status": "completed",
+      "created_at": "2026-01-29T19:39:05.729Z",
+      "updated_at": "2026-01-29T19:39:13.470Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "13ddc374-39f7-423d-93a6-a77d0961ce37",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/c110a1b2-8daf-4b15-babc-8770f40338a2",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/c110a1b2-8daf-4b15-babc-8770f40338a2"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, feature, or concept related to AI models or text detection? Providing more context will help me give you a more accurate response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 43,
+            "total_tokens": 437,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3S9BBxaKc9g32Q70Fx78EJiQFKeU",
+              "object": "chat.completion",
+              "created": 1769715553,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, feature, or concept related to AI models or text detection? Providing more context will help me give you a more accurate response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 43,
+                "total_tokens": 437,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3S9BBxaKc9g32Q70Fx78EJiQFKeU"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "e4f78355-b93a-4aea-9e81-7c672615c465",
+      "nonce": "b8b7712f-6d04-4179-994d-898e78f136dd",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:44:05.729Z",
+      "tx_signature": "c110a1b2-8daf-4b15-babc-8770f40338a2",
+      "paid_at": "2026-01-29T19:39:12.017Z",
+      "completed_at": "2026-01-29T19:39:13.470Z"
+    },
+    {
+      "id": "2097c08a-0013-4bc3-9bff-766f95e5a4f4",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:40:07.827Z",
+      "updated_at": "2026-01-29T19:40:07.827Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "9fb009a1-7c44-4452-92e2-9a97e03fc649",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "45f554bc-0695-4d97-b9c0-1bd16cd7a799",
+      "nonce": "4ed2979c-3fdd-4608-94b3-d20b95c7bb1e",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:45:07.827Z"
+    },
+    {
+      "id": "e7d5743a-36b2-46c2-a7a4-83c12217bce5",
+      "status": "pending_payment",
+      "created_at": "2026-01-29T19:40:07.866Z",
+      "updated_at": "2026-01-29T19:40:07.866Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "d05a19b7-c686-472a-9b1d-731fe917973e",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "34d6ec18-c1c6-44ae-ac7c-47cba91c0963",
+      "nonce": "212bd74c-72ff-46bd-850d-93e5a02bef51",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:45:07.866Z"
+    },
+    {
+      "id": "eb21571a-8d89-4ea6-9e0c-2457c449b001",
+      "status": "completed",
+      "created_at": "2026-01-29T19:42:06.665Z",
+      "updated_at": "2026-01-29T19:42:16.605Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "3b6b6fd2-d66d-48e1-9f1d-d26df7ca8fce",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/ed08ac02-e71e-451d-a8f7-49c6d578ca50",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/ed08ac02-e71e-451d-a8f7-49c6d578ca50"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? For example, are you asking about a specific tool, technology, or concept related to AI models or text detection?",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 36,
+            "total_tokens": 430,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3SC7eqxIq0ZaxKImaNgxPpjlOazw",
+              "object": "chat.completion",
+              "created": 1769715735,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? For example, are you asking about a specific tool, technology, or concept related to AI models or text detection?",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 36,
+                "total_tokens": 430,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3SC7eqxIq0ZaxKImaNgxPpjlOazw"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "2983a03c-b042-4893-9b30-f083df3ddc9d",
+      "nonce": "da6ac3d8-194f-48cc-af1a-9b3aa730f175",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T19:47:06.665Z",
+      "tx_signature": "ed08ac02-e71e-451d-a8f7-49c6d578ca50",
+      "paid_at": "2026-01-29T19:42:13.960Z",
+      "completed_at": "2026-01-29T19:42:16.604Z"
+    },
+    {
+      "id": "cfaec46f-6728-492d-9b88-f9478a7c5a1b",
+      "status": "completed",
+      "created_at": "2026-01-29T19:42:18.932Z",
+      "updated_at": "2026-01-29T19:42:29.481Z",
+      "meta": {
+        "workflow_name": "Content Generation & Analysis Suite",
+        "nodes": [
+          {
+            "id": "b2f0c07b-4333-443f-bfb0-db23b2c4a418",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 4,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00036,
+            "gasCost": 0.001,
+            "totalCost": 0.00136
+          },
+          {
+            "id": "d3163938-f65a-4468-9b73-6255fbb53fb1",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00002,
+            "gasCost": 0.0005,
+            "totalCost": 0.00052
+          },
+          {
+            "id": "ea4322ef-f8a8-47cb-af0f-ac2bf23edb0d",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00014,
+            "gasCost": 0.0005,
+            "totalCost": 0.00064
+          },
+          {
+            "id": "81f8d393-9155-4733-913c-4fb6c533b1f4",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          }
+        ],
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "node_count": 4,
+        "description": "Prepay for workflow: Content Generation & Analysis Suite",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/e3ea0e20-b523-4c8c-93cb-3ab944580874",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/e3ea0e20-b523-4c8c-93cb-3ab944580874"
+        },
+        "workflow_session_id": "aaadc555-099e-4e62-911f-b52ef7da6745",
+        "prepaid_at": "2026-01-29T19:42:29.463Z"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "870e49ae-0ebb-408a-8369-99e536455675",
+      "nonce": "6c589760-6cac-4dd4-b4dd-e8843608258c",
+      "amount_usdc": 0.0032,
+      "model_or_node": "Content Generation & Analysis Suite",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-01-29T19:47:18.932Z",
+      "tx_signature": "e3ea0e20-b523-4c8c-93cb-3ab944580874",
+      "paid_at": "2026-01-29T19:42:29.463Z",
+      "completed_at": "2026-01-29T19:42:29.463Z"
+    },
+    {
+      "id": "de9be57c-2ba0-4c1e-b4da-4400bacd32d9",
+      "status": "completed",
+      "created_at": "2026-01-29T20:02:41.330Z",
+      "updated_at": "2026-01-29T20:02:59.726Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "ea12ed24-b867-4b2e-b078-31565e7bfe3e",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/5e7a49af-8a30-4382-8697-f8d2141af2f9",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/5e7a49af-8a30-4382-8697-f8d2141af2f9"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what specific item or concept you are referring to? This will help me provide a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 26,
+            "total_tokens": 420,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3SW9Vk6TkbRDpNJ2QZSaDh1F1or7",
+              "object": "chat.completion",
+              "created": 1769716977,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what specific item or concept you are referring to? This will help me provide a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 26,
+                "total_tokens": 420,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_3683ee3deb"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3SW9Vk6TkbRDpNJ2QZSaDh1F1or7"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "852584c9-a74c-4324-8168-9f60e3133d94",
+      "nonce": "13edd5f2-4461-4b93-8aca-9eafbe42a3ce",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T20:07:41.330Z",
+      "tx_signature": "5e7a49af-8a30-4382-8697-f8d2141af2f9",
+      "paid_at": "2026-01-29T20:02:55.957Z",
+      "completed_at": "2026-01-29T20:02:59.726Z"
+    },
+    {
+      "id": "2d84451b-e995-47c5-9858-52dcb3b33ab7",
+      "status": "completed",
+      "created_at": "2026-01-29T20:04:12.404Z",
+      "updated_at": "2026-01-29T20:04:29.293Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "0f47e06a-acc7-4aea-a916-4543b8d2ce4c",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/c556ba59-586d-490b-ad09-da83449fbc98",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/c556ba59-586d-490b-ad09-da83449fbc98"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what \"this\" refers to? Are you asking about a specific tool, technology, or concept related to AI models or text detection? Providing more details will help me give you a precise answer.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 43,
+            "total_tokens": 437,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3SXdsO7PWXs9Yc6p9zsrayxiIo6c",
+              "object": "chat.completion",
+              "created": 1769717069,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what \"this\" refers to? Are you asking about a specific tool, technology, or concept related to AI models or text detection? Providing more details will help me give you a precise answer.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 43,
+                "total_tokens": 437,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3SXdsO7PWXs9Yc6p9zsrayxiIo6c"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "1eb6a0d3-aa47-4927-a419-cf9eea4bd739",
+      "nonce": "5dd13aa3-5b2e-49c8-a84e-6e92b5906bfe",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T20:09:12.404Z",
+      "tx_signature": "c556ba59-586d-490b-ad09-da83449fbc98",
+      "paid_at": "2026-01-29T20:04:28.086Z",
+      "completed_at": "2026-01-29T20:04:29.293Z"
+    },
+    {
+      "id": "72f3dc2a-0544-44ab-8c89-e67bedc5cbb2",
+      "status": "completed",
+      "created_at": "2026-01-29T20:04:54.625Z",
+      "updated_at": "2026-01-29T20:05:05.441Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "39cff70a-a62c-42ed-90e1-d0a602fa85db",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/8271e002-b733-41b0-b850-8d82eaecb66c",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/8271e002-b733-41b0-b850-8d82eaecb66c"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 27,
+            "total_tokens": 421,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3SYD24Qn8Rc66kptcCxsRMAbnNCi",
+              "object": "chat.completion",
+              "created": 1769717105,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 27,
+                "total_tokens": 421,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3SYD24Qn8Rc66kptcCxsRMAbnNCi"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "0845c7a7-a43e-4f13-a72c-aa13b9d226e5",
+      "nonce": "fa15f3a8-c0c8-4ef9-bc66-56edcf49808a",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T20:09:54.625Z",
+      "tx_signature": "8271e002-b733-41b0-b850-8d82eaecb66c",
+      "paid_at": "2026-01-29T20:05:04.305Z",
+      "completed_at": "2026-01-29T20:05:05.441Z"
+    },
+    {
+      "id": "86f94efd-c6d2-4e7f-afcb-21b0a9e4ed0e",
+      "status": "completed",
+      "created_at": "2026-01-29T20:26:01.918Z",
+      "updated_at": "2026-01-29T20:26:13.471Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "c6d6a089-044f-46d2-97cd-68e12116caca",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/593e96bd-3b59-42c0-b342-9b016709d655",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/593e96bd-3b59-42c0-b342-9b016709d655"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 27,
+            "total_tokens": 421,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3SsflaUaHKhLea4plkagSDgWkb7V",
+              "object": "chat.completion",
+              "created": 1769718373,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? This will help me give you a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 27,
+                "total_tokens": 421,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3SsflaUaHKhLea4plkagSDgWkb7V"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "5dc44c0d-b371-47ca-aed5-1ee41117c142",
+      "nonce": "62cc063a-9766-4730-badb-306a9009c86d",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-29T20:31:01.918Z",
+      "tx_signature": "593e96bd-3b59-42c0-b342-9b016709d655",
+      "paid_at": "2026-01-29T20:26:12.185Z",
+      "completed_at": "2026-01-29T20:26:13.471Z"
+    },
+    {
+      "id": "675aa688-f08f-48e7-9f99-9c04703d41d7",
+      "status": "completed",
+      "created_at": "2026-01-30T01:19:22.222Z",
+      "updated_at": "2026-01-30T01:19:34.242Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "ac278a7c-2ff8-4a9d-801c-9583f1d05add",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/e543ab4e-a933-42a5-9c12-bea27b9d3f90",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/e543ab4e-a933-42a5-9c12-bea27b9d3f90"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, model, or process related to AI text detection or evaluation? Providing more context will help me give you a better response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 42,
+            "total_tokens": 436,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3XSXcPKBFTCbgEMj4yaIk1SP8ZCb",
+              "object": "chat.completion",
+              "created": 1769735973,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please clarify what you are referring to? Are you asking about a specific tool, model, or process related to AI text detection or evaluation? Providing more context will help me give you a better response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 42,
+                "total_tokens": 436,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3XSXcPKBFTCbgEMj4yaIk1SP8ZCb"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "7d6929de-a235-497c-8b9d-1cd4aecc8071",
+      "nonce": "1762dff9-b5f2-4666-af66-166f57af1891",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T01:24:22.222Z",
+      "tx_signature": "e543ab4e-a933-42a5-9c12-bea27b9d3f90",
+      "paid_at": "2026-01-30T01:19:32.333Z",
+      "completed_at": "2026-01-30T01:19:34.242Z"
+    },
+    {
+      "id": "79dcc6f8-d63a-4dc1-91ac-170ef4248c25",
+      "status": "completed",
+      "created_at": "2026-01-30T01:52:53.980Z",
+      "updated_at": "2026-01-30T01:54:00.208Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "ae3a9269-0e29-4deb-87ed-27bb0a9bc3bc",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo17k7r85rqm3086kth5lra6snjte43j0rkexkv9k4m4trk6hyh2yxq0zwqew",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo17k7r85rqm3086kth5lra6snjte43j0rkexkv9k4m4trk6hyh2yxq0zwqew",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/38f36d5b-bfc0-41e4-941b-e1c4eefed50b",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/38f36d5b-bfc0-41e4-941b-e1c4eefed50b"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? Are you asking about a specific tool, technology, or concept related to AI or text detection?",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 32,
+            "total_tokens": 426,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3XzrgyVgmhQoxaXmpuYZ8rC1A9ih",
+              "object": "chat.completion",
+              "created": 1769738039,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? Are you asking about a specific tool, technology, or concept related to AI or text detection?",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 32,
+                "total_tokens": 426,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3XzrgyVgmhQoxaXmpuYZ8rC1A9ih"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo17k7r85rqm3086kth5lra6snjte43j0rkexkv9k4m4trk6hyh2yxq0zwqew",
+      "request_id": "5cff84c2-413a-4521-9554-80bc5ac44ab9",
+      "nonce": "60e5e5e0-a049-4126-94a9-75c34677a256",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T01:57:53.980Z",
+      "tx_signature": "38f36d5b-bfc0-41e4-941b-e1c4eefed50b",
+      "paid_at": "2026-01-30T01:53:58.127Z",
+      "completed_at": "2026-01-30T01:54:00.208Z"
+    },
+    {
+      "id": "5d673aa0-2a2f-47b4-a4af-4eac6650e808",
+      "status": "pending_payment",
+      "created_at": "2026-01-30T02:00:49.437Z",
+      "updated_at": "2026-01-30T02:00:49.437Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "323a68a8-7d7e-4d1d-89d7-6cc005f77566",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo17k7r85rqm3086kth5lra6snjte43j0rkexkv9k4m4trk6hyh2yxq0zwqew",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo17k7r85rqm3086kth5lra6snjte43j0rkexkv9k4m4trk6hyh2yxq0zwqew",
+      "request_id": "dad47b4d-4746-41b9-8d0b-670de073fd95",
+      "nonce": "3a082986-f14f-4c04-9987-a97296608d3f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:05:49.437Z"
+    },
+    {
+      "id": "145c4f30-5e77-4e41-95cf-5869cbaa6093",
+      "status": "pending_payment",
+      "created_at": "2026-01-30T02:02:21.478Z",
+      "updated_at": "2026-01-30T02:02:21.478Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "be2aee5b-38b8-4d77-81dc-78769bb115fb",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "928a9d29-1976-4a5c-a298-6609f9c0cf74",
+      "nonce": "c5a7a409-459a-4f75-ab9e-6c5ad38c3457",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:07:21.478Z"
+    },
+    {
+      "id": "ef5fc421-108e-4d07-8155-d148bcfe19a0",
+      "status": "pending_payment",
+      "created_at": "2026-01-30T02:05:30.113Z",
+      "updated_at": "2026-01-30T02:05:30.113Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "19df54d7-327b-4f68-a306-84bc3fe375f4",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "3f285df9-beb7-49d2-b673-00219d1e5f1f",
+      "nonce": "53f79386-2671-44ae-b13e-14a8dd37fb97",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:10:30.113Z"
+    },
+    {
+      "id": "33cedab3-1f87-43d0-ab3e-929c1a9f0a1c",
+      "status": "pending_payment",
+      "created_at": "2026-01-30T02:08:09.435Z",
+      "updated_at": "2026-01-30T02:08:09.435Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "eaf028cb-a606-4ce4-93a4-39731142745a",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner"
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "e71e5918-905e-42bf-8f2b-2573d78737cf",
+      "nonce": "34e84a66-f370-4ef5-8a66-df675b0fae37",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:13:09.435Z"
+    },
+    {
+      "id": "7599838b-b493-4c81-acc5-419a4f554700",
+      "status": "completed",
+      "created_at": "2026-01-30T02:12:30.975Z",
+      "updated_at": "2026-01-30T02:12:45.412Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "d5d146d0-a864-42d3-9ae8-cbc73f709bcf",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/117fc772-7429-48df-8ec1-b87938d24e94",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/117fc772-7429-48df-8ec1-b87938d24e94"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a particular tool, concept, or piece of technology? This will help me give you a more accurate response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 40,
+            "total_tokens": 434,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3YI0OW3HKDh85FJ6U8Zgxlt7kmhj",
+              "object": "chat.completion",
+              "created": 1769739164,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a particular tool, concept, or piece of technology? This will help me give you a more accurate response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 40,
+                "total_tokens": 434,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3YI0OW3HKDh85FJ6U8Zgxlt7kmhj"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "f86f5247-baec-44e1-ae33-8c573f1c77a9",
+      "nonce": "2a2c329b-c737-42e5-b709-68ec46a766a8",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:17:30.975Z",
+      "tx_signature": "117fc772-7429-48df-8ec1-b87938d24e94",
+      "paid_at": "2026-01-30T02:12:44.138Z",
+      "completed_at": "2026-01-30T02:12:45.412Z"
+    },
+    {
+      "id": "af5b38bc-88f7-4baa-bc9d-4fae94621ce9",
+      "status": "completed",
+      "created_at": "2026-01-30T02:13:12.943Z",
+      "updated_at": "2026-01-30T02:13:24.022Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "1b29f036-7934-4a68-add1-ddc290af2089",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 17 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/55970eb9-a81e-45cb-8e0f-7550ec2b6948",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/55970eb9-a81e-45cb-8e0f-7550ec2b6948"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a specific tool, technology, or concept related to AI or text detection?",
+          "usage": {
+            "prompt_tokens": 392,
+            "completion_tokens": 33,
+            "total_tokens": 425,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3YIdGhGqabAcRWTlc8NbV9sxmp8V",
+              "object": "chat.completion",
+              "created": 1769739203,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you are referring to? Are you asking about a specific tool, technology, or concept related to AI or text detection?",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 392,
+                "completion_tokens": 33,
+                "total_tokens": 425,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3YIdGhGqabAcRWTlc8NbV9sxmp8V"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "2bc3eab4-5283-423e-98ac-a35537061e65",
+      "nonce": "8d930f07-2411-417f-851e-71bd63c85872",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T02:18:12.943Z",
+      "tx_signature": "55970eb9-a81e-45cb-8e0f-7550ec2b6948",
+      "paid_at": "2026-01-30T02:13:22.940Z",
+      "completed_at": "2026-01-30T02:13:24.022Z"
+    },
+    {
+      "id": "3a7c894d-e079-4f59-982f-5513790df863",
+      "status": "completed",
+      "created_at": "2026-01-30T19:28:47.002Z",
+      "updated_at": "2026-01-30T19:28:57.621Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "6ba66f7c-84c8-40d8-bb08-d981c33b5e81",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/22f4c8aa-07e4-43ae-952d-059a00ed8518",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/22f4c8aa-07e4-43ae-952d-059a00ed8518"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? This will help me give you a more accurate and helpful response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 28,
+            "total_tokens": 422,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3oSnO2a99eOSuTldIRwCEDaGhvKZ",
+              "object": "chat.completion",
+              "created": 1769801337,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what \"this\" refers to? This will help me give you a more accurate and helpful response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 28,
+                "total_tokens": 422,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3oSnO2a99eOSuTldIRwCEDaGhvKZ"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "8d7150d8-9512-4b95-8cff-2e2dfadba439",
+      "nonce": "be0e8e0b-6a59-465e-bab2-00f3199bebfe",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T19:33:47.002Z",
+      "tx_signature": "22f4c8aa-07e4-43ae-952d-059a00ed8518",
+      "paid_at": "2026-01-30T19:28:55.958Z",
+      "completed_at": "2026-01-30T19:28:57.621Z"
+    },
+    {
+      "id": "8d917277-3fcc-48c3-a3a7-92ebf5c323aa",
+      "status": "completed",
+      "created_at": "2026-01-30T19:32:42.320Z",
+      "updated_at": "2026-01-30T19:32:56.747Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "fdbc7d33-4621-4e29-8305-cd2ba7b669a8",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 18 chars"
+        },
+        "wallet_address": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+        "prompt": "what does this do?",
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true,
+          "payer": "aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+          "explorerLink": "https://testnet.explorer.provable.com/transaction/da4707c4-b789-45fa-8ce7-f5923df2724f",
+          "explorerUrl": "https://testnet.explorer.provable.com/transaction/da4707c4-b789-45fa-8ce7-f5923df2724f"
+        },
+        "result": {
+          "output": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? This will help me give you a more accurate response.",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 24,
+            "total_tokens": 418,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "model": "AI-Text-Detector-Examiner",
+          "raw": {
+            "success": true,
+            "data": {
+              "id": "chatcmpl-D3oWcBmUiFnJWKFdYDrjzoCNeZ3tA",
+              "object": "chat.completion",
+              "created": 1769801574,
+              "model": "i3-model",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "As a finetuned specialized niche model, Could you please provide more context or specify what you're referring to? This will help me give you a more accurate response.",
+                    "refusal": null,
+                    "annotations": []
+                  },
+                  "logprobs": null,
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 394,
+                "completion_tokens": 24,
+                "total_tokens": 418,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_1590f93f9d"
+            },
+            "error": null,
+            "status_code": 200,
+            "provider": "i3",
+            "request_id": "chatcmpl-D3oWcBmUiFnJWKFdYDrjzoCNeZ3tA"
+          },
+          "error": null,
+          "warning": null
+        }
+      },
+      "type": "infer",
+      "user_id": "wallet:aleo1s7gc75pd92vtspwj23jkpy4xtyx3nwuvnx8kuj5hg7pmcr2ndvpsmahlk4",
+      "request_id": "202a3a0d-93f7-4b6c-b7a8-cc052a3dc0ed",
+      "nonce": "c2e826d1-3241-435f-a2a2-a4f150d7961d",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-01-30T19:37:42.320Z",
+      "tx_signature": "da4707c4-b789-45fa-8ce7-f5923df2724f",
+      "paid_at": "2026-01-30T19:32:52.727Z",
+      "completed_at": "2026-01-30T19:32:56.747Z"
     }
   ]
 }
