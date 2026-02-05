@@ -2,9 +2,36 @@ const fs = require('fs');
 const path = require('path');
 const { randomUUID, randomBytes } = require('crypto');
 const { MCP_CONFIG } = require('./config');
+const { sha256, redactToken, debug } = require('./log');
 
 const STORE_FILE = MCP_CONFIG.billing.storeFile;
 const TOKENS_FILE = path.join(path.dirname(STORE_FILE), 'anonymous-tokens.json');
+
+function numEnv(name, fallback) {
+  const raw = process.env[name];
+  if (raw == null) return fallback;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function boolEnv(name, fallback) {
+  const raw = process.env[name];
+  if (raw == null) return fallback;
+  const v = String(raw).trim().toLowerCase();
+  if (['1', 'true', 'yes', 'y', 'on'].includes(v)) return true;
+  if (['0', 'false', 'no', 'n', 'off'].includes(v)) return false;
+  return fallback;
+}
+
+const STORE_SENSITIVE =
+  boolEnv('MCP_STORE_SENSITIVE', MCP_CONFIG?.billing?.storeSensitive ?? false);
+const BILLING_RETENTION_DAYS =
+  numEnv('MCP_BILLING_RETENTION_DAYS', MCP_CONFIG?.billing?.retentionDays ?? 30);
+const TOKEN_EVENT_RETENTION_DAYS =
+  numEnv(
+    'MCP_TOKEN_EVENT_RETENTION_DAYS',
+    MCP_CONFIG?.billing?.tokenEventRetentionDays ?? 30
+  );
 
 function ensureStoreFile() {
   const dir = path.dirname(STORE_FILE);
@@ -34,7 +61,8 @@ function loadState() {
     if (!data || !Array.isArray(data.entries)) {
       return { entries: [] };
     }
-    return data;
+    // 启动时做一次轻量裁剪（只影响历史已完成/过期记录，不影响支付流程）
+    return { entries: pruneEntries(data.entries) };
   } catch (err) {
     console.warn('[billing-store] failed to load store, resetting', err);
     return { entries: [] };
@@ -48,7 +76,10 @@ function loadTokens() {
   try {
     const raw = fs.readFileSync(TOKENS_FILE, 'utf-8');
     const data = JSON.parse(raw);
-    return data.tokens || {};
+    const tokens = data.tokens || {};
+    // 启动时裁剪历史事件（不会影响余额）
+    pruneTokenEvents(tokens);
+    return tokens;
   } catch (err) {
     console.warn('[token-store] failed to load tokens, resetting', err);
     return {};
@@ -72,6 +103,113 @@ function generateAnonymousToken() {
   return token;
 }
 
+function tokenKey(token) {
+  return sha256(String(token));
+}
+
+function resolveTokenKey(token) {
+  if (!token) return null;
+  const raw = String(token);
+  // 兼容历史：如果磁盘上还存的是明文 token key，则优先命中
+  if (tokenCache[raw]) return raw;
+  const hashed = tokenKey(raw);
+  if (tokenCache[hashed]) return hashed;
+  return hashed;
+}
+
+function maybeMigrateLegacyTokenKey(token) {
+  const raw = String(token || '');
+  if (!raw) return null;
+  if (!tokenCache[raw]) return null;
+  const hashed = tokenKey(raw);
+  if (tokenCache[hashed]) {
+    // 已存在 hashed，则删除 legacy raw
+    delete tokenCache[raw];
+    persistTokens(tokenCache);
+    return hashed;
+  }
+  tokenCache[hashed] = tokenCache[raw];
+  delete tokenCache[raw];
+  persistTokens(tokenCache);
+  debug('[token-store] migrated legacy token key', { token: redactToken(raw) });
+  return hashed;
+}
+
+function pruneTokenEvents(tokens) {
+  const days = Number(TOKEN_EVENT_RETENTION_DAYS || 0);
+  if (!Number.isFinite(days) || days <= 0) return;
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  for (const k of Object.keys(tokens || {})) {
+    const t = tokens[k];
+    if (!t) continue;
+    if (Array.isArray(t.deposits)) {
+      t.deposits = t.deposits.filter((d) => Date.parse(d?.timestamp || 0) >= cutoff);
+    }
+    if (Array.isArray(t.usage)) {
+      t.usage = t.usage.filter((u) => Date.parse(u?.timestamp || 0) >= cutoff);
+    }
+  }
+}
+
+function sanitizeResultForStorage(result) {
+  if (!result || typeof result !== 'object') return result;
+  // 只保留最小统计字段
+  return {
+    status: result.status || 'ok',
+    model: result.model || undefined,
+    usage: result.usage || undefined,
+    error: result.error || undefined,
+    warning: result.warning || undefined
+  };
+}
+
+function sanitizeMetaForStorage(meta) {
+  if (!meta || typeof meta !== 'object') return meta;
+  if (STORE_SENSITIVE) return meta;
+  const clean = { ...meta };
+  // 内容类/身份类敏感字段
+  delete clean.prompt;
+  delete clean.wallet_address;
+  // 结果去内容，仅保留统计
+  if (clean.result && typeof clean.result === 'object') {
+    clean.result = sanitizeResultForStorage(clean.result);
+  }
+  // 验证信息去可关联链接/地址
+  if (clean.verification && typeof clean.verification === 'object') {
+    clean.verification = {
+      ok: !!clean.verification.ok,
+      code: clean.verification.code || undefined,
+      network: clean.verification.network || undefined
+    };
+  }
+  // 其它可能含大块内容/外部原始数据
+  delete clean.raw;
+  return clean;
+}
+
+function sanitizeEntryForStorage(entry) {
+  if (!entry || typeof entry !== 'object') return entry;
+  if (STORE_SENSITIVE) return entry;
+  const clean = { ...entry };
+  if (clean.meta) clean.meta = sanitizeMetaForStorage(clean.meta);
+  return clean;
+}
+
+function pruneEntries(entries) {
+  const days = Number(BILLING_RETENTION_DAYS || 0);
+  if (!Number.isFinite(days) || days <= 0) return Array.isArray(entries) ? entries : [];
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  const list = Array.isArray(entries) ? entries : [];
+  // 仅裁剪历史“已终态”记录，避免影响正在进行的支付/工作流
+  return list.filter((e) => {
+    const status = e?.status;
+    if (status === 'pending_payment' || status === 'paid') return true;
+    const ts = Date.parse(e?.updated_at || e?.created_at || 0);
+    if (!Number.isFinite(ts)) return true;
+    return ts >= cutoff;
+  });
+}
+
 /**
  * 创建匿名充值记录
  * @param {Object} params
@@ -81,9 +219,10 @@ function generateAnonymousToken() {
  */
 function createAnonymousDeposit({ txId, amount }) {
   const token = generateAnonymousToken();
+  const key = tokenKey(token);
   const now = new Date().toISOString();
   
-  tokenCache[token] = {
+  tokenCache[key] = {
     balance: amount,
     created_at: now,
     updated_at: now,
@@ -98,7 +237,7 @@ function createAnonymousDeposit({ txId, amount }) {
   persistTokens(tokenCache);
   
   console.log('[token-store] Created anonymous token:', {
-    token: token.slice(0, 12) + '...',
+    token: redactToken(token),
     balance: amount
   });
   
@@ -112,14 +251,17 @@ function createAnonymousDeposit({ txId, amount }) {
  * @param {number} amount 
  */
 function addDepositToToken(token, txId, amount) {
-  if (!tokenCache[token]) {
+  // 如命中 legacy raw key，则迁移为 hashed key（并确保后续使用的是新 key）
+  maybeMigrateLegacyTokenKey(token);
+  const key = resolveTokenKey(token);
+  if (!key || !tokenCache[key]) {
     return null;
   }
   
   const now = new Date().toISOString();
-  tokenCache[token].balance += amount;
-  tokenCache[token].updated_at = now;
-  tokenCache[token].deposits.push({
+  tokenCache[key].balance += amount;
+  tokenCache[key].updated_at = now;
+  tokenCache[key].deposits.push({
     tx_id: txId,
     amount: amount,
     timestamp: now
@@ -127,7 +269,7 @@ function addDepositToToken(token, txId, amount) {
   
   persistTokens(tokenCache);
   
-  return { balance: tokenCache[token].balance };
+  return { balance: tokenCache[key].balance };
 }
 
 /**
@@ -136,14 +278,18 @@ function addDepositToToken(token, txId, amount) {
  * @returns {Object|null} { valid, balance } 或 null
  */
 function validateToken(token) {
-  if (!token || !tokenCache[token]) {
+  if (!token) return null;
+  // 命中 legacy raw key 时，自动迁移（不改变客户端 token 形态）
+  maybeMigrateLegacyTokenKey(token);
+  const key = resolveTokenKey(token);
+  if (!key || !tokenCache[key]) {
     return null;
   }
   
   return {
     valid: true,
-    balance: tokenCache[token].balance,
-    created_at: tokenCache[token].created_at
+    balance: tokenCache[key].balance,
+    created_at: tokenCache[key].created_at
   };
 }
 
@@ -155,28 +301,29 @@ function validateToken(token) {
  * @returns {Object|null} { success, remaining } 或 null
  */
 function deductFromToken(token, amount, usageInfo = {}) {
-  if (!tokenCache[token]) {
-    return null;
-  }
+  maybeMigrateLegacyTokenKey(token);
+  const key = resolveTokenKey(token);
+  if (!key || !tokenCache[key]) return null;
   
-  if (tokenCache[token].balance < amount) {
-    return { success: false, error: 'insufficient_balance', balance: tokenCache[token].balance };
+  if (tokenCache[key].balance < amount) {
+    return { success: false, error: 'insufficient_balance', balance: tokenCache[key].balance };
   }
   
   const now = new Date().toISOString();
-  tokenCache[token].balance -= amount;
-  tokenCache[token].updated_at = now;
-  tokenCache[token].usage.push({
+  tokenCache[key].balance -= amount;
+  tokenCache[key].updated_at = now;
+  tokenCache[key].usage.push({
     amount: amount,
     timestamp: now,
     ...usageInfo
   });
   
+  pruneTokenEvents(tokenCache);
   persistTokens(tokenCache);
   
   return { 
     success: true, 
-    remaining: tokenCache[token].balance,
+    remaining: tokenCache[key].balance,
     deducted: amount
   };
 }
@@ -186,10 +333,10 @@ function deductFromToken(token, amount, usageInfo = {}) {
  * @param {string} token 
  */
 function getTokenBalance(token) {
-  if (!tokenCache[token]) {
-    return null;
-  }
-  return tokenCache[token].balance;
+  maybeMigrateLegacyTokenKey(token);
+  const key = resolveTokenKey(token);
+  if (!key || !tokenCache[key]) return null;
+  return tokenCache[key].balance;
 }
 
 const state = loadState();
@@ -201,7 +348,22 @@ for (const entry of state.entries) {
 }
 
 function persist() {
-  fs.writeFileSync(STORE_FILE, JSON.stringify(state, null, 2));
+  // 落盘时执行去敏与保留策略（不影响内存中正在执行的流程）
+  const pruned = pruneEntries(state.entries);
+  // 如果发生裁剪，确保索引同步（避免通过 request_id 访问到已裁剪对象）
+  if (pruned.length !== state.entries.length) {
+    const alive = new Set(pruned.map((e) => e?.request_id).filter(Boolean));
+    for (const key of byRequestId.keys()) {
+      if (!alive.has(key)) byRequestId.delete(key);
+    }
+    state.entries = pruned;
+  } else {
+    state.entries = pruned;
+  }
+  const toWrite = {
+    entries: state.entries.map((e) => sanitizeEntryForStorage(e))
+  };
+  fs.writeFileSync(STORE_FILE, JSON.stringify(toWrite, null, 2));
 }
 
 function createEntry(data) {

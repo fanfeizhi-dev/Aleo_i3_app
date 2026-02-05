@@ -938,7 +938,7 @@
             try {
                 // 首先验证配置
                 if (!validateFirebaseConfig()) {
-                    throw new Error('Firebase 配置验证失败，请检查配置信息');
+                    throw new Error('Firebase config validation failed. Please check your configuration.');
                 }
                 
                 console.log('🚀 开始初始化 Firebase...');
@@ -1071,7 +1071,7 @@
                         console.log('✅ 登录成功:', result.user.email);
                         (function(){
                             const el = document.getElementById('googleSignInStatus');
-                            if (el) el.textContent = 'Log in successful！';
+                            if (el) el.textContent = 'Log in successful!';
                         })();
                     } catch (popupErr) {
                         const code = popupErr && popupErr.code;
@@ -1088,7 +1088,7 @@
                     console.log('✅ 登录成功:', result.user.email);
                     (function(){
                         const el = document.getElementById('googleSignInStatus');
-                        if (el) el.textContent = 'Log in successful！';
+                        if (el) el.textContent = 'Log in successful!';
                     })();
                 }
                 
@@ -1099,7 +1099,7 @@
                     if (el) el.textContent = 'Domain not authorized, please add current domain in Firebase console';
                 } else {
                     const el = document.getElementById('googleSignInStatus');
-                    if (el) el.textContent = 'Log in failed: ' + error.message;
+                    if (el) el.textContent = 'Log in failed. Please try again.';
                 }
             }
         }
@@ -1371,7 +1371,7 @@
                 
             } catch (error) {
                 console.error('签到失败:', error);
-                alert('Check-in failed: ' + error.message);
+                alert('Check-in failed. Please try again.');
             }
         };
 
@@ -1430,7 +1430,7 @@
                 
             } catch (error) {
                 console.error('❌ 登出失败:', error);
-                alert('Logout failed: ' + error.message);
+                alert('Logout failed. Please try again.');
             }
         };
 
@@ -1597,8 +1597,8 @@
         // - 无论是否登录，都会写入顶层 wallets/<address> 文档，便于独立管理钱包
         window.onWalletConnected = async function(address, chainId, networkName) {
             try {
-                if (!firebaseDb) throw new Error('Firebase 未初始化');
-                if (!address) throw new Error('address 不能为空');
+                if (!firebaseDb) throw new Error('Firebase not initialized');
+                if (!address) throw new Error('Wallet address is required.');
 
                 const { doc, setDoc, getDoc, updateDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js');
 
@@ -1723,7 +1723,7 @@
                 localStorage.setItem('walletConnected', 'true');
             } catch (err) {
                 console.error('❌ 写入钱包信息到 Firestore 失败:', err);
-                alert('Failed to save wallet info: ' + err.message);
+                alert('Failed to save wallet info. Please try again.');
             }
         };
 

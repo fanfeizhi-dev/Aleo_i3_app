@@ -274,6 +274,16 @@ class WalletManager {
                 return;
             }
 
+            // ========== 进行中锁：避免 UI 多次刷新导致重复弹窗 ==========
+            // 当一次 getPrivateRecords 还在等待用户确认时，如果 updateUI 被多次调用，
+            // 会造成 Leo Wallet 连续弹出“Share records”确认框。
+            if (!forceRefresh && this._paymentModeStatusInFlight) {
+                try {
+                    await this._paymentModeStatusInFlight;
+                } catch (_) {}
+                return;
+            }
+
             // 缓存机制：避免频繁调用 getPrivateRecords（会触发钱包弹窗）
             // 缓存 5 分钟，除非强制刷新
             const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -289,20 +299,26 @@ class WalletManager {
             }
 
             // 检查是否有 private records（异步检测）
-            // 注意：这可能会触发 Leo Wallet 弹窗，所以我们使用缓存
+            // 注意：这可能会触发 Leo Wallet 弹窗，所以我们使用缓存 + 进行中锁
             let hasPrivateBalance = false;
-            try {
-                if (window.AleoPayment && typeof window.AleoPayment.getPrivateRecords === 'function') {
-                    const records = await window.AleoPayment.getPrivateRecords();
-                    hasPrivateBalance = records && records.length > 0;
+            this._paymentModeStatusInFlight = (async () => {
+                try {
+                    if (window.AleoPayment && typeof window.AleoPayment.getPrivateRecords === 'function') {
+                        const records = await window.AleoPayment.getPrivateRecords({
+                            // 允许 AleoPayment 自己做缓存/去重；这里仅做调用侧去重
+                            forceRefresh: !!forceRefresh
+                        });
+                        hasPrivateBalance = records && records.length > 0;
+                    }
+                } catch (e) {
+                    console.warn('[WalletManager] Failed to check private records:', e);
+                    // 如果检测失败，使用之前的缓存（如果有）
+                    if (this._paymentModeCache !== undefined) {
+                        hasPrivateBalance = this._paymentModeCache;
+                    }
                 }
-            } catch (e) {
-                console.warn('[WalletManager] Failed to check private records:', e);
-                // 如果检测失败，使用之前的缓存（如果有）
-                if (this._paymentModeCache !== undefined) {
-                    hasPrivateBalance = this._paymentModeCache;
-                }
-            }
+            })();
+            try { await this._paymentModeStatusInFlight; } finally { this._paymentModeStatusInFlight = null; }
 
             // 更新缓存
             this._paymentModeCache = hasPrivateBalance;

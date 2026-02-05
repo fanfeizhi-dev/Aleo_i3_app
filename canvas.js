@@ -284,9 +284,7 @@ function show402InvoiceModal(invoice, workflow) {
                 });
             } catch (err) {
                 console.error('Aleo canvas payment error:', err);
-                statusEl.textContent =
-                    'Payment failed or was rejected: ' +
-                    (err && err.message ? err.message : err);
+                statusEl.textContent = 'Payment failed or was rejected. Please try again.';
                 payBtn.disabled = false;
                 payBtn.textContent = `Pay ${amount.toFixed(6)} ALEO`;
             }
@@ -474,7 +472,7 @@ async function purchaseAndPrepayCanvasWorkflow(options = {}) {
         if (!confirmResponse.ok || confirmJson.status !== 'ok') {
             const errorMsg = confirmJson.message || confirmJson.error || 'Payment verification failed';
             console.error('[Canvas][Prepay] Confirmation failed:', errorMsg, confirmJson);
-            alert(`❌ Prepay confirmation failed: ${errorMsg}`);
+            alert('Prepay confirmation failed. Please try again.');
             return;
         }
 
@@ -621,7 +619,7 @@ async function purchaseAndPrepayCanvasWorkflow(options = {}) {
         }, 600);
     } catch (error) {
         console.error('❌ Canvas prepayment failed:', error);
-        alert(`Payment failed: ${error.message}`);
+        alert('Payment failed. Please try again.');
     }
 }
 

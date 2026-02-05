@@ -587,10 +587,10 @@ function placeOrder() {
 
         const tokenCount = tokenOrders.length;
         const shareCount = shareOrders.length;
-        let message = '🎉 购买完成！\n\n';
-        if (tokenCount > 0) message += `✅ Tokens: ${tokenCount} 个模型\n`;
-        if (shareCount > 0) message += `✅ Shares: ${shareCount} 个模型\n`;
-        message += '\n📋 查看交易详情请点击右下角通知';
+        let message = '🎉 Purchase complete!\n\n';
+        if (tokenCount > 0) message += `✅ Tokens: ${tokenCount} model(s)\n`;
+        if (shareCount > 0) message += `✅ Shares: ${shareCount} model(s)\n`;
+        message += '\n📋 Click the notification at bottom-right to view transaction details.';
         
         alert(message);
 
@@ -629,15 +629,15 @@ function showPurchaseSuccessToast(signature, order, explorerUrl) {
         
         toast.innerHTML = `
             <button onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.2);border:none;color:white;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:16px;line-height:1;">×</button>
-            <h4 style="margin:0 0 8px 0;font-size:16px;font-weight:600;">🎉 购买成功！</h4>
+            <h4 style="margin:0 0 8px 0;font-size:16px;font-weight:600;">🎉 Purchase successful!</h4>
             <p style="margin:0 0 4px 0;font-size:14px;opacity:0.95;"><strong>${order.modelName}</strong></p>
-            <p style="margin:0 0 4px 0;font-size:13px;opacity:0.9;">数量: ${quantity}</p>
-            <p style="margin:0 0 12px 0;font-size:13px;opacity:0.9;">金额: ${amount}</p>
+            <p style="margin:0 0 4px 0;font-size:13px;opacity:0.9;">Quantity: ${quantity}</p>
+            <p style="margin:0 0 12px 0;font-size:13px;opacity:0.9;">Amount: ${amount}</p>
             <a href="${explorerUrl}" target="_blank" rel="noopener noreferrer" 
                style="display:inline-block;background:rgba(255,255,255,0.2);color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;transition:all 0.2s;"
                onmouseover="this.style.background='rgba(255,255,255,0.3)'"
                onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                📋 查看交易详情 →
+                📋 View transaction details →
             </a>
         `;
         

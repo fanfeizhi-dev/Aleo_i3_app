@@ -1,14 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Aleo Network 图标 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1079.72 1080">
   <defs>
-    <linearGradient id="aleoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#00b894;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#009b77;stop-opacity:1" />
-    </linearGradient>
+    <style>
+      .cls-1 {
+        fill: #121212;
+      }
+    </style>
   </defs>
-  <!-- 背景圆 -->
-  <circle cx="50" cy="50" r="48" fill="url(#aleoGrad)" />
-  <!-- A 字母代表 Aleo -->
-  <text x="50" y="68" font-family="Arial, sans-serif" font-size="45" font-weight="bold" fill="#fff" text-anchor="middle">A</text>
+  <polygon class="cls-1" points="612.33 247.34 547.82 247.34 477.26 247.34 360 589.53 431.41 589.53 526.38 310.37 560.76 310.37 655.72 589.53 524.82 589.53 431.41 589.53 409.31 652.56 546.1 652.56 677.01 652.56 738.4 832.66 812.08 832.66 612.33 247.34"/>
+  <polygon class="cls-1" points="276.69 832.66 347.91 832.66 409.31 652.56 338.4 652.56 276.69 832.66"/>
+  <polygon class="cls-1" points="289.24 589.53 267.64 652.56 338.4 652.56 360 589.53 289.24 589.53"/>
 </svg>

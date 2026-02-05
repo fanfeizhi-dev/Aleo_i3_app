@@ -18,6 +18,107 @@
     // 默认交易费用 (microcredits)
     const DEFAULT_FEE = 25_000; // 0.025 Credits (transfer_private 需要更多 gas)
 
+    // ========= Privacy-safe logging =========
+    // 目标：避免在浏览器控制台/共享屏幕/恶意扩展可读范围内泄露私密 record、交易输入、金额习惯等。
+    // 仅在本地或显式开启时输出 debug；且 debug 内容始终脱敏。
+    function __apIsDebugEnabled() {
+        try {
+            const isLocalhost = (typeof location !== 'undefined')
+                && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+            if (isLocalhost) return true;
+            if (typeof window !== 'undefined' && window.__ALEO_PAYMENT_DEBUG__ === true) return true;
+            if (typeof localStorage !== 'undefined' && localStorage.getItem('ALEO_PAYMENT_DEBUG') === '1') return true;
+        } catch (_) {}
+        return false;
+    }
+
+    const __AP_DEBUG = __apIsDebugEnabled();
+
+    function apDebug(...args) { if (__AP_DEBUG) console.debug(...args); }
+    function apInfo(...args) { console.info(...args); }
+    function apWarn(...args) { console.warn(...args); }
+    function apError(...args) { console.error(...args); }
+
+    function apMaskAddress(addr) {
+        if (!addr) return '';
+        const s = String(addr);
+        if (s.length <= 16) return s;
+        return `${s.slice(0, 8)}…${s.slice(-6)}`;
+    }
+
+    // 非加密指纹：用于日志相关性，不作为安全哈希承诺
+    function apFingerprint(value) {
+        const str = value == null ? '' : String(value);
+        let h = 0x811c9dc5; // FNV-1a 32-bit
+        for (let i = 0; i < str.length; i++) {
+            h ^= str.charCodeAt(i);
+            h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)) >>> 0;
+        }
+        return `fp_${h.toString(16).padStart(8, '0')}`;
+    }
+
+    function apBucketMicrocredits(microcredits) {
+        // 输出数量级区间，避免暴露精确支付习惯
+        let n;
+        try {
+            n = typeof microcredits === 'bigint' ? microcredits : BigInt(Math.trunc(Number(microcredits || 0)));
+        } catch (_) {
+            return 'unknown';
+        }
+        if (n <= 0n) return '0';
+        if (n < 10_000n) return '<1e4';
+        if (n < 100_000n) return '1e4-1e5';
+        if (n < 1_000_000n) return '1e5-1e6';
+        if (n < 10_000_000n) return '1e6-1e7';
+        if (n < 100_000_000n) return '1e7-1e8';
+        return '>=1e8';
+    }
+
+    function apRecordSummary(record) {
+        if (!record || typeof record !== 'object') return { present: false };
+        const owner = record.owner || (record.data && record.data.owner);
+        const hasCiphertext = !!record.ciphertext;
+        const hasNonce = !!record.nonce;
+        const hasPlaintext = typeof record.plaintext === 'string';
+        const spent = !!record.spent;
+        return {
+            present: true,
+            owner: owner ? apMaskAddress(owner) : '',
+            ownerFp: owner ? apFingerprint(owner) : '',
+            spent,
+            hasCiphertext,
+            hasNonce,
+            hasPlaintext
+        };
+    }
+
+    function apRedactTransactionForLog(tx) {
+        if (!tx || typeof tx !== 'object') return tx;
+        const redacted = {
+            ...tx,
+            address: apMaskAddress(tx.address),
+        };
+        if (Array.isArray(tx.transitions)) {
+            redacted.transitions = tx.transitions.map((t) => {
+                const out = { ...t };
+                if (Array.isArray(out.inputs) && out.inputs.length > 0) {
+                    out.inputs = [...out.inputs];
+                    out.inputs[0] = '[REDACTED_RECORD_INPUT]';
+                    if (typeof out.inputs[1] === 'string') out.inputs[1] = apMaskAddress(out.inputs[1]);
+                    if (typeof out.inputs[2] === 'string') out.inputs[2] = '[REDACTED_AMOUNT]';
+                }
+                return out;
+            });
+        }
+        if (Array.isArray(tx.inputs) && tx.inputs.length > 0) {
+            redacted.inputs = [...tx.inputs];
+            redacted.inputs[0] = '[REDACTED_RECORD_INPUT]';
+            if (typeof redacted.inputs[1] === 'string') redacted.inputs[1] = apMaskAddress(redacted.inputs[1]);
+            if (typeof redacted.inputs[2] === 'string') redacted.inputs[2] = '[REDACTED_AMOUNT]';
+        }
+        return redacted;
+    }
+
     /**
      * 获取 Leo Wallet Provider
      */
@@ -48,13 +149,13 @@
             publicKey = typeof provider.publicKey === 'string' 
                 ? provider.publicKey 
                 : provider.publicKey.toString();
-            console.log('[AleoPayment] Got publicKey from provider:', publicKey);
+            apDebug('[AleoPayment] Got publicKey from provider:', apMaskAddress(publicKey));
         }
         
         // 如果 provider 没有 publicKey，尝试从 walletManager 获取
         if (!publicKey && window.walletManager && window.walletManager.isConnected && window.walletManager.walletType === 'leo') {
             publicKey = window.walletManager.walletAddress;
-            console.log('[AleoPayment] Got publicKey from walletManager:', publicKey);
+            apDebug('[AleoPayment] Got publicKey from walletManager:', apMaskAddress(publicKey));
         }
         
         // 验证 publicKey 是有效的 Aleo 地址格式，且不是平台收款地址
@@ -69,7 +170,7 @@
                     publicKey = typeof provider.publicKey === 'string' 
                         ? provider.publicKey 
                         : provider.publicKey.toString();
-                    console.log('[AleoPayment] Corrected publicKey from provider:', publicKey);
+                    apDebug('[AleoPayment] Corrected publicKey from provider:', apMaskAddress(publicKey));
                 } else {
                     return { ready: false, error: 'Invalid wallet address detected. Please reconnect your wallet.' };
                 }
@@ -104,14 +205,14 @@
         
         // 情况 1: provider 已经有 publicKey（最理想的情况）
         if (provider && provider.publicKey) {
-            console.log('[AleoPayment] Provider already connected with publicKey');
+            apDebug('[AleoPayment] Provider already connected with publicKey');
             return isLeoWalletReady();
         }
         
         // 情况 2: walletManager 显示已连接但 provider 没有 publicKey
         // 这说明浏览器会话已过期，需要重新授权
         if (wm && wm.isConnected && wm.walletType === 'leo' && provider) {
-            console.log('[AleoPayment] Session may have expired, provider.publicKey is empty');
+            apDebug('[AleoPayment] Session may have expired, provider.publicKey is empty');
             
             // 先短暂等待，看看 provider 是否会自动恢复
             let waitCount = 0;
@@ -125,7 +226,7 @@
                     const pk = typeof provider.publicKey === 'string' 
                         ? provider.publicKey 
                         : provider.publicKey.toString();
-                    console.log('[AleoPayment] Provider publicKey became available after wait:', pk);
+                    apDebug('[AleoPayment] Provider publicKey became available after wait:', apMaskAddress(pk));
                     return {
                         ready: true,
                         provider,
@@ -136,7 +237,7 @@
             
             // 如果允许自动重连，主动调用 connect()
             if (autoReconnect && typeof provider.connect === 'function') {
-                console.log('[AleoPayment] Attempting auto-reconnect to Leo Wallet...');
+                apDebug('[AleoPayment] Attempting auto-reconnect to Leo Wallet...');
                 
                 try {
                     // 使用适当的连接参数
@@ -145,7 +246,7 @@
                     const programs = ['credits.aleo'];
                     
                     const connectResult = await provider.connect(decryptPermission, network, programs);
-                    console.log('[AleoPayment] Auto-reconnect result:', connectResult);
+                    apDebug('[AleoPayment] Auto-reconnect result:', connectResult ? '[present]' : '[empty]');
                     
                     // 等待 provider 更新
                     await new Promise(resolve => setTimeout(resolve, 500));
@@ -163,7 +264,7 @@
                     
                     if (newPublicKey) {
                         const pk = typeof newPublicKey === 'string' ? newPublicKey : newPublicKey.toString();
-                        console.log('[AleoPayment] Auto-reconnect successful, publicKey:', pk);
+                        apDebug('[AleoPayment] Auto-reconnect successful, publicKey:', apMaskAddress(pk));
                         
                         // 更新 walletManager
                         if (wm) {
@@ -253,14 +354,14 @@
     async function waitForRealTransactionId(leoWallet, localTxId, transferType = 'unknown', maxWaitMs = 30000) {
         // 如果已经是有效的 Aleo 交易 ID，直接返回
         if (localTxId && typeof localTxId === 'string' && localTxId.startsWith('at1')) {
-            console.log(`[AleoPayment] ✅ Already valid Aleo transaction ID: ${localTxId}`);
+            apDebug(`[AleoPayment] ✅ Already valid Aleo transaction ID: ${localTxId}`);
             return localTxId;
         }
         
-        console.log(`[AleoPayment] 🔄 Waiting for real transaction ID...`);
-        console.log(`[AleoPayment] Local request ID: ${localTxId}`);
-        console.log(`[AleoPayment] Transfer type: ${transferType}`);
-        console.log(`[AleoPayment] Max wait time: ${maxWaitMs}ms`);
+        apDebug(`[AleoPayment] 🔄 Waiting for real transaction ID...`);
+        apDebug(`[AleoPayment] Local request ID: ${localTxId}`);
+        apDebug(`[AleoPayment] Transfer type: ${transferType}`);
+        apDebug(`[AleoPayment] Max wait time: ${maxWaitMs}ms`);
         
         // 检查 transactionStatus 方法是否可用
         if (!leoWallet || typeof leoWallet.transactionStatus !== 'function') {
@@ -275,11 +376,11 @@
         
         while (Date.now() - startTime < maxWaitMs) {
             attempt++;
-            console.log(`[AleoPayment] Polling attempt ${attempt}...`);
+            apDebug(`[AleoPayment] Polling attempt ${attempt}...`);
             
             try {
                 const status = await leoWallet.transactionStatus(localTxId);
-                console.log(`[AleoPayment] Transaction status (attempt ${attempt}):`, status);
+                apDebug(`[AleoPayment] Transaction status (attempt ${attempt}):`, status);
                 
                 // 检查各种可能的字段名
                 const realTxId = status?.transactionId || 
@@ -290,14 +391,14 @@
                                  status?.txHash;
                 
                 if (realTxId && typeof realTxId === 'string' && realTxId.startsWith('at1')) {
-                    console.log(`[AleoPayment] ✅ Got real transaction ID after ${attempt} attempts: ${realTxId}`);
+                    apDebug(`[AleoPayment] ✅ Got real transaction ID after ${attempt} attempts: ${realTxId}`);
                     return realTxId;
                 }
                 
                 // 检查交易状态
                 const txStatus = status?.status || status?.state;
                 if (txStatus) {
-                    console.log(`[AleoPayment] Transaction status: ${txStatus}`);
+                    apDebug(`[AleoPayment] Transaction status: ${txStatus}`);
                     
                     // 如果交易失败，抛出错误
                     if (txStatus === 'failed' || txStatus === 'rejected' || txStatus === 'error') {
@@ -306,7 +407,7 @@
                     
                     // 如果交易被广播/确认，继续等待真正的 ID
                     if (txStatus === 'broadcast' || txStatus === 'pending' || txStatus === 'processing') {
-                        console.log(`[AleoPayment] Transaction is ${txStatus}, continuing to wait...`);
+                        apDebug(`[AleoPayment] Transaction is ${txStatus}, continuing to wait...`);
                     }
                 }
                 
@@ -370,21 +471,36 @@
      * 获取用户的私密 credits records
      * @returns {Promise<Array>} records 数组
      */
-    async function getPrivateRecords() {
+    // ========== Private records 缓存 + 去重锁 ==========
+    // Leo Wallet 的 requestRecords 通常每次都会弹窗确认。
+    // 登录/渲染期间如果被多处重复调用，会导致弹窗不停出现。
+    let __privateRecordsInFlight = null;
+    let __privateRecordsCache = null;
+    let __privateRecordsCacheTime = 0;
+    const __PRIVATE_RECORDS_CACHE_MS = 5 * 60 * 1000; // 5 minutes
+
+    async function getPrivateRecords(options = {}) {
+        const forceRefresh = !!options.forceRefresh;
+        const now = Date.now();
+        if (!forceRefresh && __privateRecordsCache && (now - __privateRecordsCacheTime) < __PRIVATE_RECORDS_CACHE_MS) {
+            return __privateRecordsCache;
+        }
+        if (!forceRefresh && __privateRecordsInFlight) {
+            return __privateRecordsInFlight;
+        }
+
+        __privateRecordsInFlight = (async () => {
         const provider = getLeoProvider();
         if (!provider) {
             console.warn('[AleoPayment] No Leo Wallet provider');
             return [];
         }
 
-        // 打印所有可用方法
-        console.log('[AleoPayment] Provider methods:', Object.getOwnPropertyNames(provider));
-        console.log('[AleoPayment] Provider prototype methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(provider) || {}));
-        
-        // 检查 adapter 属性
-        if (provider.adapter) {
-            console.log('[AleoPayment] Has adapter property:', Object.getOwnPropertyNames(provider.adapter));
-        }
+        // 隐私：避免输出 provider 的完整属性/原型/adapter（可能暴露环境细节与权限面）
+        apDebug('[AleoPayment] getPrivateRecords: provider meta:', {
+            hasRequestRecords: typeof provider.requestRecords === 'function',
+            hasAdapter: !!provider.adapter
+        });
 
         try {
             // 尝试不同的 API 调用方式
@@ -392,23 +508,24 @@
             
             // 方式1: requestRecords(programId)
             if (typeof provider.requestRecords === 'function') {
-                console.log('[AleoPayment] Trying requestRecords("credits.aleo")...');
+                apDebug('[AleoPayment] Trying requestRecords("credits.aleo")...');
                 try {
                     rawResult = await provider.requestRecords('credits.aleo');
-                    console.log('[AleoPayment] requestRecords raw result:', rawResult);
-                    console.log('[AleoPayment] Result type:', typeof rawResult);
-                    console.log('[AleoPayment] Is array:', Array.isArray(rawResult));
-                    if (rawResult) {
-                        console.log('[AleoPayment] Result keys:', Object.keys(rawResult));
-                    }
+                    // 隐私：不要打印 rawResult（可能包含 ciphertext/nonce/plaintext）
+                    apDebug('[AleoPayment] requestRecords result meta:', {
+                        type: typeof rawResult,
+                        isArray: Array.isArray(rawResult),
+                        hasRecordsField: !!rawResult && typeof rawResult === 'object' && Array.isArray(rawResult.records),
+                        hasDataField: !!rawResult && typeof rawResult === 'object' && Array.isArray(rawResult.data),
+                    });
                 } catch (e1) {
                     console.warn('[AleoPayment] requestRecords("credits.aleo") failed:', e1.message);
                     
                     // 方式2: 尝试传入对象参数
                     try {
-                        console.log('[AleoPayment] Trying requestRecords with object param...');
+                        apDebug('[AleoPayment] Trying requestRecords with object param...');
                         rawResult = await provider.requestRecords({ program: 'credits.aleo' });
-                        console.log('[AleoPayment] requestRecords with object succeeded:', rawResult);
+                        apDebug('[AleoPayment] requestRecords with object succeeded');
                     } catch (e2) {
                         console.warn('[AleoPayment] requestRecords with object failed:', e2.message);
                     }
@@ -422,27 +539,27 @@
                 if (Array.isArray(rawResult)) {
                     // 格式1: 直接是数组
                     records = rawResult;
-                    console.log('[AleoPayment] Result is array with', records.length, 'records');
+                    apDebug('[AleoPayment] Result is array with', records.length, 'records');
                 } else if (typeof rawResult === 'object') {
                     // 格式2: 可能是 { records: [...] } 或 { data: [...] }
                     if (Array.isArray(rawResult.records)) {
                         records = rawResult.records;
-                        console.log('[AleoPayment] Extracted records from result.records:', records.length, 'records');
+                        apDebug('[AleoPayment] Extracted records from result.records:', records.length, 'records');
                     } else if (Array.isArray(rawResult.data)) {
                         records = rawResult.data;
-                        console.log('[AleoPayment] Extracted records from result.data:', records.length, 'records');
+                        apDebug('[AleoPayment] Extracted records from result.data:', records.length, 'records');
                     } else {
                         // 格式3: 可能是单个 record 对象
                         // 检查是否有 record 的典型属性
                         if (rawResult.ciphertext || rawResult.plaintext || rawResult.nonce || rawResult.owner) {
                             records = [rawResult];
-                            console.log('[AleoPayment] Result appears to be a single record');
+                            apDebug('[AleoPayment] Result appears to be a single record');
                         } else {
                             // 尝试获取所有值
                             const values = Object.values(rawResult);
                             if (values.length > 0 && values.every(v => typeof v === 'object')) {
                                 records = values;
-                                console.log('[AleoPayment] Extracted', records.length, 'records from object values');
+                                apDebug('[AleoPayment] Extracted', records.length, 'records from object values');
                             }
                         }
                     }
@@ -450,32 +567,33 @@
             }
             
             if (records.length > 0) {
-                // 打印每个 record 的详细信息
-                console.log('[AleoPayment] Found', records.length, 'total records:');
-                records.forEach((rec, i) => {
-                    console.log(`[AleoPayment] Record ${i}:`, JSON.stringify(rec, null, 2));
-                    const microcredits = extractMicrocreditsFromRecord(rec);
-                    console.log(`[AleoPayment] Record ${i} balance:`, microcredits.toString(), 'microcredits =', microcreditsToAleo(Number(microcredits)), 'ALEO');
-                });
-                
-                // 过滤出未花费的记录
+                // 隐私：不要在控制台输出私密 records 的明文/余额细节（可能被恶意扩展/XSS 读取）
                 const unspentRecords = records.filter(rec => !rec.spent);
-                console.log('[AleoPayment] Unspent records:', unspentRecords.length);
                 
                 if (unspentRecords.length > 0) {
                     return unspentRecords;
                 }
             }
             
-            console.log('[AleoPayment] ⚠️ No private records found.');
-            console.log('[AleoPayment] 💡 To use private transfers, you need private records.');
-            console.log('[AleoPayment] 💡 You can convert public balance to private using transfer_public_to_private.');
+            apDebug('[AleoPayment] ⚠️ No private records found.');
+            apDebug('[AleoPayment] 💡 To use private transfers, you need private records.');
+            apDebug('[AleoPayment] 💡 You can convert public balance to private using transfer_public_to_private.');
             return [];
         } catch (error) {
             console.warn('[AleoPayment] Failed to get records:', error);
         }
 
         return [];
+        })();
+
+        try {
+            const records = await __privateRecordsInFlight;
+            __privateRecordsCache = Array.isArray(records) ? records : [];
+            __privateRecordsCacheTime = Date.now();
+            return __privateRecordsCache;
+        } finally {
+            __privateRecordsInFlight = null;
+        }
     }
 
     /**
@@ -526,7 +644,11 @@
         
         for (const record of records) {
             const balance = extractMicrocreditsFromRecord(record);
-            console.log('[AleoPayment] Record balance:', balance.toString(), 'Required:', totalRequired.toString());
+            apDebug('[AleoPayment] Record balance check:', {
+                balanceBucket: apBucketMicrocredits(balance),
+                requiredBucket: apBucketMicrocredits(totalRequired),
+                record: apRecordSummary(record)
+            });
             
             if (balance >= totalRequired) {
                 return record;
@@ -567,9 +689,14 @@
     async function sendPrivateTransfer(options) {
         const { recipient, amountMicrocredits, record, fee, network, provider, publicKey } = options;
 
-        console.log('[AleoPayment] Sending private transfer...');
-        console.log('[AleoPayment] Record:', record);
-        console.log('[AleoPayment] Amount:', amountMicrocredits, 'Fee:', fee, 'Network:', network);
+        apDebug('[AleoPayment] Sending private transfer...', {
+            recipient: apMaskAddress(recipient),
+            amountBucket: apBucketMicrocredits(amountMicrocredits),
+            feeBucket: apBucketMicrocredits(fee),
+            network,
+            record: apRecordSummary(record),
+            sender: apMaskAddress(publicKey)
+        });
 
         try {
             // 准备 record 输入
@@ -620,19 +747,21 @@
                 fee: parseInt(fee) || 25000
             };
 
-            console.log('[AleoPayment] Trying new API format for private transfer:', JSON.stringify(newFormatTransaction, null, 2));
+            // 隐私：不要 stringify/输出交易参数（包含 recordInput 与精确金额）
+            apDebug('[AleoPayment] Trying new API format for private transfer:', apRedactTransactionForLog(newFormatTransaction));
 
             // 发送交易 - 先尝试新格式
             let txResult;
             try {
                 txResult = await leoWallet.requestTransaction(newFormatTransaction);
-                console.log('[AleoPayment] New format succeeded for private transfer');
+                apDebug('[AleoPayment] New format succeeded for private transfer');
             } catch (newFormatError) {
                 console.warn('[AleoPayment] New format failed for private transfer, trying old format:', newFormatError.message);
                 txResult = await leoWallet.requestTransaction(oldFormatTransaction);
             }
             
-            console.log('[AleoPayment] Private transfer result:', txResult);
+            // 隐私：避免输出完整 txResult（钱包实现可能携带额外敏感字段）
+            apDebug('[AleoPayment] Private transfer result received');
 
             if (txResult) {
                 const txId = typeof txResult === 'string' 
@@ -660,13 +789,18 @@
     async function sendPublicTransfer(options) {
         const { recipient, amountMicrocredits, fee, network, provider, publicKey } = options;
 
-        console.log('[AleoPayment] Sending public transfer (fallback)...');
-        console.log('[AleoPayment] sendPublicTransfer options:', { recipient, amountMicrocredits, fee, network, publicKey });
+        apDebug('[AleoPayment] Sending public transfer (fallback)...', {
+            recipient: apMaskAddress(recipient),
+            amountBucket: apBucketMicrocredits(amountMicrocredits),
+            feeBucket: apBucketMicrocredits(fee),
+            network,
+            sender: apMaskAddress(publicKey)
+        });
 
         try {
             // 确保 network 有值
             const networkValue = network || 'testnetbeta';
-            console.log('[AleoPayment] Using network value:', networkValue);
+            apDebug('[AleoPayment] Using network value:', networkValue);
 
             // 直接使用 window.leoWallet 确保正确调用
             const leoWallet = window.leoWallet;
@@ -675,7 +809,8 @@
                 return { success: false, error: 'Leo Wallet not available' };
             }
 
-            console.log('[AleoPayment] Leo Wallet methods:', Object.keys(leoWallet));
+            // 隐私：避免输出钱包对象方法列表（环境/指纹信息）
+            apDebug('[AleoPayment] Leo Wallet present');
 
             // ========== 新版 Leo Wallet API 格式 ==========
             // 使用 chainId + transitions 数组格式
@@ -706,22 +841,22 @@
                 fee: parseInt(fee) || 25000
             };
 
-            console.log('[AleoPayment] Trying new API format:', JSON.stringify(newFormatTransaction, null, 2));
+            apDebug('[AleoPayment] Trying new API format:', apRedactTransactionForLog(newFormatTransaction));
 
             let txResult;
             try {
                 // 先尝试新版 API 格式
                 txResult = await leoWallet.requestTransaction(newFormatTransaction);
-                console.log('[AleoPayment] New format succeeded');
+                apDebug('[AleoPayment] New format succeeded');
             } catch (newFormatError) {
                 console.warn('[AleoPayment] New format failed, trying old format:', newFormatError.message);
-                console.log('[AleoPayment] Trying old API format:', JSON.stringify(oldFormatTransaction, null, 2));
+                apDebug('[AleoPayment] Trying old API format:', apRedactTransactionForLog(oldFormatTransaction));
                 
                 // 回退到旧版格式
                 txResult = await leoWallet.requestTransaction(oldFormatTransaction);
             }
             
-            console.log('[AleoPayment] Public transfer result:', txResult);
+            apDebug('[AleoPayment] Public transfer result received');
 
             if (txResult) {
                 const txId = typeof txResult === 'string' 
@@ -755,8 +890,10 @@
     async function transferPublicToPrivate(options = {}) {
         const { amount, fee = DEFAULT_FEE } = options;
 
-        console.log('[AleoPayment] 🔒 Converting public balance to private records...');
-        console.log('[AleoPayment] Amount:', amount, 'ALEO');
+        apDebug('[AleoPayment] 🔒 Converting public balance to private records...', {
+            amountHint: Number.isFinite(Number(amount)) ? `~${Math.round(Number(amount))} ALEO` : 'unknown',
+            feeBucket: apBucketMicrocredits(fee)
+        });
 
         // 1. 检查钱包状态（用户主动操作，允许自动重连）
         const walletStatus = await waitForLeoWalletReady(5000, 300, true);
@@ -765,7 +902,7 @@
         }
 
         const { provider, publicKey } = walletStatus;
-        console.log('[AleoPayment] User address:', publicKey);
+        apDebug('[AleoPayment] User address:', apMaskAddress(publicKey));
 
         // 2. 转换金额为 microcredits
         const amountMicrocredits = aleoToMicrocredits(amount);
@@ -775,7 +912,7 @@
 
         // 3. 获取当前网络
         const network = getCurrentNetwork();
-        console.log('[AleoPayment] Network:', network);
+        apDebug('[AleoPayment] Network:', network);
 
         try {
             const leoWallet = window.leoWallet;
@@ -811,27 +948,27 @@
                 fee: parseInt(fee) || 25000
             };
 
-            console.log('[AleoPayment] Calling transfer_public_to_private...');
-            console.log('[AleoPayment] Transaction params:', JSON.stringify(newFormatTransaction, null, 2));
+            apDebug('[AleoPayment] Calling transfer_public_to_private...');
+            apDebug('[AleoPayment] Transaction params:', apRedactTransactionForLog(newFormatTransaction));
 
             let txResult;
             try {
                 txResult = await leoWallet.requestTransaction(newFormatTransaction);
-                console.log('[AleoPayment] New format succeeded');
+                apDebug('[AleoPayment] New format succeeded');
             } catch (newFormatError) {
                 console.warn('[AleoPayment] New format failed, trying old format:', newFormatError.message);
                 txResult = await leoWallet.requestTransaction(oldFormatTransaction);
             }
 
-            console.log('[AleoPayment] transfer_public_to_private result:', txResult);
+            apDebug('[AleoPayment] transfer_public_to_private result received');
 
             if (txResult) {
                 const txId = typeof txResult === 'string' 
                     ? txResult 
                     : (txResult.transactionId || txResult.transaction_id || txResult.txId || txResult.id);
                 
-                console.log('[AleoPayment] ✅ Successfully converted', amount, 'ALEO to private records');
-                console.log('[AleoPayment] Transaction ID:', txId);
+                apDebug('[AleoPayment] ✅ Successfully converted public -> private');
+                apDebug('[AleoPayment] Transaction ID:', txId);
                 
                 return {
                     success: true,
@@ -864,6 +1001,10 @@
     function showPrivacyGuidanceModal(options = {}) {
         return new Promise((resolve) => {
             const { issue, amountNeeded, amountMicrocredits } = options;
+            const safeAmountNeeded = Number.isFinite(amountNeeded) ? amountNeeded : 0;
+            const safeAmountWithFee = Number.isFinite(amountMicrocredits)
+                ? (amountMicrocredits / MICROCREDITS_PER_CREDIT)
+                : 0;
             
             // 移除已存在的模态框
             const existing = document.getElementById('privacyGuidanceModal');
@@ -921,7 +1062,13 @@
                     <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:20px;">
                         <div style="font-size:12px;color:#92400e;display:flex;align-items:center;gap:8px;">
                             <span style="font-size:16px;">💡</span>
-                            <span><strong>Payment amount:</strong> ${amountNeeded.toFixed(6)} ALEO (~${(amountMicrocredits / 1000000).toFixed(6)} with fee)</span>
+                            <span>
+                                <strong>Payment amount:</strong>
+                                <span id="privacyAmountText">(hidden)</span>
+                                <button id="privacyRevealAmountBtn" style="margin-left:10px;padding:4px 10px;border:1px solid #f59e0b;background:#fff;border-radius:999px;cursor:pointer;font-size:11px;color:#92400e;">
+                                    Show amount
+                                </button>
+                            </span>
                         </div>
                     </div>
                     
@@ -979,6 +1126,16 @@
             `;
             
             document.body.appendChild(modal);
+
+            // 隐私：默认不把精确金额落在 DOM；用户明确操作后再渲染
+            const revealBtn = modal.querySelector('#privacyRevealAmountBtn');
+            const amountText = modal.querySelector('#privacyAmountText');
+            if (revealBtn && amountText) {
+                revealBtn.onclick = () => {
+                    amountText.textContent = `${safeAmountNeeded.toFixed(6)} ALEO (~${safeAmountWithFee.toFixed(6)} with fee)`;
+                    revealBtn.remove();
+                };
+            }
             
             // 选项点击事件
             modal.querySelector('#optionConvert').onclick = () => {
@@ -1036,10 +1193,16 @@
             preferPrivate = true  // 默认优先私密转账
         } = options;
 
-        console.log('[AleoPayment] Starting payment:', { recipient, amount, fee, memo, preferPrivate });
+        apDebug('[AleoPayment] Starting payment:', {
+            recipient: apMaskAddress(recipient),
+            amountHint: Number.isFinite(Number(amount)) ? `~${Math.round(Number(amount))} ALEO` : 'unknown',
+            feeBucket: apBucketMicrocredits(fee),
+            memoHint: memo ? `len=${String(memo).length}` : '',
+            preferPrivate: !!preferPrivate
+        });
 
         // 1. 检查钱包状态（用户主动发起支付，允许自动重连）
-        console.log('[AleoPayment] Checking wallet status...');
+        apDebug('[AleoPayment] Checking wallet status...');
         const walletStatus = await waitForLeoWalletReady(5000, 300, true);
         
         if (!walletStatus.ready) {
@@ -1057,7 +1220,7 @@
         }
 
         const { provider, publicKey } = walletStatus;
-        console.log('[AleoPayment] Wallet ready, using publicKey:', publicKey);
+        apDebug('[AleoPayment] Wallet ready, using publicKey:', apMaskAddress(publicKey));
 
         // 2. 转换金额为 microcredits
         const amountMicrocredits = aleoToMicrocredits(amount);
@@ -1067,7 +1230,7 @@
 
         // 3. 获取当前网络
         const network = getCurrentNetwork();
-        console.log('[AleoPayment] Using network:', network);
+        apDebug('[AleoPayment] Using network:', network);
 
         // 4. 如果优先私密转账，尝试获取私密 records
         let hasPrivateRecords = false;
@@ -1075,7 +1238,7 @@
         
         if (preferPrivate) {
             try {
-                console.log('[AleoPayment] Checking for private records...');
+                apDebug('[AleoPayment] Checking for private records...');
                 const records = await getPrivateRecords();
                 
                 if (records.length > 0) {
@@ -1084,7 +1247,7 @@
                     const suitableRecord = findSufficientRecord(records, amountMicrocredits, fee);
                     
                     if (suitableRecord) {
-                        console.log('[AleoPayment] Found suitable private record, using transfer_private');
+                        apDebug('[AleoPayment] Found suitable private record, using transfer_private');
                         
                         const privateResult = await sendPrivateTransfer({
                             recipient,
@@ -1111,11 +1274,11 @@
                         // 如果私密转账失败，记录错误但继续尝试公开转账
                         console.warn('[AleoPayment] Private transfer failed:', privateResult.error);
                     } else {
-                        console.log('[AleoPayment] No single record with sufficient balance for private transfer');
+                        apDebug('[AleoPayment] No single record with sufficient balance for private transfer');
                         privateRecordIssue = 'insufficient_balance';
                     }
                 } else {
-                    console.log('[AleoPayment] No private records found');
+                    apDebug('[AleoPayment] No private records found');
                     privateRecordIssue = 'no_records';
                 }
             } catch (error) {
@@ -1126,7 +1289,7 @@
 
         // 5. 如果没有 private records，显示用户引导
         if (privateRecordIssue && preferPrivate) {
-            console.log('[AleoPayment] Showing privacy guidance to user...');
+            apDebug('[AleoPayment] Showing privacy guidance to user...');
             
             const userChoice = await showPrivacyGuidanceModal({
                 issue: privateRecordIssue,
@@ -1136,7 +1299,7 @@
             
             if (userChoice === 'convert_then_pay') {
                 // 用户选择先转换再支付
-                console.log('[AleoPayment] User chose to convert public to private first');
+                apDebug('[AleoPayment] User chose to convert public to private first');
                 
                 // 建议转换的金额：支付金额 + fee + 一些余量
                 const suggestedConvertAmount = Math.max(1, Math.ceil((amountMicrocredits + fee) / MICROCREDITS_PER_CREDIT * 2));
@@ -1146,7 +1309,7 @@
                 });
                 
                 if (convertResult.success) {
-                    console.log('[AleoPayment] Conversion successful, now attempting private payment');
+                    apDebug('[AleoPayment] Conversion successful, now attempting private payment');
                     
                     // 等待一下让 wallet 更新 records
                     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -1192,7 +1355,7 @@
         }
 
         // 6. 回退到公开转账
-        console.log('[AleoPayment] Falling back to public transfer');
+        apDebug('[AleoPayment] Falling back to public transfer');
         
         try {
             const publicResult = await sendPublicTransfer({
@@ -1250,7 +1413,12 @@
      * @returns {Promise<string|null>} 交易 ID 或 null (取消)
      */
     async function settleInvoiceWithLeo(invoice) {
-        console.log('[AleoPayment] Settling invoice:', invoice);
+        // 隐私：避免输出完整 invoice（可能含 request_id/memo/金额等敏感业务信息）
+        apDebug('[AleoPayment] Settling invoice:', {
+            requestId: invoice?.request_id || '',
+            amount: invoice?.amount_usdc ?? invoice?.amount ?? invoice?.amount_aleo ?? 0,
+            recipient: apMaskAddress(invoice?.recipient || PLATFORM_RECIPIENT)
+        });
 
         // 获取金额
         const amount = invoice.amount_usdc ?? invoice.amount ?? invoice.amount_aleo ?? 0;
@@ -1278,7 +1446,7 @@
         }
 
         // 记录转账类型
-        console.log(`[AleoPayment] Payment successful via ${result.privacyLevel} transfer`);
+        apDebug(`[AleoPayment] Payment successful via ${result.privacyLevel} transfer`);
 
         return result.transactionId;
     }
@@ -1306,7 +1474,19 @@
      */
     function getAnonymousToken() {
         try {
-            return localStorage.getItem(ANONYMOUS_TOKEN_KEY);
+            // 隐私：默认存 sessionStorage（降低 XSS/持久化泄露的风险）
+            const ss = sessionStorage.getItem(ANONYMOUS_TOKEN_KEY);
+            if (ss) return ss;
+            // 兼容迁移：如果旧版本存到了 localStorage，则迁移到 sessionStorage
+            const legacy = localStorage.getItem(ANONYMOUS_TOKEN_KEY);
+            if (legacy) {
+                try {
+                    sessionStorage.setItem(ANONYMOUS_TOKEN_KEY, legacy);
+                    localStorage.removeItem(ANONYMOUS_TOKEN_KEY);
+                } catch (_) {}
+                return legacy;
+            }
+            return null;
         } catch (e) {
             console.warn('[AleoPayment] Failed to get anonymous token:', e);
             return null;
@@ -1318,8 +1498,8 @@
      */
     function saveAnonymousToken(token) {
         try {
-            localStorage.setItem(ANONYMOUS_TOKEN_KEY, token);
-            console.log('[AleoPayment] Anonymous token saved');
+            sessionStorage.setItem(ANONYMOUS_TOKEN_KEY, token);
+            apDebug('[AleoPayment] Anonymous token saved (session)');
         } catch (e) {
             console.warn('[AleoPayment] Failed to save anonymous token:', e);
         }
@@ -1330,8 +1510,10 @@
      */
     function clearAnonymousToken() {
         try {
-            localStorage.removeItem(ANONYMOUS_TOKEN_KEY);
-            console.log('[AleoPayment] Anonymous token cleared');
+            sessionStorage.removeItem(ANONYMOUS_TOKEN_KEY);
+            // 兼容：也清掉旧位置
+            try { localStorage.removeItem(ANONYMOUS_TOKEN_KEY); } catch (_) {}
+            apDebug('[AleoPayment] Anonymous token cleared');
         } catch (e) {
             console.warn('[AleoPayment] Failed to clear anonymous token:', e);
         }
@@ -1395,7 +1577,9 @@
             return { success: false, error: 'Invalid amount' };
         }
 
-        console.log('[AleoPayment] Starting anonymous deposit:', { amount });
+        apDebug('[AleoPayment] Starting anonymous deposit:', {
+            amountHint: Number.isFinite(Number(amount)) ? `~${Math.round(Number(amount))} ALEO` : 'unknown'
+        });
 
         // 1. 检查钱包状态
         const walletStatus = isLeoWalletReady();
@@ -1416,7 +1600,7 @@
         }
 
         const txId = paymentResult.transactionId;
-        console.log('[AleoPayment] Transfer successful:', txId);
+        apDebug('[AleoPayment] Transfer successful:', txId);
 
         // 3. 调用服务端确认充值
         try {
@@ -1446,7 +1630,7 @@
                 saveAnonymousToken(data.access_token);
             }
 
-            console.log('[AleoPayment] ✅ Anonymous deposit successful:', {
+            apDebug('[AleoPayment] ✅ Anonymous deposit successful:', {
                 balance: data.balance,
                 isNewToken: !existingToken
             });
@@ -1649,7 +1833,13 @@
      * 诊断 Leo Wallet 功能
      */
     async function diagnoseLeoWallet() {
-        console.log('====== Leo Wallet 诊断开始 ======');
+        // 隐私：诊断会输出较多环境信息与潜在敏感结果，默认关闭，仅在 debug 模式下启用。
+        if (!__AP_DEBUG) {
+            apWarn('[AleoPayment] diagnoseLeoWallet is disabled (non-debug mode). Set localStorage ALEO_PAYMENT_DEBUG=1 or window.__ALEO_PAYMENT_DEBUG__=true to enable.');
+            return { success: false, error: 'Diagnostics disabled in non-debug mode' };
+        }
+
+        apDebug('====== Leo Wallet 诊断开始 ======');
         
         const leoWallet = window.leoWallet;
         if (!leoWallet) {
@@ -1657,68 +1847,67 @@
             return { success: false, error: 'Leo Wallet not found' };
         }
         
-        console.log('✅ window.leoWallet 存在');
+        apDebug('✅ window.leoWallet 存在');
         
         // 1. 检查所有属性和方法
-        console.log('📋 Leo Wallet 属性和方法:');
+        apDebug('📋 Leo Wallet 属性和方法:');
         const allKeys = [];
         for (const key in leoWallet) {
             const type = typeof leoWallet[key];
-            console.log(`  - ${key}: ${type}`);
             allKeys.push({ key, type });
         }
+        apDebug('  - enumerable keys count:', allKeys.length);
         
         // 2. 检查原型方法
         const proto = Object.getPrototypeOf(leoWallet);
         if (proto) {
-            console.log('📋 Leo Wallet 原型方法:');
-            Object.getOwnPropertyNames(proto).forEach(name => {
-                if (name !== 'constructor') {
-                    console.log(`  - ${name}: ${typeof proto[name]}`);
-                }
-            });
+            const protoNames = Object.getOwnPropertyNames(proto).filter(n => n !== 'constructor');
+            apDebug('📋 Leo Wallet 原型方法数量:', protoNames.length);
         }
         
         // 3. 检查连接状态
-        console.log('🔗 连接状态:');
-        console.log('  - publicKey:', leoWallet.publicKey);
-        console.log('  - connected:', leoWallet.connected);
+        apDebug('🔗 连接状态:', {
+            publicKey: leoWallet.publicKey ? apMaskAddress(leoWallet.publicKey) : '',
+            connected: !!leoWallet.connected
+        });
         
         // 4. 检查 decryptPermission
         if (leoWallet.decryptPermission !== undefined) {
-            console.log('🔐 当前 decryptPermission:', leoWallet.decryptPermission);
+            apDebug('🔐 当前 decryptPermission:', leoWallet.decryptPermission);
         }
         
         // 5. 测试 requestRecords
         if (typeof leoWallet.requestRecords === 'function') {
-            console.log('✅ requestRecords 方法存在');
-            console.log('🔄 尝试调用 requestRecords("credits.aleo")...');
+            apDebug('✅ requestRecords 方法存在');
+            apDebug('🔄 尝试调用 requestRecords("credits.aleo")...');
             try {
                 const records = await leoWallet.requestRecords('credits.aleo');
-                console.log('✅ requestRecords 成功:', records);
+                const list = Array.isArray(records) ? records : (records ? [records] : []);
+                apDebug('✅ requestRecords 成功:', { count: list.length, sample: list[0] ? apRecordSummary(list[0]) : null });
             } catch (e) {
-                console.log('❌ requestRecords 失败:', e.name, e.message);
+                apDebug('❌ requestRecords 失败:', e.name, e.message);
                 // 尝试其他参数格式
                 try {
-                    console.log('🔄 尝试 requestRecords({ program: "credits.aleo" })...');
+                    apDebug('🔄 尝试 requestRecords({ program: "credits.aleo" })...');
                     const records2 = await leoWallet.requestRecords({ program: 'credits.aleo' });
-                    console.log('✅ requestRecords 对象格式成功:', records2);
+                    const list2 = Array.isArray(records2) ? records2 : (records2 ? [records2] : []);
+                    apDebug('✅ requestRecords 对象格式成功:', { count: list2.length, sample: list2[0] ? apRecordSummary(list2[0]) : null });
                 } catch (e2) {
-                    console.log('❌ requestRecords 对象格式也失败:', e2.message);
+                    apDebug('❌ requestRecords 对象格式也失败:', e2.message);
                 }
             }
         }
         
         // 6. 测试 requestTransaction
         if (typeof leoWallet.requestTransaction === 'function') {
-            console.log('✅ requestTransaction 方法存在');
+            apDebug('✅ requestTransaction 方法存在');
         }
         
-        console.log('====== Leo Wallet 诊断结束 ======');
-        console.log('💡 如果 requestRecords 失败，请尝试：');
-        console.log('   1. 断开钱包连接');
-        console.log('   2. 刷新页面');
-        console.log('   3. 重新连接钱包（会请求新的权限）');
+        apDebug('====== Leo Wallet 诊断结束 ======');
+        apDebug('💡 如果 requestRecords 失败，请尝试：');
+        apDebug('   1. 断开钱包连接');
+        apDebug('   2. 刷新页面');
+        apDebug('   3. 重新连接钱包（会请求新的权限）');
         
         return {
             success: true,
@@ -1761,5 +1950,5 @@
         hasAnonymousToken
     };
 
-    console.log('✅ Aleo Payment Module loaded (Privacy-First Mode with Anonymous Token Support)');
+    apDebug('✅ Aleo Payment Module loaded (Privacy-First Mode with Anonymous Token Support)');
 })();

@@ -40,7 +40,16 @@ const MCP_CONFIG = {
     expiresInSeconds: Number(process.env.ALEO_EXPIRES_SECONDS || 300)
   },
   billing: {
-    storeFile: path.join(__dirname, '..', '..', 'data', 'billing-entries.json')
+    storeFile: path.join(__dirname, '..', '..', 'data', 'billing-entries.json'),
+    // 隐私：默认不将 prompt / 完整模型输出 / 钱包地址等敏感字段落盘
+    // 如需调试，可设置环境变量 MCP_STORE_SENSITIVE=1
+    storeSensitive: false,
+    // 数据保留：仅裁剪历史终态记录（不影响正在支付/执行中的 entry）
+    // 可通过 MCP_BILLING_RETENTION_DAYS 覆盖
+    retentionDays: 30,
+    // 匿名 token 的 deposits/usage 事件保留天数（余额不受影响）
+    // 可通过 MCP_TOKEN_EVENT_RETENTION_DAYS 覆盖
+    tokenEventRetentionDays: 30
   },
   autoRouter: {
     defaultMaxCandidates: 3

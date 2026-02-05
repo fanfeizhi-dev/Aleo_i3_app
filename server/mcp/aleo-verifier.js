@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { MCP_CONFIG } = require('./config');
+const { debug, redactTx, redactUrl } = require('./log');
 
 // Aleo API endpoints
 const ALEO_MAINNET_API = 'https://api.explorer.aleo.org/v1/mainnet';
@@ -49,7 +50,10 @@ function creditsToMicroCredits(credits) {
  */
 async function getTransaction(apiUrl, txId) {
   const url = `${apiUrl}/transaction/${txId}`;
-  console.log(`[Aleo Verifier] Fetching transaction from: ${url}`);
+  debug('[Aleo Verifier] Fetching transaction', {
+    api: redactUrl(apiUrl),
+    tx: redactTx(txId)
+  });
   
   const response = await fetch(url, {
     headers: {
@@ -183,28 +187,32 @@ async function verifyAleoTransfer({
     let tx = null;
     const maxAttempts = 30; // Aleo 交易确认可能需要更长时间
     
-    console.log(`[Aleo Verifier] Starting transaction verification with polling (max ${maxAttempts} attempts)...`);
+    debug('[Aleo Verifier] Start polling', { maxAttempts, tx: redactTx(txId) });
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         tx = await getTransaction(apiUrl, txId);
         if (tx) {
-          console.log(`[Aleo Verifier] ✅ Transaction found after ${attempt + 1} attempt(s)`);
+          debug('[Aleo Verifier] ✅ Tx found', { attempts: attempt + 1, tx: redactTx(txId) });
           break;
         }
       } catch (err) {
-        console.warn(`[Aleo Verifier] Attempt ${attempt + 1}/${maxAttempts} failed:`, err.message);
+        debug('[Aleo Verifier] Poll attempt failed', {
+          attempt: attempt + 1,
+          maxAttempts,
+          message: err?.message
+        });
       }
       
       if (attempt < maxAttempts - 1) {
         const waitTime = 3000; // 每次等待3秒
-        console.log(`[Aleo Verifier] Transaction not found yet, waiting ${waitTime}ms before retry ${attempt + 2}...`);
+        debug('[Aleo Verifier] Waiting before retry', { waitTime, nextAttempt: attempt + 2 });
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
     }
     
     if (!tx) {
-      console.error(`[Aleo Verifier] ❌ Transaction not found after ${maxAttempts} attempts`);
+      debug('[Aleo Verifier] ❌ Tx not found after polling', { maxAttempts, tx: redactTx(txId) });
       return {
         ok: false,
         code: 'tx_not_found',

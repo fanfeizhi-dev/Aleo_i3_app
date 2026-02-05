@@ -15,6 +15,7 @@ const {
 } = require('./payments');
 const { verifyAleoTransfer } = require('./aleo-verifier');
 const { getNetworkConfigFromRequest, MCP_CONFIG } = require('./config');
+const { redactPaymentHeader, debug } = require('./log');
 
 const router = express.Router();
 
@@ -225,15 +226,8 @@ router.post('/models.invoke', async (req, res) => {
   try {
     const userId = resolveUserId(req);
     const networkConfig = getNetworkConfigFromRequest(req);
-    
-    // 记录网络配置信息
-    console.log('[mcp/models.invoke] Network config:', {
-      network: networkConfig.network,
-      rpcUrl: networkConfig.rpcUrl,
-      explorerBaseUrl: networkConfig.explorerBaseUrl,
-      requestHeader: req.headers['x-aleo-network'],
-      bodyNetwork: req.body?.network
-    });
+    // 生产环境避免泄露基础设施信息；仅在 MCP_DEBUG 下输出最小信息
+    debug('[mcp/models.invoke] Network:', networkConfig.network);
     
     const paymentProof = parsePaymentHeader(req.headers['x-payment']);
     const requestId = req.headers['x-request-id'] || req.body?.request_id;
@@ -257,8 +251,7 @@ router.post('/models.invoke', async (req, res) => {
         tokensOrCalls: 1,
         metadata: {
           auto_router: selection,
-          wallet_address: walletAddress,
-          prompt: sanitizePrompt(req.body?.prompt),
+          // 隐私：不在账单里持久化保存钱包地址/Prompt（store.js 会进一步做落盘去敏）
           model_name: selection.model.id
         }
       });
@@ -296,13 +289,13 @@ router.post('/models.invoke', async (req, res) => {
 
     // 检查是否使用 prepaid credits
     if (paymentProof.isPrepaid) {
-      console.log('[mcp/models.invoke] Using prepaid credits, skipping payment verification');
+      debug('[mcp/models.invoke] Using prepaid credits, skipping payment verification');
       
       // 跳过支付验证，直接处理请求
       const paidAt = new Date().toISOString();
       const baseMeta = {
         ...entry.meta,
-        wallet_address: entry.meta?.wallet_address || walletAddress || null,
+        // 隐私：不持久化保存钱包地址
         payment_method: 'prepaid_credits',
         prepaid_remaining: paymentProof.remaining
       };
@@ -313,7 +306,7 @@ router.post('/models.invoke', async (req, res) => {
         meta: baseMeta
       });
 
-      const storedPrompt = entry.meta?.prompt || sanitizePrompt(req.body?.prompt);
+      const storedPrompt = sanitizePrompt(req.body?.prompt);
       const inference = await invokeChatCompletion({
         prompt: storedPrompt,
         modelId: entry.model_or_node,
@@ -383,7 +376,7 @@ router.post('/models.invoke', async (req, res) => {
     // TODO: 未来可以添加异步验证机制
     const verification = {
       ok: true,
-      payer: entry.meta?.wallet_address || walletAddress || null,
+      payer: null,
       explorerLink: explorerLink,
       explorerUrl: explorerLink
     };
@@ -391,7 +384,6 @@ router.post('/models.invoke', async (req, res) => {
     const paidAt = new Date().toISOString();
     const baseMeta = {
       ...entry.meta,
-      wallet_address: entry.meta?.wallet_address || walletAddress || null,
       verification
     };
 
@@ -401,7 +393,7 @@ router.post('/models.invoke', async (req, res) => {
       meta: baseMeta
     });
 
-    const storedPrompt = entry.meta?.prompt || sanitizePrompt(req.body?.prompt);
+    const storedPrompt = sanitizePrompt(req.body?.prompt);
     const inference = await invokeChatCompletion({
       prompt: storedPrompt,
       modelId: entry.model_or_node,
@@ -430,7 +422,6 @@ router.post('/models.invoke', async (req, res) => {
       completed_at: completedAt,
       meta: {
         ...baseMeta,
-        prompt: storedPrompt,
         result
       }
     });
@@ -454,7 +445,7 @@ router.post('/models.invoke', async (req, res) => {
       tx_signature: paymentProof.tx,
       explorer: explorer,
       settled_at: completedAt,
-      payer_wallet: verification.payer || null,
+      payer_wallet: null,
       result,
       meta: {
         verification: {
@@ -543,10 +534,9 @@ router.post('/workflow.prepay', async (req, res) => {
     const estimated = estimateWorkflowNodes({ nodes });
     const totalCost = estimated.reduce((sum, node) => sum + node.totalCost, 0);
 
-    console.log('[mcp/workflow.prepay] Workflow cost breakdown:', {
+    debug('[mcp/workflow.prepay] Workflow cost summary:', {
       workflowName,
       nodeCount: estimated.length,
-      nodes: estimated.map(n => ({ name: n.name, calls: n.calls, cost: n.totalCost })),
       totalCost
     });
 
@@ -646,14 +636,13 @@ router.post('/workflow.prepay', async (req, res) => {
 
     const verification = {
       ok: true,
-      payer: entry.meta?.wallet_address || walletAddress || null,
+      payer: null,
       explorerLink: explorerLink,
       explorerUrl: explorerLink
     };
 
     const updatedMeta = {
       ...entry.meta,
-      wallet_address: entry.meta?.wallet_address || walletAddress || null,
       verification,
       workflow_session_id: workflowSessionId,
       prepaid_at: timestamp
@@ -670,10 +659,9 @@ router.post('/workflow.prepay', async (req, res) => {
       meta: updatedMeta
     });
 
-    console.log('[mcp/workflow.prepay] ✅ Workflow prepayment successful:', {
+    debug('[mcp/workflow.prepay] ✅ Workflow prepayment successful:', {
       workflowSessionId,
-      totalCost,
-      tx: paymentProof.tx
+      totalCost
     });
 
     return res.json({
@@ -685,7 +673,7 @@ router.post('/workflow.prepay', async (req, res) => {
       tx_signature: paymentProof.tx,
       settled_at: timestamp,
       explorer: verification.explorerUrl,
-      payer_wallet: verification.payer,
+      payer_wallet: null,
       nodes: estimated.map(n => ({
         name: n.name,
         calls: n.calls,
@@ -709,18 +697,15 @@ router.post('/workflow/execute', async (req, res) => {
       req.body?.walletAddress ||
       null;
     const paymentHeaderRaw = req.headers['x-payment'];
-    if (paymentHeaderRaw) {
-      console.log('[mcp/workflow.execute] received X-PAYMENT header:', paymentHeaderRaw);
-    } else {
-      console.log('[mcp/workflow.execute] no X-PAYMENT header on request');
-    }
+    // 隐私：不要在日志中输出完整支付凭证
+    debug('[mcp/workflow.execute] X-PAYMENT present:', !!paymentHeaderRaw, paymentHeaderRaw ? redactPaymentHeader(paymentHeaderRaw) : '');
     const paymentProof = parsePaymentHeader(paymentHeaderRaw);
 
     // **新增: 检查是否使用预付费模式**
     const workflowSessionId = req.body?.workflow_session_id;
     
     if (workflowSessionId) {
-      console.log('[mcp/workflow.execute] Using prepaid workflow session:', workflowSessionId);
+      debug('[mcp/workflow.execute] Using prepaid workflow session:', workflowSessionId);
       
       // 查找预付费记录
       const allEntries = store.listEntriesByUser(userId);
@@ -764,8 +749,7 @@ router.post('/workflow/execute', async (req, res) => {
         };
         workflowSessions.set(workflowSessionId, session);
         
-        console.log('[mcp/workflow.execute] Created prepaid execution session:', {
-          sessionId: workflowSessionId,
+        debug('[mcp/workflow.execute] Created prepaid execution session:', {
           nodeCount: estimated.length
         });
       }
@@ -937,7 +921,7 @@ router.post('/workflow/execute', async (req, res) => {
     // 直接认为验证成功，不进行 RPC 验证
     const verification = {
       ok: true,
-      payer: entry.meta?.wallet_address || session.walletAddress || walletAddress || null,
+      payer: null,
       explorerLink: explorerLink,
       explorerUrl: explorerLink
     };
@@ -945,7 +929,6 @@ router.post('/workflow/execute', async (req, res) => {
     const paidAt = new Date().toISOString();
     const baseMeta = {
       ...entry.meta,
-      wallet_address: entry.meta?.wallet_address || session.walletAddress || walletAddress || null,
       verification
     };
 
@@ -961,7 +944,7 @@ router.post('/workflow/execute', async (req, res) => {
       tx_signature: paymentProof.tx,
       amount_usdc: entry.amount_usdc,
       explorer: verification.explorerUrl,
-      payer_wallet: verification.payer
+      payer_wallet: null
     };
 
     store.markEntryStatus(entry.request_id, 'completed', {
@@ -1120,14 +1103,13 @@ router.post('/share/buy', async (req, res) => {
     // 直接认为验证成功，不进行 RPC 验证
     const verification = {
       ok: true,
-      payer: entry.meta?.wallet_address || walletAddress || null,
+      payer: null,
       explorerLink: explorerLink,
       explorerUrl: explorerLink
     };
 
     const baseMeta = {
       ...entry.meta,
-      wallet_address: entry.meta?.wallet_address || walletAddress || null,
       verification
     };
 
@@ -1152,7 +1134,7 @@ router.post('/share/buy', async (req, res) => {
       tx_signature: paymentProof.tx,
       settled_at: timestamp,
       explorer: verification.explorerUrl,
-      payer_wallet: verification.payer
+      payer_wallet: null
     });
   } catch (err) {
     console.error('[mcp/share.buy]', err);

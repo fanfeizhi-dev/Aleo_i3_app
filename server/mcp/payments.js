@@ -2,6 +2,11 @@ const { randomUUID } = require('crypto');
 const { MCP_CONFIG } = require('./config');
 const store = require('./store');
 
+function createOpaqueMemo() {
+  // 不可关联的短 memo：避免把 request_id 直接暴露到链路/前端/潜在链上可读字段里
+  return `m_${randomUUID().replace(/-/g, '').slice(0, 16)}`;
+}
+
 function createInvoice({
   type,
   userId,
@@ -48,7 +53,8 @@ function build402Body(entry, extras = {}, networkConfig = null) {
     recipient: paymentConfig.recipient || MCP_CONFIG.payments.recipient,
     network: paymentConfig.network || MCP_CONFIG.payments.network,
     expires_at: entry.expires_at,
-    memo: entry.request_id,
+    // 隐私：memo 不再等于 request_id（降低相关性）。如需兼容旧前端，依然提供 memo 字段但为不可关联随机值。
+    memo: entry.meta?.memo || createOpaqueMemo(),
     description: entry.meta?.description,
     decimals: paymentConfig.decimals || MCP_CONFIG.payments.decimals,
     payment_url: paymentConfig.paymentUrl || MCP_CONFIG.payments.paymentUrl || null,
@@ -95,7 +101,15 @@ function parsePaymentHeader(header) {
   // Aleo 支付逻辑（支持 aleo 和 x402 前缀以保持向后兼容）
   if (!trimmed.toLowerCase().startsWith('aleo') && !trimmed.toLowerCase().startsWith('x402')) return null;
   const [, ...rest] = trimmed.split(/\s+/);
-  const paramsString = rest.join(' ');
+  // 兼容两种格式：
+  // 1) "aleo <network>; tx=...; amount=...; nonce=..."
+  // 2) "aleo tx=...; amount=...; nonce=..."（无 network）
+  // 3) 某些前端会把 "<network>;" 写成带分号的 token，这里也要兼容
+  const first = rest[0] || '';
+  const firstNormalized = String(first).replace(/;$/, '');
+  const firstLooksLikeParam = /^(\w+)=/.test(firstNormalized);
+  const networkCandidate = first && !firstLooksLikeParam ? firstNormalized : null;
+  const paramsString = (networkCandidate ? rest.slice(1) : rest).join(' ');
   const parts = paramsString
     .split(';')
     .map((part) => part.trim())
@@ -118,7 +132,7 @@ function parsePaymentHeader(header) {
   }
   return {
     isPrepaid: false,
-    network: rest[0] || MCP_CONFIG.payments.network,
+    network: networkCandidate || MCP_CONFIG.payments.network,
     tx: data.tx,
     amount: Number(data.amount),
     nonce: data.nonce,

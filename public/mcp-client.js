@@ -13,6 +13,14 @@
 
   let cachedWeb3 = null;
   let explorerToastStylesInjected = false;
+  const MCP_DEBUG =
+    (typeof localStorage !== 'undefined' && localStorage.getItem('mcp_debug') === '1') ||
+    (window.APP_CONFIG && window.APP_CONFIG.debug === true) ||
+    false;
+  function debugLog(...args) {
+    if (!MCP_DEBUG) return;
+    try { console.log(...args); } catch (_) {}
+  }
 
   function injectExplorerToastStyles() {
     if (explorerToastStylesInjected) return;
@@ -933,18 +941,17 @@
     const fullEndpoint = path.startsWith('http')
       ? path
       : `${MCP_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
-    console.log('[MCPClient] request start', fullEndpoint, body);
+    debugLog('[MCPClient] request start', fullEndpoint);
     const baseHeaders = { 'Content-Type': 'application/json' };
     let sessionHeaders = { ...(opts.headers || {}) };
     let paymentHeaders = {};
     const history = [];
     const payload = { ...(body || {}) };
-    let walletAddress = detectWalletAddress();
-    if (walletAddress) {
+    const attachWalletAddress = opts.attachWalletAddress === true;
+    let walletAddress = attachWalletAddress ? detectWalletAddress() : null;
+    if (attachWalletAddress && walletAddress) {
       baseHeaders['X-Wallet-Address'] = walletAddress;
-      if (!payload.wallet_address) {
-        payload.wallet_address = walletAddress;
-      }
+      if (!payload.wallet_address) payload.wallet_address = walletAddress;
     }
     
     // 添加网络信息到请求头
@@ -969,13 +976,13 @@
       }
       const payloadJson = JSON.stringify(payload);
       const headers = { ...baseHeaders, ...sessionHeaders, ...paymentHeaders };
-      console.log('[MCPClient] issuing fetch', fullEndpoint, { headers });
+      debugLog('[MCPClient] issuing fetch', fullEndpoint);
       const response = await fetch(fullEndpoint, {
         method: 'POST',
         headers,
         body: payloadJson
       });
-      console.log('[MCPClient] response status', response.status, fullEndpoint);
+      debugLog('[MCPClient] response status', response.status, fullEndpoint);
       paymentHeaders = {};
 
       const session = response.headers.get('X-Workflow-Session');
@@ -1189,9 +1196,11 @@
           try { await opts.onPayment(invoice, tx); } catch (_) {}
         }
         emit('payment:settled', { endpoint: fullEndpoint, invoice, tx });
-        walletAddress = detectWalletAddress() || walletAddress;
-        if (walletAddress) {
-          baseHeaders['X-Wallet-Address'] = walletAddress;
+        if (attachWalletAddress) {
+          walletAddress = detectWalletAddress() || walletAddress;
+          if (walletAddress) {
+            baseHeaders['X-Wallet-Address'] = walletAddress;
+          }
         }
         const memoPart = invoice.memo ? `; memo=${invoice.memo}` : '';
         paymentHeaders = {
@@ -1202,7 +1211,7 @@
       }
 
       const result = await response.json();
-      console.log('[MCPClient] final result', result);
+      debugLog('[MCPClient] final result', result);
       history.push({ type: 'result', result });
       if (typeof opts.onResult === 'function') {
         try { await opts.onResult(result); } catch (_) {}
