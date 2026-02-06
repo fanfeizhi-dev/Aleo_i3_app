@@ -511,7 +511,7 @@ function placeOrder() {
         
         // 处理Token购买
         for (const order of tokenOrders) {
-            MCPClient.logStatus('invoice', `准备购买 ${order.modelName} API调用`, {
+            MCPClient.logStatus('invoice', `Purchase API calls for ${order.modelName}`, {
                 description: `${order.quantity}K calls × ${order.pricePerK} ALEO`
             });
             const response = await MCPClient.purchaseShare({
@@ -525,7 +525,7 @@ function placeOrder() {
                     });
                 },
                 onPayment(invoice, tx) {
-                    MCPClient.logStatus('payment', '已完成 Token 支付', {
+                    MCPClient.logStatus('payment', 'Token payment completed', {
                         amount: invoice.amount_usdc,
                         memo: invoice.memo || invoice.request_id,
                         tx
@@ -543,7 +543,7 @@ function placeOrder() {
 
         // 处理Share购买
         for (const order of shareOrders) {
-            MCPClient.logStatus('invoice', `准备购买 ${order.modelName} 份额`, {
+            MCPClient.logStatus('invoice', `Purchase share for ${order.modelName}`, {
                 description: `${order.quantity} × ${order.pricePerShare} ALEO`
             });
             const response = await MCPClient.purchaseShare({
@@ -557,7 +557,7 @@ function placeOrder() {
                     });
                 },
                 onPayment(invoice, tx) {
-                    MCPClient.logStatus('payment', '已完成 Share 支付', {
+                    MCPClient.logStatus('payment', 'Share payment completed', {
                         amount: invoice.amount_usdc,
                         memo: invoice.memo || invoice.request_id,
                         tx

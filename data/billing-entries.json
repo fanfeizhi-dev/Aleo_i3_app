@@ -7706,6 +7706,1100 @@
       "tx_signature": "3860e28b-c1e5-4020-81ad-cf3b2f3f09c0",
       "paid_at": "2026-02-05T17:06:55.647Z",
       "completed_at": "2026-02-05T17:06:55.647Z"
+    },
+    {
+      "id": "2d9f3345-d07b-444f-8de1-02e7a5723ada",
+      "status": "completed",
+      "created_at": "2026-02-06T01:51:05.944Z",
+      "updated_at": "2026-02-06T01:51:21.135Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "1aaa605c-520d-43dd-865c-b4c48e70790b",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 370,
+            "total_tokens": 764,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "6b43da41-2023-4847-bb16-a6b985f84e0c",
+      "nonce": "7e6ccd60-0359-4f69-8979-748c2a36f7cf",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T01:56:05.944Z",
+      "tx_signature": "7a863d50-738c-4a5c-aec6-191266495156",
+      "paid_at": "2026-02-06T01:51:14.440Z",
+      "completed_at": "2026-02-06T01:51:21.135Z"
+    },
+    {
+      "id": "1f1026d6-0eee-4e3c-a1c6-6dc2cff13a3a",
+      "status": "completed",
+      "created_at": "2026-02-06T02:08:33.979Z",
+      "updated_at": "2026-02-06T02:08:45.388Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "3e3c532d-8c9d-4247-a794-474769c4075e",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 213,
+            "total_tokens": 607,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "7e3a2c9e-1c36-4472-b735-6995c9549fe2",
+      "nonce": "4a0b6adf-2dd5-4889-a363-0b4ff7e7835e",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:13:33.979Z",
+      "tx_signature": "67600c81-436c-4fac-967a-7b62abd7344a",
+      "paid_at": "2026-02-06T02:08:41.015Z",
+      "completed_at": "2026-02-06T02:08:45.388Z"
+    },
+    {
+      "id": "1888955e-b408-4458-86d4-cb88c7d72364",
+      "status": "completed",
+      "created_at": "2026-02-06T02:08:55.297Z",
+      "updated_at": "2026-02-06T02:09:16.201Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "bda778a0-32aa-4294-b55a-b895ab9de7b3",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 349,
+            "total_tokens": 743,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "5859525e-fd12-494b-8f38-6a41b5ff3fcd",
+      "nonce": "dd8ee567-1574-4ee5-a2a1-eef7ee0abcc0",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:13:55.297Z",
+      "tx_signature": "90340f38-9323-4602-9e0a-a3a2e6821611",
+      "paid_at": "2026-02-06T02:09:09.752Z",
+      "completed_at": "2026-02-06T02:09:16.201Z"
+    },
+    {
+      "id": "c568e95d-f733-4f56-8590-a44a4dc26f46",
+      "status": "completed",
+      "created_at": "2026-02-06T02:10:15.045Z",
+      "updated_at": "2026-02-06T02:10:26.957Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "7bc66de2-3ab9-4344-95ef-bb5fd38c8106",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 216,
+            "total_tokens": 610,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "0410b2b4-aae6-4494-9596-32ade5999bce",
+      "nonce": "eb85b049-22dd-43b0-9f23-cf5b43a465c9",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:15:15.045Z",
+      "tx_signature": "f3b39391-86f3-4786-97cd-a977b6d652b8",
+      "paid_at": "2026-02-06T02:10:22.876Z",
+      "completed_at": "2026-02-06T02:10:26.957Z"
+    },
+    {
+      "id": "fd0774aa-4851-4981-85d9-a44cb1f4d6c4",
+      "status": "completed",
+      "created_at": "2026-02-06T02:11:45.338Z",
+      "updated_at": "2026-02-06T02:12:01.096Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "d4131bbf-4361-4315-9e6e-fae6777bc286",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 243,
+            "total_tokens": 637,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "83f7031a-65e1-4c8d-bafa-54c033e77f3c",
+      "nonce": "6bf6565a-68bc-40e4-a241-516ee9698125",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:16:45.338Z",
+      "tx_signature": "32d9ecec-66f5-47d5-9b99-725ed280b1f9",
+      "paid_at": "2026-02-06T02:11:55.564Z",
+      "completed_at": "2026-02-06T02:12:01.096Z"
+    },
+    {
+      "id": "835a80de-49b2-4cc1-8ec9-c607ae2ff8bf",
+      "status": "completed",
+      "created_at": "2026-02-06T02:12:38.184Z",
+      "updated_at": "2026-02-06T02:12:52.792Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "5e8cd28c-e240-45ab-8db8-ab0f56b82cd3",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 293,
+            "total_tokens": 687,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "aafa945e-0f71-423d-851f-280ad1eb510a",
+      "nonce": "6e4818c7-94fd-415a-af64-fe74b440362f",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:17:38.184Z",
+      "tx_signature": "46e38586-8ed0-48a7-ab0d-240aa5afdc16",
+      "paid_at": "2026-02-06T02:12:47.229Z",
+      "completed_at": "2026-02-06T02:12:52.792Z"
+    },
+    {
+      "id": "ba7798b4-6c8d-414c-8574-a44df839b944",
+      "status": "completed",
+      "created_at": "2026-02-06T02:13:15.017Z",
+      "updated_at": "2026-02-06T02:13:41.759Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "cbd6c055-6bae-45ce-ba79-065d2fadc770",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 274,
+            "total_tokens": 668,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "953103d0-188a-4c49-9897-2fb8b8c98953",
+      "nonce": "a8ee2c2f-d775-45d7-91f5-6b01cff60e60",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:18:15.017Z",
+      "tx_signature": "ada9a825-f424-48f7-b1fc-3c69e443f5dc",
+      "paid_at": "2026-02-06T02:13:36.445Z",
+      "completed_at": "2026-02-06T02:13:41.759Z"
+    },
+    {
+      "id": "22f4a65a-12e2-44c9-af8c-d71ad4722d0c",
+      "status": "completed",
+      "created_at": "2026-02-06T02:13:57.818Z",
+      "updated_at": "2026-02-06T02:14:17.549Z",
+      "meta": {
+        "share_id": "NVIDIA-Cosmos-World-Model_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for NVIDIA-Cosmos-World-Model",
+        "verification": {
+          "ok": true
+        }
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "a893807f-6794-47b9-9b35-26195bb3afd1",
+      "nonce": "033db756-bbc0-4ec2-8225-48811b6c7e2e",
+      "amount_usdc": 0.00009,
+      "model_or_node": "NVIDIA-Cosmos-World-Model",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:18:57.818Z",
+      "tx_signature": "3154204f-9e22-422c-bdb0-1c1289d85556",
+      "paid_at": "2026-02-06T02:14:17.540Z",
+      "completed_at": "2026-02-06T02:14:17.540Z"
+    },
+    {
+      "id": "5b0a1afb-9f1f-4060-8fb9-b05e276a528d",
+      "status": "completed",
+      "created_at": "2026-02-06T02:14:17.562Z",
+      "updated_at": "2026-02-06T02:14:25.389Z",
+      "meta": {
+        "share_id": "AI-Text-Detector-Examiner_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        }
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "d2cbbba1-c343-4634-aaaf-f2d48209bb0c",
+      "nonce": "b8a234a8-b09d-43bf-be61-e36975f4fbda",
+      "amount_usdc": 0.00009,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:19:17.562Z",
+      "tx_signature": "7663f0ea-91df-4638-b28a-bc7a385afa6c",
+      "paid_at": "2026-02-06T02:14:25.379Z",
+      "completed_at": "2026-02-06T02:14:25.379Z"
+    },
+    {
+      "id": "b8eb8790-768e-4695-a5c9-daa56f569973",
+      "status": "completed",
+      "created_at": "2026-02-06T02:14:44.923Z",
+      "updated_at": "2026-02-06T02:14:57.125Z",
+      "meta": {
+        "workflow_name": "w1",
+        "nodes": [
+          {
+            "id": "aa365eae-b194-43ce-baeb-10ed35c9f8b3",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00009,
+            "gasCost": 0.00025,
+            "totalCost": 0.00034
+          },
+          {
+            "id": "a746dc5e-909d-4b09-9bda-f5d7504421dd",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00001,
+            "gasCost": 0.00025,
+            "totalCost": 0.00026
+          },
+          {
+            "id": "76f39268-b12c-4424-9834-1c89125e39b6",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00007,
+            "gasCost": 0.00025,
+            "totalCost": 0.00032
+          },
+          {
+            "id": "2667c20a-2cb5-4117-8667-6bccbfecf927",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00009,
+            "gasCost": 0.00025,
+            "totalCost": 0.00034
+          }
+        ],
+        "node_count": 4,
+        "description": "Prepay for workflow: w1",
+        "verification": {
+          "ok": true
+        },
+        "workflow_session_id": "d157b57a-95e0-4018-a2a1-e6cbd8c2d5fe",
+        "prepaid_at": "2026-02-06T02:14:57.119Z"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1vypn5753kyt8ekgvscjaavk8txvxhd4x9906msaevq655xxjwv8qy9pcce",
+      "request_id": "c3e81fd9-fd24-4093-9696-a1949c94facf",
+      "nonce": "6136890d-aa41-497b-862e-ae241cc13107",
+      "amount_usdc": 0.00126,
+      "model_or_node": "w1",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-02-06T02:19:44.923Z",
+      "tx_signature": "32a8b84b-3312-41c1-9823-a8c9843a50f4",
+      "paid_at": "2026-02-06T02:14:57.119Z",
+      "completed_at": "2026-02-06T02:14:57.119Z"
+    },
+    {
+      "id": "1c4a4da0-dbf5-4a72-8349-f2f125051db2",
+      "status": "completed",
+      "created_at": "2026-02-06T02:15:05.205Z",
+      "updated_at": "2026-02-06T02:15:19.544Z",
+      "meta": {
+        "workflow_name": "AI Safety & Watermarking Pipeline",
+        "nodes": [
+          {
+            "id": "6e61ffa0-bccb-4831-9938-36da469c1527",
+            "name": "AI-Text-Detector-Examiner",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          },
+          {
+            "id": "286067bb-d107-421b-8ac5-71833c4ed7a7",
+            "name": "SafeKey-Safety-Reasoner",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.0008,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 5
+            },
+            "computeCost": 0.0008,
+            "gasCost": 0.00025,
+            "totalCost": 0.00105
+          },
+          {
+            "id": "ba885b81-bf05-4112-9876-a95c2a2d166b",
+            "name": "Invisible-Watermark-Remover",
+            "calls": 3,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00006,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 3.21
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.00075,
+            "totalCost": 0.00093
+          },
+          {
+            "id": "d78c4063-43c2-4fba-88f0-24ba1175b7ef",
+            "name": "Context-Watermarker",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00008,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 6.79
+            },
+            "computeCost": 0.00008,
+            "gasCost": 0.00025,
+            "totalCost": 0.00033
+          }
+        ],
+        "node_count": 4,
+        "description": "Prepay for workflow: AI Safety & Watermarking Pipeline",
+        "verification": {
+          "ok": true
+        },
+        "workflow_session_id": "92043328-db81-4cd4-a6a1-ad9642038210",
+        "prepaid_at": "2026-02-06T02:15:19.537Z"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1vypn5753kyt8ekgvscjaavk8txvxhd4x9906msaevq655xxjwv8qy9pcce",
+      "request_id": "25d16200-27ee-4c4b-ac22-cf729d9d0e13",
+      "nonce": "fe59c1d3-7853-459a-9cbe-29bdd6a1a44b",
+      "amount_usdc": 0.00299,
+      "model_or_node": "AI Safety & Watermarking Pipeline",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-02-06T02:20:05.205Z",
+      "tx_signature": "4216b0ea-82ac-46ab-9c38-0cb90610eac4",
+      "paid_at": "2026-02-06T02:15:19.537Z",
+      "completed_at": "2026-02-06T02:15:19.537Z"
+    },
+    {
+      "id": "b52c352d-bf35-4258-b26a-92b784e4af72",
+      "status": "completed",
+      "created_at": "2026-02-06T02:17:48.643Z",
+      "updated_at": "2026-02-06T02:18:02.723Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "056541b1-1927-4f74-ba51-24adeb4d75f3",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 243,
+            "total_tokens": 637,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "2855d3a0-2622-4002-90c8-d5ed9461516c",
+      "nonce": "20c3797e-8269-4692-8ef1-cc3d8a06cf82",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:22:48.643Z",
+      "tx_signature": "294d6b0f-5808-43a5-8963-ab58ccbcf030",
+      "paid_at": "2026-02-06T02:17:56.624Z",
+      "completed_at": "2026-02-06T02:18:02.723Z"
+    },
+    {
+      "id": "156d0f1b-51ad-4d3e-83dd-457e995b7aef",
+      "status": "completed",
+      "created_at": "2026-02-06T02:18:24.414Z",
+      "updated_at": "2026-02-06T02:18:41.087Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "79ab622b-5185-4a60-9422-d223beb1a79b",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 273,
+            "total_tokens": 667,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "fa83ceaa-ca46-42cf-bc2f-667c393891c5",
+      "nonce": "44d53889-61c3-480f-a002-dccfb61e8cf0",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:23:24.414Z",
+      "tx_signature": "51e890f1-0af5-462f-b201-4eb44566352f",
+      "paid_at": "2026-02-06T02:18:34.766Z",
+      "completed_at": "2026-02-06T02:18:41.087Z"
+    },
+    {
+      "id": "e91813b6-59f4-4441-abda-000e4c63f426",
+      "status": "completed",
+      "created_at": "2026-02-06T02:19:41.553Z",
+      "updated_at": "2026-02-06T02:19:56.703Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "cfc470c0-a736-429e-bc5a-7bd627949cb2",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 346,
+            "total_tokens": 740,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "d15d0e53-6383-41a4-aaae-29bc2ca0b8df",
+      "nonce": "124b4c11-b9d4-4a6c-8bc3-d1e3b8b31930",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:24:41.553Z",
+      "tx_signature": "3dd00781-0f4d-4791-8842-75ce395666bb",
+      "paid_at": "2026-02-06T02:19:51.251Z",
+      "completed_at": "2026-02-06T02:19:56.703Z"
+    },
+    {
+      "id": "12b41480-f648-4de1-b6e5-893b65a3cad7",
+      "status": "completed",
+      "created_at": "2026-02-06T02:20:21.608Z",
+      "updated_at": "2026-02-06T02:20:39.384Z",
+      "meta": {
+        "auto_router": {
+          "requestId": "393ba331-e5e3-413e-8cd4-4a2231e177f4",
+          "model": {
+            "id": "AI-Text-Detector-Examiner",
+            "version": "latest",
+            "category": "Model Analysis",
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            }
+          },
+          "reasoning": "Selected model \"AI-Text-Detector-Examiner\" with score 99. Prompt length 28 chars"
+        },
+        "model_name": "AI-Text-Detector-Examiner",
+        "description": "Invoke AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        },
+        "result": {
+          "status": "ok",
+          "model": "AI-Text-Detector-Examiner",
+          "usage": {
+            "prompt_tokens": 394,
+            "completion_tokens": 234,
+            "total_tokens": 628,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          }
+        }
+      },
+      "type": "infer",
+      "user_id": "anonymous",
+      "request_id": "9b5609d4-ce96-450a-8819-2ef274204269",
+      "nonce": "a0d998cf-9dd6-4459-aa2c-e844dcb441da",
+      "amount_usdc": 0.00034,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 1,
+      "expires_at": "2026-02-06T02:25:21.608Z",
+      "tx_signature": "00f1421d-8f7e-4e8b-bf6f-e0b5746aae40",
+      "paid_at": "2026-02-06T02:20:34.558Z",
+      "completed_at": "2026-02-06T02:20:39.384Z"
+    },
+    {
+      "id": "5032866c-24e2-4ed6-9ef2-ef8f8376239a",
+      "status": "completed",
+      "created_at": "2026-02-06T02:21:29.309Z",
+      "updated_at": "2026-02-06T02:21:41.809Z",
+      "meta": {
+        "share_id": "AI-Text-Detector-Examiner_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        }
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "470fe233-3ae4-4314-be2e-b4ad3dce8481",
+      "nonce": "8f64e193-d6ed-4157-a7fe-07c8c73e5cbb",
+      "amount_usdc": 0.00009,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:26:29.309Z",
+      "tx_signature": "84cb9e42-1ff5-4985-a4c9-0136df13c8e4",
+      "paid_at": "2026-02-06T02:21:41.803Z",
+      "completed_at": "2026-02-06T02:21:41.803Z"
+    },
+    {
+      "id": "f38a95ae-d822-4aef-bcc4-6c503f49fb46",
+      "status": "pending_payment",
+      "created_at": "2026-02-06T02:21:41.823Z",
+      "updated_at": "2026-02-06T02:21:41.823Z",
+      "meta": {
+        "share_id": "NVIDIA-Cosmos-World-Model_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for NVIDIA-Cosmos-World-Model"
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "ea7eb445-c855-4e22-8034-331e78e3a334",
+      "nonce": "ab51e713-0dfe-4e03-ab4e-6ad0c6b3a88b",
+      "amount_usdc": 0.00009,
+      "model_or_node": "NVIDIA-Cosmos-World-Model",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:26:41.823Z"
+    },
+    {
+      "id": "e693d3ef-d449-4ff8-98f2-dc8da0009501",
+      "status": "completed",
+      "created_at": "2026-02-06T02:22:39.828Z",
+      "updated_at": "2026-02-06T02:22:51.350Z",
+      "meta": {
+        "share_id": "AI-Text-Detector-Examiner_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for AI-Text-Detector-Examiner",
+        "verification": {
+          "ok": true
+        }
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "095e99af-53d5-47ec-83c5-d2d263a09080",
+      "nonce": "40259f96-9bdd-4905-b4e2-0f1037f0dbde",
+      "amount_usdc": 0.00009,
+      "model_or_node": "AI-Text-Detector-Examiner",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:27:39.828Z",
+      "tx_signature": "278818e7-3438-4f90-9ad0-23712c845cab",
+      "paid_at": "2026-02-06T02:22:51.345Z",
+      "completed_at": "2026-02-06T02:22:51.345Z"
+    },
+    {
+      "id": "88a3790d-4405-40b6-b808-1801ff99793b",
+      "status": "completed",
+      "created_at": "2026-02-06T02:22:51.361Z",
+      "updated_at": "2026-02-06T02:22:58.999Z",
+      "meta": {
+        "share_id": "NVIDIA-Cosmos-World-Model_tokens",
+        "is_token_purchase": true,
+        "description": "Purchase API calls for NVIDIA-Cosmos-World-Model",
+        "verification": {
+          "ok": true
+        }
+      },
+      "type": "token",
+      "user_id": "anonymous",
+      "request_id": "cedb8447-cbdb-444f-b928-476777fc600b",
+      "nonce": "326a62c5-033c-41d0-90b1-91cb561636ad",
+      "amount_usdc": 0.00009,
+      "model_or_node": "NVIDIA-Cosmos-World-Model",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:27:51.361Z",
+      "tx_signature": "089e7e54-a804-4169-a9d8-1cc155ca0b43",
+      "paid_at": "2026-02-06T02:22:58.991Z",
+      "completed_at": "2026-02-06T02:22:58.991Z"
+    },
+    {
+      "id": "4feb31b7-9da1-4ae1-be19-c93b6423f703",
+      "status": "completed",
+      "created_at": "2026-02-06T02:23:26.272Z",
+      "updated_at": "2026-02-06T02:23:37.378Z",
+      "meta": {
+        "workflow_name": "workflow1",
+        "nodes": [
+          {
+            "id": "60f2dc8d-94c5-4f8e-a155-11c92fee3636",
+            "name": "AI-Text-Detector-Examiner",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 14.73
+            },
+            "computeCost": 0.00009,
+            "gasCost": 0.00025,
+            "totalCost": 0.00034
+          },
+          {
+            "id": "560e7a59-9bba-4411-a92b-e1e0615a0ae1",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 1,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00009,
+            "gasCost": 0.00025,
+            "totalCost": 0.00034
+          }
+        ],
+        "node_count": 2,
+        "description": "Prepay for workflow: workflow1",
+        "verification": {
+          "ok": true
+        },
+        "workflow_session_id": "085b103c-c894-4016-9c8d-7cb11fc57b95",
+        "prepaid_at": "2026-02-06T02:23:37.369Z"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1vypn5753kyt8ekgvscjaavk8txvxhd4x9906msaevq655xxjwv8qy9pcce",
+      "request_id": "5fcfabdf-8807-40e1-90b0-a783d8ffce82",
+      "nonce": "0cbf58b0-c23e-4ae6-8666-3e40111a71cc",
+      "amount_usdc": 0.00068,
+      "model_or_node": "workflow1",
+      "tokens_or_calls": 2,
+      "expires_at": "2026-02-06T02:28:26.272Z",
+      "tx_signature": "290df0d1-bb12-4d64-8d69-ebc311e8f9c4",
+      "paid_at": "2026-02-06T02:23:37.369Z",
+      "completed_at": "2026-02-06T02:23:37.369Z"
+    },
+    {
+      "id": "0b175e43-a216-4dd3-88c5-ca86d38cd4ee",
+      "status": "completed",
+      "created_at": "2026-02-06T02:24:04.692Z",
+      "updated_at": "2026-02-06T02:24:18.550Z",
+      "meta": {
+        "workflow_name": "Content Generation & Analysis Suite",
+        "nodes": [
+          {
+            "id": "7959112d-382a-483c-bf55-f81745d99c9e",
+            "name": "NVIDIA-Cosmos-World-Model",
+            "calls": 4,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 4.67
+            },
+            "computeCost": 0.00036,
+            "gasCost": 0.001,
+            "totalCost": 0.00136
+          },
+          {
+            "id": "ec8ce0e4-e86f-44a1-a671-9b4221ce49df",
+            "name": "SurfGen-3D-Shape-Generator",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00001,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 1.69
+            },
+            "computeCost": 0.00002,
+            "gasCost": 0.0005,
+            "totalCost": 0.00052
+          },
+          {
+            "id": "d7db12e0-73c5-4c84-a71c-e9b90b44a35c",
+            "name": "InfoGAN-Disentangled-Representation",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00007,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 12.85
+            },
+            "computeCost": 0.00014,
+            "gasCost": 0.0005,
+            "totalCost": 0.00064
+          },
+          {
+            "id": "bc1d23c6-8842-4a7b-a320-db7afd533dc4",
+            "name": "TPU-GAN-Temporal-Point-Cloud",
+            "calls": 2,
+            "pricing": {
+              "currency": "ALEO",
+              "pricePerCallUsdc": 0.00009,
+              "gasPerCallUsdc": 0.00025,
+              "sharePriceUsdc": 15.89
+            },
+            "computeCost": 0.00018,
+            "gasCost": 0.0005,
+            "totalCost": 0.00068
+          }
+        ],
+        "node_count": 4,
+        "description": "Prepay for workflow: Content Generation & Analysis Suite",
+        "verification": {
+          "ok": true
+        },
+        "workflow_session_id": "22b02ff3-6a2d-4805-99ad-9d4106c6f9ac",
+        "prepaid_at": "2026-02-06T02:24:18.541Z"
+      },
+      "type": "workflow_prepay",
+      "user_id": "wallet:aleo1vypn5753kyt8ekgvscjaavk8txvxhd4x9906msaevq655xxjwv8qy9pcce",
+      "request_id": "d0129215-426d-4d65-9188-16c9c5dd40af",
+      "nonce": "e6db1dcb-a236-4f17-8a06-5d1fa8abbb06",
+      "amount_usdc": 0.0032,
+      "model_or_node": "Content Generation & Analysis Suite",
+      "tokens_or_calls": 4,
+      "expires_at": "2026-02-06T02:29:04.692Z",
+      "tx_signature": "8ca951bf-a9f9-44f9-b491-8a3e6ce6484b",
+      "paid_at": "2026-02-06T02:24:18.541Z",
+      "completed_at": "2026-02-06T02:24:18.541Z"
     }
   ]
 }
